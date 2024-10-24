@@ -20,11 +20,17 @@ public class Grocery {
    * @param name           The name of the grocery item.
    * @param unit           Unit of measurement for the grocery.
    * @param price          Price per unit of the grocery.
+   *                       Float because we need precision when measuring price per unit.
    * @param expirationDate Expiration date of the grocery in.
+   *                       LocalDate is immutable, useful methods for date manipulation,
+   *                       Only day, month and year variables.
    * @param quantity       Total quantity of the grocery.
+   *                       Float because we need precision when measuring the grocery.
    * @throws IllegalArgumentException If string parameters is null.
    * @throws IllegalArgumentException If float values are negative.
+   * @throws IllegalArgumentException If name is over 32 characters long.
    * @throws IllegalArgumentException If try block throws DateTimeParseException, wrong format.
+   * @throws IllegalArgumentException If expiration date is in the past.
    */
   public Grocery(String name, String unit, float price, String expirationDate, float quantity)
       throws IllegalArgumentException {
@@ -36,14 +42,30 @@ public class Grocery {
       throw new IllegalArgumentException("The price or quantity can not be negative");
     }
 
+    if (name.length() > 32) {
+      throw new IllegalArgumentException("The name can not be above 32 characters");
+    }
+
+    if (price > 10000) {
+      throw new IllegalArgumentException("The price can not be above 10000 characters");
+    }
+
+    if (quantity > 1000) {
+      throw new IllegalArgumentException("The quantity can not be above 1000 characters");
+    }
+
     this.name = name;
     this.unit = unit;
     this.price = price;
     this.quantity = quantity;
 
     try {
-      this.expirationDate =
+      LocalDate parsedDateInput =
           LocalDate.parse(expirationDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+      if (parsedDateInput.isBefore(LocalDate.now())) {
+        throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
+      }
+      this.expirationDate = parsedDateInput;
     } catch (DateTimeParseException e) {
       throw new IllegalArgumentException("Invalid date format. Please use dd.MM.yyyy", e);
     }
@@ -101,10 +123,10 @@ public class Grocery {
    * @throws IllegalArgumentException if the quantity is negative.
    */
   public void setQuantity(float quantity) throws IllegalArgumentException {
-    if (quantity < 0) {
-      throw new IllegalArgumentException("Quantity has to be above 0");
+    if (quantity < 0 || quantity > 1000) {
+      throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
     }
-    this.quantity = this.quantity + quantity;
+    this.quantity += quantity;
   }
 
   /**
