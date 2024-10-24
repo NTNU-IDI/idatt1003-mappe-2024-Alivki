@@ -29,6 +29,8 @@ public class Grocery {
    * @throws IllegalArgumentException If string parameters is null.
    * @throws IllegalArgumentException If float values are negative.
    * @throws IllegalArgumentException If name is over 32 characters long.
+   * @throws IllegalArgumentException If price is above 10000.
+   * @throws IllegalArgumentException If quantity is above 1000.
    * @throws IllegalArgumentException If try block throws DateTimeParseException, wrong format.
    * @throws IllegalArgumentException If expiration date is in the past.
    */
@@ -120,7 +122,7 @@ public class Grocery {
    * Sets the new total quantity stored of specific grocery.
    *
    * @param quantity The new quantity of a grocery getting stored.
-   * @throws IllegalArgumentException if the quantity is negative.
+   * @throws IllegalArgumentException If the quantity is negative or above 1000.
    */
   public void setQuantity(float quantity) throws IllegalArgumentException {
     if (quantity < 0 || quantity > 1000) {
