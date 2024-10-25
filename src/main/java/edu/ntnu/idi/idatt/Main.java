@@ -10,7 +10,8 @@ public class Main {
    */
   public static void main(String[] args) {
     // TODO: implement main method logic
-    TextUserInterface ui = new TextUserInterface();
+    Fridge fridge = new Fridge();
+    TextUserInterface ui = new TextUserInterface(fridge);
     ui.init();
     ui.start();
   }
