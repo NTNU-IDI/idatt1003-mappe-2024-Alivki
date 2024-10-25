@@ -35,9 +35,20 @@ public class TextUserInterface {
    */
   private void addGrocery() {
     System.out.println("\nEnter grocery name: ");
-    String name = scanner.nextLine();
+    String name1 = scanner.nextLine();
+    String name2 = scanner.nextLine();
 
-    Grocery input = new Grocery(name, "kg", 110f, "28.10.2024", 1.2f);
-    fridge.addGrocery(input);
+    Grocery input1 = new Grocery(name1, "l", 110f, "28.10.2024", 1.2f);
+    Grocery input2 = new Grocery(name2, "stk", 110f, "28.10.2024", 1.2f);
+    fridge.addGrocery(input1);
+    fridge.addGrocery(input2);
+    printGroceries();
+  }
+
+  /**
+   * .
+   */
+  private void printGroceries() {
+    fridge.printFridgeContent();
   }
 }

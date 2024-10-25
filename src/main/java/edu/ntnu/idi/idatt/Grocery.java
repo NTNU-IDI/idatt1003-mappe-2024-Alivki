@@ -61,9 +61,14 @@ public class Grocery {
     }
 
     this.name = name;
-    this.unit = unit;
+    this.unit = unit.toUpperCase();
     this.price = price;
-    this.quantity = quantity;
+
+    if (unit.equalsIgnoreCase("stk")) {
+      this.quantity = Math.round(quantity);
+    } else {
+      this.quantity = quantity;
+    }
 
     try {
       LocalDate parsedDateInput =

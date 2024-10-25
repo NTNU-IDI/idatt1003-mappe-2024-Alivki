@@ -88,7 +88,7 @@ class GroceryTest {
 
   @Test
   void testGetUnitIsEqualsToUnit() {
-    assertEquals("kg", cheese.getUnit());
+    assertEquals("KG", cheese.getUnit());
     assertNotEquals("L", cheese.getUnit());
   }
 
@@ -139,9 +139,26 @@ class GroceryTest {
   }
 
   @Test
+  void testConstructorRoundsQuantityToSingleDigitIfUnitIsStk() {
+    Grocery milk = new Grocery("milk", "stk", 100f, "01.01.2025", 2.5f);
+    assertEquals(3f, milk.getQuantity());
+    assertNotEquals(2.5f, milk.getQuantity());
+  }
+
+  @Test
+  void testConstructorDoesNotRoundIfQuantityIsOtherThenStk() {
+    Grocery juice = new Grocery("milk", "l", 100f, "01.01.2025", 2.5f);
+    Grocery ham = new Grocery("milk", "kg", 100f, "01.01.2025", 2.5f);
+    assertEquals(2.5f, juice.getQuantity());
+    assertEquals(2.5f, ham.getQuantity());
+    assertNotEquals(2f, juice.getQuantity());
+    assertNotEquals(2f, ham.getQuantity());
+  }
+
+  @Test
   void testToStringIsEqualsToOutput() {
     assertEquals(
-        "cheese: 1.2 kg, price per kg: 100.0, expiration date: January 1, 2025",
+        "cheese: 1.2 KG, price per KG: 100.0, expiration date: January 1, 2025",
         cheese.toString());
     assertNotEquals("cheese: 1.2kg", cheese.toString());
   }
