@@ -40,6 +40,10 @@ public class Grocery {
       throw new IllegalArgumentException("Grocery info can not be null");
     }
 
+    if (name.isEmpty() || unit.isEmpty() || expirationDate.isEmpty()) {
+      throw new IllegalArgumentException("Grocery info can not be null");
+    }
+
     if (price < 0 || quantity < 0) {
       throw new IllegalArgumentException("The price or quantity can not be negative");
     }
