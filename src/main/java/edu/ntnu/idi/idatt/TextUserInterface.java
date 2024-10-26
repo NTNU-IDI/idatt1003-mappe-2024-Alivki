@@ -21,12 +21,6 @@ public class TextUserInterface {
    * .
    */
   public void start() {
-    Grocery cheese = new Grocery("cheese", "kg", 110f, "28.10.2024", 1.2f);
-    Grocery milk = new Grocery("milk", "l", 30f, "28.10.2025", 1f);
-    Grocery bread = new Grocery("bread", "stk", 28f, "28.10.2026", 2f);
-    Grocery ham = new Grocery("ham", "kg", 160f, "28.10.2027", 0.4f);
-    System.out.printf("%s%n%s%n%s%n%s", cheese, milk, bread, ham);
-
     addGrocery();
   }
 
@@ -38,11 +32,14 @@ public class TextUserInterface {
     String name1 = scanner.nextLine();
     String name2 = scanner.nextLine();
 
-    Grocery input1 = new Grocery(name1, "l", 110f, "28.10.2024", 1.2f);
-    Grocery input2 = new Grocery(name2, "stk", 110f, "28.10.2024", 1.2f);
-    fridge.addGrocery(input1);
-    fridge.addGrocery(input2);
+    fridge.addGrocery(name1, "l", 110f, "28.10.2024", 1.2f);
+    fridge.addGrocery(name2, "stk", 110f, "28.10.2024", 1.2f);
+
     printGroceries();
+
+    fridge.decreaseQuantity("cheese", 2.4f);
+
+    fridge.findGrocery("cheese");
   }
 
   /**
