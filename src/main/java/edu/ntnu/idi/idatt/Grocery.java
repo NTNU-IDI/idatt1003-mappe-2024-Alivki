@@ -130,14 +130,37 @@ public class Grocery {
   /**
    * Sets the new total quantity stored of specific grocery.
    *
-   * @param quantity The new quantity of a grocery getting stored.
+   * @param quantity How much of a grocery is being added.
    * @throws IllegalArgumentException If the quantity is negative or above 1000.
    */
-  public void setQuantity(float quantity) throws IllegalArgumentException {
+  public void increaseQuantity(float quantity) throws IllegalArgumentException {
     if (quantity < 0 || quantity > 1000) {
       throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
     }
-    this.quantity += quantity;
+
+    if (unit.equalsIgnoreCase("stk")) {
+      this.quantity += Math.round(quantity);
+    } else {
+      this.quantity += quantity;
+    }
+  }
+
+  /**
+   * Sets the new total quantity stored of specific grocery.
+   *
+   * @param quantity How much of a grocery is being removed.
+   * @throws IllegalArgumentException If the quantity is negative or above 1000.
+   */
+  public void decreaseQuantity(float quantity) throws IllegalArgumentException {
+    if (quantity < 0 || quantity > 1000) {
+      throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
+    }
+
+    if (unit.equalsIgnoreCase("stk")) {
+      this.quantity -= Math.round(quantity);
+    } else {
+      this.quantity -= quantity;
+    }
   }
 
   /**
@@ -149,15 +172,17 @@ public class Grocery {
    */
   @Override
   public String toString() {
-    StringBuilder string = new StringBuilder();
+    String names = this.name;
+    if (this.name.length() > 10) {
+      names = name.substring(0, 10) + "..";
+    }
 
-    string.append(this.name).append(": ")
-        .append(this.quantity).append(" ")
-        .append(this.unit).append(", ")
-        .append("price per ").append(unit).append(": ").append(this.price).append(", ")
-        .append("expiration date: ")
-        .append(this.expirationDate.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
+    String priceUnit = String.format("%.2f%s", this.quantity, this.unit);
 
-    return string.toString();
+    return String.format("| %-12s | %-8s  | %.2fkr        | %s       |%n",
+        names,
+        priceUnit,
+        this.price,
+        this.expirationDate);
   }
 }

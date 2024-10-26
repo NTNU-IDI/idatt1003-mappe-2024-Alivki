@@ -111,30 +111,92 @@ class GroceryTest {
   }
 
   @Test
-  void testSetQuantityValidPositiveInput() {
-    cheese.setQuantity(1.3f);
+  void testIncreaseQuantityValidPositiveInput() {
+    cheese.increaseQuantity(1.3f);
     assertEquals(2.5f, cheese.getQuantity());
     assertNotEquals(1.3f, cheese.getQuantity());
   }
 
   @Test
-  void testSetQuantityZeroInput() {
-    cheese.setQuantity(0f);
+  void testIncreaseQuantityZeroInput() {
+    cheese.increaseQuantity(0f);
     assertEquals(1.2f, cheese.getQuantity());
     assertNotEquals(1.3f, cheese.getQuantity());
   }
 
   @Test
-  void testSetQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsNegative() {
+  void testIncreaseQuantityValidPositiveInputForUnitStk() {
+    Grocery egg = new Grocery("egg", "stk", 50f, "01.01.2025", 1.2f);
+    assertEquals(1f, egg.getQuantity());
+    egg.increaseQuantity(1.3f);
+    assertEquals(2f, egg.getQuantity());
+    assertNotEquals(2.5f, egg.getQuantity());
+  }
+
+  @Test
+  void testIncreaseQuantityZeroInputForUnitStk() {
+    Grocery egg = new Grocery("egg", "stk", 50f, "01.01.2025", 1.2f);
+    egg.increaseQuantity(0f);
+    assertEquals(1f, egg.getQuantity());
+    assertNotEquals(1.3f, egg.getQuantity());
+  }
+
+  @Test
+  void testIncreaseQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsNegative() {
     assertThrows(IllegalArgumentException.class, () ->
-        cheese.setQuantity(-2f)
+        cheese.increaseQuantity(-2f)
     );
   }
 
   @Test
-  void testSetQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsAbove1000() {
+  void testIncreaseQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsAbove1000() {
     assertThrows(IllegalArgumentException.class, () ->
-        cheese.setQuantity(1001f)
+        cheese.increaseQuantity(1001f)
+    );
+  }
+
+  @Test
+  void testDecreaseQuantityValidPositiveInput() {
+    cheese.decreaseQuantity(0.2f);
+    assertEquals(1f, cheese.getQuantity());
+    assertNotEquals(1.3f, cheese.getQuantity());
+  }
+
+  @Test
+  void testDecreaseQuantityZeroInput() {
+    cheese.decreaseQuantity(0f);
+    assertEquals(1.2f, cheese.getQuantity());
+    assertNotEquals(1.3f, cheese.getQuantity());
+  }
+
+  @Test
+  void testDecreaseQuantityValidPositiveInputForUnitStk() {
+    Grocery egg = new Grocery("egg", "stk", 50f, "01.01.2025", 2.2f);
+    assertEquals(2f, egg.getQuantity());
+    egg.decreaseQuantity(1.3f);
+    assertEquals(1f, egg.getQuantity());
+    assertNotEquals(2.5f, egg.getQuantity());
+  }
+
+  @Test
+  void testDecreaseQuantityZeroInputForUnitStk() {
+    Grocery egg = new Grocery("egg", "stk", 50f, "01.01.2025", 2.2f);
+    egg.increaseQuantity(0f);
+    assertEquals(2f, egg.getQuantity());
+    assertNotEquals(1.3f, egg.getQuantity());
+  }
+
+  @Test
+  void testDecreaseQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsNegative() {
+    assertThrows(IllegalArgumentException.class, () ->
+        cheese.decreaseQuantity(-2f)
+    );
+  }
+
+  @Test
+  void testDecreaseQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsAbove1000() {
+    assertThrows(IllegalArgumentException.class, () ->
+        cheese.decreaseQuantity(1001f)
     );
   }
 
@@ -157,8 +219,8 @@ class GroceryTest {
 
   @Test
   void testToStringIsEqualsToOutput() {
-    assertEquals(
-        "cheese: 1.2 KG, price per KG: 100.0, expiration date: January 1, 2025",
+    assertEquals(String.format(
+            "| cheese       | 1.20KG    | 100.00kr        | 2025-01-01       |%n"),
         cheese.toString());
     assertNotEquals("cheese: 1.2kg", cheese.toString());
   }
