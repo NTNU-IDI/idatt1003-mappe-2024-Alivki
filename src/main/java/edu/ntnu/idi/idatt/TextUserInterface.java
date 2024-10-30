@@ -35,15 +35,14 @@ public class TextUserInterface {
 
     fridge.addGrocery(name1, "l", 110f, "28.11.2025", 1.2f);
     fridge.addGrocery(name2, "stk", 110f, "28.11.2024", 1.2f);
-
     printGroceries();
 
     //fridge.decreaseQuantity("cheese", 2.4f);
 
     //fridge.findGrocery("cheese");
 
-    LocalDate test = LocalDate.of(2023, 12, 31);
-    fridge.bestBeforeDate(test);
+    //ocalDate test = LocalDate.of(2026, 12, 31);
+    //fridge.bestBeforeDate(test);
   }
 
   /**

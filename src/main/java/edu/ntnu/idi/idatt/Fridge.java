@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -47,8 +48,20 @@ public class Fridge {
       }
     }
 
+    int low = 0;
+    int high = groceries.size();
+
+    while (low < high) {
+      int mid = (low + high) / 2;
+      if (groceries.get(mid).getName().compareTo(name) < 0) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+
     Grocery newGrocery = new Grocery(name, unit, price, expirationDate, quantity);
-    groceries.add(newGrocery);
+    groceries.add(low, newGrocery);
     System.out.printf("%n%s was successfully added!%n", name);
 
     //TODO sort the list of groceries on added
@@ -58,7 +71,6 @@ public class Fridge {
    * .
    */
   public void findGrocery(String inputName) {
-    //clearConsole();
     for (Grocery grocery : groceries) {
       if (grocery.getName().equalsIgnoreCase(inputName)) {
         System.out.print(printFridgeHeader());
@@ -67,7 +79,7 @@ public class Fridge {
         return;
       }
     }
-    System.out.printf("%s not found!%n", inputName);
+    System.out.printf("%n%s not found!%n", inputName);
   }
 
   /**
@@ -118,7 +130,6 @@ public class Fridge {
    * .
    */
   public void bestBeforeDate(LocalDate inputDate) {
-    //TODO find all groceries that before best before date
     if (groceries.stream()
         .noneMatch(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))) {
       System.out.printf("You have no groceries with a expiration date before %s.%n", inputDate);
@@ -128,7 +139,7 @@ public class Fridge {
     System.out.print(printFridgeHeader());
     groceries.stream()
         .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))
-        .sorted((a1, a2) -> a1.getExpirationDate().compareTo(a2.getExpirationDate()))
+        .sorted(Comparator.comparing(Grocery::getExpirationDate))
         .map(Grocery::toString)
         .forEach(System.out::print);
     System.out.format("+--------------+-----------+-----------------+------------------+%n");
@@ -138,7 +149,6 @@ public class Fridge {
    * .
    */
   public void printFridgeContent() {
-    //clearConsole();
     if (groceries.isEmpty()) {
       System.out.println("There is no groceries in your fridge!");
       return;
@@ -147,10 +157,6 @@ public class Fridge {
     System.out.print(printFridgeHeader());
     groceries.stream().map(Grocery::toString).forEach(System.out::print);
     System.out.format("+--------------+-----------+-----------------+------------------+%n");
-    //for (Grocery grocery : groceries) {
-      //System.out.print(grocery);
-      //System.out.format("+--------------+-----------+-----------------+------------------+%n");
-    //}
   }
 
   /**
