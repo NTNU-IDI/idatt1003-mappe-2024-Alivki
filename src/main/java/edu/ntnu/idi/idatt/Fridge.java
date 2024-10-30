@@ -22,13 +22,16 @@ public class Fridge {
   }
 
   /**
-   * .
+   * Adds a grocery item to the list.
+   * If it is an existing grocery it will call the grocery.increaseQuantity
+   * method to increase its quantity. If it is a new item it will be added to
+   * the list while maintaining sorted order of the array.
    *
-   * @param name           name
-   * @param unit           unit
-   * @param price          price
-   * @param expirationDate expirationDate
-   * @param quantity       quantity
+   * @param name           The name of new grocery.
+   * @param unit           The unit of new grocery.
+   * @param price          The price of new grocery.
+   * @param expirationDate The expirationDate of new grocery.
+   * @param quantity       The quantity of new grocery.
    */
   public void addGrocery(
       String name, String unit, float price, String expirationDate, float quantity) {
@@ -63,12 +66,12 @@ public class Fridge {
     Grocery newGrocery = new Grocery(name, unit, price, expirationDate, quantity);
     groceries.add(low, newGrocery);
     System.out.printf("%n%s was successfully added!%n", name);
-
-    //TODO sort the list of groceries on added
   }
 
   /**
-   * .
+   * Finding a specific grocery by name.
+   *
+   * @param inputName The name of the grocery to search for.
    */
   public void findGrocery(String inputName) {
     for (Grocery grocery : groceries) {
@@ -83,51 +86,65 @@ public class Fridge {
   }
 
   /**
-   * .
+   * Removing a grocery by name.
+   *
+   * @param inputName The name of the grocery to search for.
    */
-  public void removeGrocery(String name) {
+  public void removeGrocery(String inputName) {
     for (Grocery grocery : groceries) {
-      if (grocery.getName().equals(name)) {
+      if (grocery.getName().equals(inputName)) {
         groceries.remove(grocery);
-        System.out.printf("%n%s was removed.%n", name);
+        System.out.printf("%n%s was removed.%n", inputName);
         return;
       }
     }
   }
 
   /**
-   * .
+   * Increases the quantity of grocery by name.
+   *
+   * @param inputName The name of the grocery to search for.
+   * @param quantity The quantity to increase grocery quantity with.
    */
-  public void increaseQuantity(String name, float quantity) {
+  public void increaseQuantity(String inputName, float quantity) {
     for (Grocery grocery : groceries) {
-      if (grocery.getName().equals(name)) {
+      if (grocery.getName().equals(inputName)) {
         grocery.increaseQuantity(quantity);
-        System.out.printf("%n%s increase in quantity.%n", name);
+        System.out.printf("%n%s increase in quantity.%n", inputName);
         return;
       }
     }
   }
 
   /**
-   * .
+   * Decreases the quantity of grocery by name.
+   * If the quantity after the decreasing operation is 0
+   * it calls the removeGrocery with grocery name to remove.
+   *
+   * @param inputName The name of the grocery to search for.
+   * @param quantity The quantity to decrease grocery quantity with.
    */
-  public void decreaseQuantity(String name, float quantity) {
+  public void decreaseQuantity(String inputName, float quantity) {
     for (Grocery grocery : groceries) {
-      if (grocery.getName().equals(name)) {
+      if (grocery.getName().equals(inputName)) {
         if (grocery.getQuantity() - quantity <= 0) {
           System.out.print("After decreasing quantity there was nothing left of the grocery!");
-          removeGrocery(name);
+          removeGrocery(inputName);
           return;
         }
         grocery.decreaseQuantity(quantity);
-        System.out.printf("%s decrease in quantity.%n", name);
+        System.out.printf("%s decrease in quantity.%n", inputName);
         return;
       }
     }
   }
 
   /**
-   * .
+   * Prints a list of grocery items that have an expiration date before the specified date.
+   * If no groceries with expiration date before inputDate prints no groceries exist.
+   * Printed in ascending order by date.
+   *
+   * @param inputDate The date to check against the expiration date of the grocery item.
    */
   public void bestBeforeDate(LocalDate inputDate) {
     if (groceries.stream()
@@ -146,7 +163,8 @@ public class Fridge {
   }
 
   /**
-   * .
+   * Printing all groceries in fridge in table.
+   * If there is no groceries it prints error message to user.
    */
   public void printFridgeContent() {
     if (groceries.isEmpty()) {
@@ -160,7 +178,7 @@ public class Fridge {
   }
 
   /**
-   * .
+   * Printing header for grocery content table.
    */
   private String printFridgeHeader() {
     return String.format("+---------------------------------------------------------------+%n")
@@ -171,7 +189,7 @@ public class Fridge {
   }
 
   /**
-   * Clearing the console.
+   * Clears the console.
    */
   private static void clearConsole() {
     System.out.print("\033[H\033[2J");
