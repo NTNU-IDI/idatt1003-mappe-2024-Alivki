@@ -22,6 +22,13 @@ public class Fridge {
   }
 
   /**
+   * .
+   */
+  public List<Grocery> getGroceries() {
+    return groceries;
+  }
+
+  /**
    * Adds a grocery item to the list.
    * If it is an existing grocery it will call the grocery.increaseQuantity
    * method to increase its quantity. If it is a new item it will be added to
@@ -43,7 +50,7 @@ public class Fridge {
     }
 
     for (Grocery grocery : groceries) {
-      if (grocery.getName().equals(name)) {
+      if (grocery.getName().equalsIgnoreCase(name)) {
         grocery.increaseQuantity(quantity);
         System.out.printf(
             "%nGrocery is all ready in fridge. Increased the quantity of the grocery!%n");
@@ -92,7 +99,7 @@ public class Fridge {
    */
   public void removeGrocery(String inputName) {
     for (Grocery grocery : groceries) {
-      if (grocery.getName().equals(inputName)) {
+      if (grocery.getName().equalsIgnoreCase(inputName)) {
         groceries.remove(grocery);
         System.out.printf("%n%s was removed.%n", inputName);
         return;
@@ -108,7 +115,7 @@ public class Fridge {
    */
   public void increaseQuantity(String inputName, float quantity) {
     for (Grocery grocery : groceries) {
-      if (grocery.getName().equals(inputName)) {
+      if (grocery.getName().equalsIgnoreCase(inputName)) {
         grocery.increaseQuantity(quantity);
         System.out.printf("%n%s increase in quantity.%n", inputName);
         return;
@@ -126,7 +133,7 @@ public class Fridge {
    */
   public void decreaseQuantity(String inputName, float quantity) {
     for (Grocery grocery : groceries) {
-      if (grocery.getName().equals(inputName)) {
+      if (grocery.getName().equalsIgnoreCase(inputName)) {
         if (grocery.getQuantity() - quantity <= 0) {
           System.out.print("After decreasing quantity there was nothing left of the grocery!");
           removeGrocery(inputName);
