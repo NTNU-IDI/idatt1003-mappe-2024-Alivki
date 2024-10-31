@@ -125,7 +125,7 @@ public class Grocery {
       throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
     }
 
-    this.quantity = roundIfStk(quantity, unit);
+    this.quantity += roundIfStk(quantity, unit);
   }
 
   /**
@@ -139,7 +139,7 @@ public class Grocery {
       throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
     }
 
-    this.quantity = roundIfStk(quantity, unit);
+    this.quantity -= roundIfStk(quantity, unit);
   }
 
   /**

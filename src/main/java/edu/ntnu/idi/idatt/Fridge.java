@@ -68,6 +68,11 @@ public class Fridge {
    */
   public void findGrocery(String inputName) {
     Grocery foundGrocery = groceryExist(inputName);
+    if (foundGrocery == null) {
+      System.out.printf("You do not have %s in the fridge", inputName);
+      return;
+    }
+
     System.out.print(printFridgeHeader());
     System.out.print(foundGrocery);
     System.out.format("+--------------+-----------+-----------------+------------------+%n");
@@ -79,7 +84,13 @@ public class Fridge {
    * @param inputName The name of the grocery to search for.
    */
   public void removeGrocery(String inputName) {
-    groceries.remove(groceryExist(inputName));
+    Grocery foundGrocery = groceryExist(inputName);
+    if (foundGrocery == null) {
+      System.out.printf("You do not have %s in the fridge", inputName);
+      return;
+    }
+
+    groceries.remove(foundGrocery);
     System.out.printf("%n%s was removed.%n", inputName);
   }
 
@@ -90,7 +101,13 @@ public class Fridge {
    * @param quantity The quantity to increase grocery quantity with.
    */
   public void increaseQuantity(String inputName, float quantity) {
-    groceryExist(inputName).increaseQuantity(quantity);
+    Grocery foundGrocery = groceryExist(inputName);
+    if (foundGrocery == null) {
+      System.out.printf("You do not have %s in the fridge", inputName);
+      return;
+    }
+
+    foundGrocery.increaseQuantity(quantity);
     System.out.printf("%n%s increase in quantity.%n", inputName);
   }
 
@@ -103,10 +120,10 @@ public class Fridge {
    * @param quantity The quantity to decrease grocery quantity with.
    */
   public void decreaseQuantity(String inputName, float quantity) {
-    Grocery grocery = groceryExist((inputName));
+    Grocery foundGrocery = groceryExist(inputName);
 
-    if (grocery != null) {
-      if (grocery.getQuantity() - quantity <= 0) {
+    if (foundGrocery != null) {
+      if (foundGrocery.getQuantity() - quantity <= 0) {
         removeGrocery(inputName);
         System.out.print("After decreasing quantity there was nothing left of the grocery!");
         return;
@@ -164,7 +181,6 @@ public class Fridge {
         return grocery;
       }
     }
-    System.out.printf("you do not have %s in the fridge!", inputName);
     return null;
   }
 
