@@ -42,36 +42,22 @@ public class Fridge {
    */
   public void addGrocery(
       String name, String unit, float price, String expirationDate, float quantity) {
+    Grocery newGrocery = new Grocery(name, unit, price, expirationDate, quantity);
+
     if (groceries.isEmpty()) {
-      Grocery newGrocery = new Grocery(name, unit, price, expirationDate, quantity);
       groceries.add(newGrocery);
       System.out.printf("%s was successfully added!", name);
       return;
     }
 
-    for (Grocery grocery : groceries) {
-      if (grocery.getName().equalsIgnoreCase(name)) {
-        grocery.increaseQuantity(quantity);
-        System.out.printf(
-            "%nGrocery is all ready in fridge. Increased the quantity of the grocery!%n");
-        return;
-      }
+    if (groceryExist(name) != null) {
+      groceryExist(name).increaseQuantity(quantity);
+      System.out.printf(
+          "%nGrocery is all ready in fridge. Increased the quantity of the grocery!%n");
+      return;
     }
 
-    int low = 0;
-    int high = groceries.size();
-
-    while (low < high) {
-      int mid = (low + high) / 2;
-      if (groceries.get(mid).getName().compareTo(name) < 0) {
-        low = mid + 1;
-      } else {
-        high = mid;
-      }
-    }
-
-    Grocery newGrocery = new Grocery(name, unit, price, expirationDate, quantity);
-    groceries.add(low, newGrocery);
+    groceries.add(findIndex(name), newGrocery);
     System.out.printf("%n%s was successfully added!%n", name);
   }
 
@@ -81,15 +67,10 @@ public class Fridge {
    * @param inputName The name of the grocery to search for.
    */
   public void findGrocery(String inputName) {
-    for (Grocery grocery : groceries) {
-      if (grocery.getName().equalsIgnoreCase(inputName)) {
-        System.out.print(printFridgeHeader());
-        System.out.print(grocery);
-        System.out.format("+--------------+-----------+-----------------+------------------+%n");
-        return;
-      }
-    }
-    System.out.printf("%n%s not found!%n", inputName);
+    Grocery foundGrocery = groceryExist(inputName);
+    System.out.print(printFridgeHeader());
+    System.out.print(foundGrocery);
+    System.out.format("+--------------+-----------+-----------------+------------------+%n");
   }
 
   /**
@@ -98,13 +79,8 @@ public class Fridge {
    * @param inputName The name of the grocery to search for.
    */
   public void removeGrocery(String inputName) {
-    for (Grocery grocery : groceries) {
-      if (grocery.getName().equalsIgnoreCase(inputName)) {
-        groceries.remove(grocery);
-        System.out.printf("%n%s was removed.%n", inputName);
-        return;
-      }
-    }
+    groceries.remove(groceryExist(inputName));
+    System.out.printf("%n%s was removed.%n", inputName);
   }
 
   /**
@@ -114,13 +90,8 @@ public class Fridge {
    * @param quantity The quantity to increase grocery quantity with.
    */
   public void increaseQuantity(String inputName, float quantity) {
-    for (Grocery grocery : groceries) {
-      if (grocery.getName().equalsIgnoreCase(inputName)) {
-        grocery.increaseQuantity(quantity);
-        System.out.printf("%n%s increase in quantity.%n", inputName);
-        return;
-      }
-    }
+    groceryExist(inputName).increaseQuantity(quantity);
+    System.out.printf("%n%s increase in quantity.%n", inputName);
   }
 
   /**
@@ -132,17 +103,17 @@ public class Fridge {
    * @param quantity The quantity to decrease grocery quantity with.
    */
   public void decreaseQuantity(String inputName, float quantity) {
-    for (Grocery grocery : groceries) {
-      if (grocery.getName().equalsIgnoreCase(inputName)) {
-        if (grocery.getQuantity() - quantity <= 0) {
-          System.out.print("After decreasing quantity there was nothing left of the grocery!");
-          removeGrocery(inputName);
-          return;
-        }
-        grocery.decreaseQuantity(quantity);
-        System.out.printf("%s decrease in quantity.%n", inputName);
+    Grocery grocery = groceryExist((inputName));
+
+    if (grocery != null) {
+      if (grocery.getQuantity() - quantity <= 0) {
+        removeGrocery(inputName);
+        System.out.print("After decreasing quantity there was nothing left of the grocery!");
         return;
       }
+
+      decreaseQuantity(inputName, quantity);
+      System.out.printf("%s decrease in quantity.%n", inputName);
     }
   }
 
@@ -182,6 +153,40 @@ public class Fridge {
     System.out.print(printFridgeHeader());
     groceries.stream().map(Grocery::toString).forEach(System.out::print);
     System.out.format("+--------------+-----------+-----------------+------------------+%n");
+  }
+
+  /**
+   * .
+   */
+  public Grocery groceryExist(String inputName) {
+    for (Grocery grocery : groceries) {
+      if (grocery.getName().equalsIgnoreCase(inputName)) {
+        return grocery;
+      }
+    }
+    System.out.printf("you do not have %s in the fridge!", inputName);
+    return null;
+  }
+
+  /**
+   * .
+   *
+   * @return return index
+   */
+  public int findIndex(String inputName) {
+    int low = 0;
+    int high = groceries.size();
+
+    while (low < high) {
+      int mid = (low + high) / 2;
+      if (groceries.get(mid).getName().compareTo(inputName) < 0) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+
+    return low;
   }
 
   /**

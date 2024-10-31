@@ -64,22 +64,9 @@ public class Grocery {
     this.unit = unit.toUpperCase();
     this.price = price;
 
-    if (unit.equalsIgnoreCase("stk")) {
-      this.quantity = Math.round(quantity);
-    } else {
-      this.quantity = quantity;
-    }
+    this.quantity = roundIfStk(quantity, unit);
 
-    try {
-      LocalDate parsedDateInput =
-          LocalDate.parse(expirationDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-      if (parsedDateInput.isBefore(LocalDate.now())) {
-        throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
-      }
-      this.expirationDate = parsedDateInput;
-    } catch (DateTimeParseException e) {
-      throw new IllegalArgumentException("Invalid date format. Please use dd.MM.yyyy", e);
-    }
+    this.expirationDate = parseDateInput(expirationDate);
   }
 
   /**
@@ -138,11 +125,7 @@ public class Grocery {
       throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
     }
 
-    if (unit.equalsIgnoreCase("stk")) {
-      this.quantity += Math.round(quantity);
-    } else {
-      this.quantity += quantity;
-    }
+    this.quantity = roundIfStk(quantity, unit);
   }
 
   /**
@@ -156,11 +139,7 @@ public class Grocery {
       throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
     }
 
-    if (unit.equalsIgnoreCase("stk")) {
-      this.quantity -= Math.round(quantity);
-    } else {
-      this.quantity -= quantity;
-    }
+    this.quantity = roundIfStk(quantity, unit);
   }
 
   /**
@@ -184,5 +163,35 @@ public class Grocery {
         priceUnit,
         this.price,
         this.expirationDate);
+  }
+
+  /**
+   * .
+   */
+  private float roundIfStk(float quantity, String unit) {
+    if (unit.equalsIgnoreCase("stk")) {
+      return Math.round(quantity);
+    } else {
+      return quantity;
+    }
+  }
+
+  /**
+   * .
+   *
+   * @param inputExpirationDate expirationdate
+   * @return LocalDate
+   */
+  private LocalDate parseDateInput(String inputExpirationDate) {
+    try {
+      LocalDate parsedDateInput =
+          LocalDate.parse(inputExpirationDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+      if (parsedDateInput.isBefore(LocalDate.now())) {
+        throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
+      }
+      return parsedDateInput;
+    } catch (DateTimeParseException e) {
+      throw new IllegalArgumentException("Invalid date format. Please use dd.MM.yyyy", e);
+    }
   }
 }

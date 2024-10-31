@@ -5,12 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
+import jdk.jfr.Description;
+import jdk.jfr.Name;
 import org.junit.jupiter.api.Test;
 
 class GroceryTest {
   Grocery cheese = new Grocery("cheese", "kg", 100f, "01.01.2025", 1.2f);
 
   @Test
+  @Name("test Constructor Throws IllegalArgumentException When Name Is Null")
+  @Description("test")
   void testConstructorThrowsIllegalArgumentExceptionWhenNameIsNull() {
     assertThrows(IllegalArgumentException.class, () ->
         new Grocery(null, "kg", 100f, "01.01.2025", 1f)
