@@ -1,7 +1,9 @@
 package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Scanner;
+import javax.sound.midi.Receiver;
 
 /**
  * .
@@ -9,6 +11,7 @@ import java.util.Scanner;
 public class TextUserInterface {
   private Fridge fridge;
   private Scanner scanner;
+  public Recipe recipe;
 
   /**
    * .
@@ -23,6 +26,23 @@ public class TextUserInterface {
    */
   public void start() {
     addGrocery();
+    //testRecipe();
+  }
+
+  public void testRecipe() {
+    ArrayList<Grocery> test = new ArrayList<>();
+    ArrayList<Grocery> test1 = new ArrayList<>();
+    ArrayList<Grocery> test2 = new ArrayList<>();
+    test.add(new Grocery("cheese", "kg", 100, "23.11.2024", 1.4f));
+    test1.add(new Grocery("milk", "l", 50, "23.11.2024", 1.4f));
+    test2.add(new Grocery("cheese", "kg", 100, "23.11.2024", 1.4f));
+
+    recipe = new Recipe("Taco", "putt alt sammen", "test", test, 4);
+
+    recipe.addGroceries(test1);
+    recipe.removeGroceries(test2);
+
+    System.out.println(recipe.toString());
   }
 
   /**
@@ -39,7 +59,7 @@ public class TextUserInterface {
 
     //fridge.decreaseQuantity("cheese", 2.4f);
 
-    //fridge.findGrocery("cheese");
+    fridge.findGrocery("cheese");
 
     //ocalDate test = LocalDate.of(2026, 12, 31);
     //fridge.bestBeforeDate(test);
