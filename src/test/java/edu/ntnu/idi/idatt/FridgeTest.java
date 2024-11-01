@@ -2,8 +2,8 @@ package edu.ntnu.idi.idatt;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +21,9 @@ class FridgeTest {
 
   @Test
   void testAddGroceryNewItem() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    Grocery grocery =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(grocery);
     List<Grocery> groceries = fridge.getGroceries();
 
     assertEquals(1, groceries.size());
@@ -41,8 +43,12 @@ class FridgeTest {
 
   @Test
   void testAddTwoGroceryNewItems() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 2f);
-    fridge.addGrocery("milk", "l", 50f, "01.01.2025", 2);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    Grocery milk =
+        new Grocery("milk", "l", 50f, "01.01.2025", 2);
+    fridge.addGrocery(cheese);
+    fridge.addGrocery(milk);
     List<Grocery> groceries = fridge.getGroceries();
 
     assertEquals(2, groceries.size());
@@ -53,31 +59,37 @@ class FridgeTest {
 
   @Test
   void testAddGroceryExistingItem() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 1f);
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 1f);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
+    fridge.addGrocery(cheese);
     List<Grocery> groceries = fridge.getGroceries();
 
     assertEquals(1, groceries.size());
-    assertEquals(2, groceries.getFirst().getQuantity());
+    assertEquals(4, groceries.getFirst().getQuantity());
     assertNotEquals(2, groceries.size());
     assertNotEquals(1, groceries.getFirst().getQuantity());
   }
 
   @Test
   void testAddGroceryExistingItemStk() {
-    fridge.addGrocery("cheese", "stk", 100f, "01.01.2025", 1.2f);
-    fridge.addGrocery("cheese", "stk", 100f, "01.01.2025", 1.5f);
+    Grocery cheese =
+        new Grocery("cheese", "stk", 100f, "01.01.2025", 1.5f);
+    fridge.addGrocery(cheese);
+    fridge.addGrocery(cheese);
     List<Grocery> groceries = fridge.getGroceries();
 
     assertEquals(1, groceries.size());
-    assertEquals(3, groceries.getFirst().getQuantity());
+    assertEquals(4, groceries.getFirst().getQuantity());
     assertNotEquals(2, groceries.size());
     assertNotEquals(1, groceries.getFirst().getQuantity());
   }
 
   @Test
   void testRemoveGrocery() {
-    fridge.addGrocery("Cheese", "kg", 100f, "01.01.2025", 1f);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
     fridge.removeGrocery("Cheese");
     List<Grocery> groceries = fridge.getGroceries();
 
@@ -87,7 +99,9 @@ class FridgeTest {
 
   @Test
   void testRemoveNonExistingGrocery() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 1f);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
     fridge.removeGrocery("milk");
     List<Grocery> groceries = fridge.getGroceries();
 
@@ -99,7 +113,9 @@ class FridgeTest {
 
   @Test
   void testIncreaseQuantity() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
     fridge.increaseQuantity("cheese", 1f);
     List<Grocery> groceries = fridge.getGroceries();
 
@@ -109,17 +125,21 @@ class FridgeTest {
 
   @Test
   void testDecreaseQuantity() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 4);
-    fridge.decreaseQuantity("cheese", 2);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
+    fridge.decreaseQuantity("cheese", 1);
     List<Grocery> groceries = fridge.getGroceries();
 
-    assertEquals(2, groceries.getFirst().getQuantity());
+    assertEquals(1, groceries.getFirst().getQuantity());
     assertNotEquals(4, groceries.getFirst().getQuantity());
   }
 
   @Test
   void testDecreaseQuantityToZero() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 2.2f);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
     fridge.decreaseQuantity("cheese", 2.2f);
     List<Grocery> groceries = fridge.getGroceries();
 
@@ -129,7 +149,9 @@ class FridgeTest {
 
   @Test
   void testFindGrocery() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 3);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
     List<Grocery> groceries = fridge.getGroceries();
 
     assertDoesNotThrow(() -> {
@@ -150,12 +172,15 @@ class FridgeTest {
 
   @Test
   void testBestBeforeDate() {
-    fridge.addGrocery("cheese", "kg", 100f, "01.01.2025", 1f);
-    fridge.addGrocery("milk", "l", 50f, "01.01.2025", 1f);
-    LocalDate inputDate = LocalDate.of(2026, 1, 1);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
+    Grocery milk =
+        new Grocery("milk", "l", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(milk);
 
     assertDoesNotThrow(() -> {
-      fridge.bestBeforeDate(inputDate);
+      fridge.bestBeforeDate("01.01.2026");
     });
   }
 
@@ -168,7 +193,9 @@ class FridgeTest {
 
   @Test
   void testPrintFridgeContent() {
-    fridge.addGrocery("Bread", "stk", 1.00f, "01.01.2025", 1);
+    Grocery cheese =
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 2f);
+    fridge.addGrocery(cheese);
     assertDoesNotThrow(() -> {
       fridge.printFridgeContent();
     });

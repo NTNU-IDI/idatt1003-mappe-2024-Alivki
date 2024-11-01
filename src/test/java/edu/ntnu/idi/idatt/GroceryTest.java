@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import jdk.jfr.Description;
 import jdk.jfr.Name;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class GroceryTest {
 
   @Test
   void testConstructorThrowsIllegalArgumentExceptionWhenDateIsNull() {
-    assertThrows(IllegalArgumentException.class, () ->
+    assertThrows(NullPointerException.class, () ->
         new Grocery("cheese", "kg", 100f, null, 1f)
     );
   }
@@ -66,13 +67,13 @@ class GroceryTest {
   @Test
   void testConstructorThrowsIllegalArgumentExceptionWhenQuantityIsAbove1000() {
     assertThrows(IllegalArgumentException.class, () ->
-        new Grocery("cheese", "kg", 100f, "01.01.2025", 1001f)
+        new Grocery("cheese", "kg", 100f, "01.01.2025", 10001f)
     );
   }
 
   @Test
   void testConstructorThrowsIllegalArgumentExceptionWhenExpirationDateIsInvalid() {
-    assertThrows(IllegalArgumentException.class, () ->
+    assertThrows(DateTimeParseException.class, () ->
         new Grocery("cheese", "kg", 100f, "invalid", 1f)
     );
   }
@@ -153,9 +154,9 @@ class GroceryTest {
   }
 
   @Test
-  void testIncreaseQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsAbove1000() {
+  void testIncreaseQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsAbove10000() {
     assertThrows(IllegalArgumentException.class, () ->
-        cheese.increaseQuantity(1001f)
+        cheese.increaseQuantity(10001f)
     );
   }
 
@@ -198,9 +199,9 @@ class GroceryTest {
   }
 
   @Test
-  void testDecreaseQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsAbove1000() {
+  void testDecreaseQuantityThrowsIllegalArgumentExceptionWhenNewQuantityIsAbove10000() {
     assertThrows(IllegalArgumentException.class, () ->
-        cheese.decreaseQuantity(1001f)
+        cheese.decreaseQuantity(10001f)
     );
   }
 

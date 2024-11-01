@@ -55,7 +55,7 @@ public class TextUserInterface {
     String name2 = scanner.nextLine();
 
     try {
-      Grocery grocery = new Grocery(name1, "l", 1.2f, "23.11.2024", 100f);
+      Grocery grocery = new Grocery(name1, "l", 1.2f, "sfd", 100f);
       fridge.addGrocery(grocery);
       Grocery grocery1 = new Grocery(name2, "l", 100f, "23.11.2024", 1f);
       fridge.addGrocery(grocery1);
@@ -64,26 +64,8 @@ public class TextUserInterface {
         System.err.print("Invalid date format, please use dd.MM.yyyy");
         return;
       }
-      System.out.print(e.getMessage());
+      System.err.print(e.getMessage());
     }
-
-    //fridge.addGrocery(name1, "l", 110f, "28.11.2025", 1.2f);
-    //fridge.addGrocery(name2, "stk", 110f, "28.11.2024", 1.2f);
-    fridge.printGrocery(name1);
-    fridge.printFridgeContent();
-    fridge.decreaseQuantity(name1, 100f);
-    fridge.increaseQuantity(name2, 2f);
-    fridge.removeGrocery(name2);
-    fridge.addGrocery(new Grocery("test", "l", 10f, "23.11.2024", 20f));
-    fridge.bestBeforeDate("23.11.2025");
-
-
-    //fridge.decreaseQuantity("cheese", 2.4f);
-
-    //fridge.findGrocery("cheese");
-
-    //ocalDate test = LocalDate.of(2026, 12, 31);
-    //fridge.bestBeforeDate(test);
   }
 
   /**
