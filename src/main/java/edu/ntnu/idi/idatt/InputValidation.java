@@ -1,35 +1,33 @@
 package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 /**
  * .
  */
 public class InputValidation {
-  /**
-   * .
-   *
-   * @param input string
-   * @return boolean
-   */
-  public boolean isNotEmpty(String input) {
-    return input != null && !input.trim().isEmpty();
-  }
 
   /**
    * .
    *
    * @param input string
-   * @return boolean
+   * @throws IllegalArgumentException If string parameters is null.
    */
-  public boolean isValidInteger(String input) {
-    try {
-      float value = Float.parseFloat(input);
-      return value > 0 && value < 10000;
-    } catch (NumberFormatException e) {
-      return false;
+  public static void isNotEmpty(String input) throws IllegalArgumentException {
+    if (input == null || input.isEmpty() || input.trim().isEmpty()) {
+      throw new IllegalArgumentException("Grocery info can not be empty!");
+    }
+  }
+
+  /**
+   * .
+   *
+   * @param input float
+   * @throws IllegalArgumentException If input is negative or over 10000.
+   */
+  public static void isValidFloat(Float input) {
+    if (input < 0 || input > 10000) {
+      throw new IllegalArgumentException("Price or quantity has to be between 0 and 10000");
     }
   }
 
@@ -37,28 +35,23 @@ public class InputValidation {
    * .
    *
    * @param input string
-   * @return boolean
+   * @throws IllegalArgumentException If name is over 32 characters long.
    */
-  public boolean nameUnder32Char(String input) {
-    return input.length() <= 32;
+  public static void nameUnder32Char(String input) {
+    if (input.length() > 32) {
+      throw new IllegalArgumentException("The name has to be under 32 character!");
+    }
   }
 
   /**
    * .
    *
    * @param input local date
-   * @return boolean
+   * @throws IllegalArgumentException If expiration date is in the past.
    */
-  public static boolean parseExpirationDate(String input) {
-    try {
-      LocalDate parsedDateInput =
-          LocalDate.parse(input, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-      if (parsedDateInput.isBefore(LocalDate.now())) {
-        throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
-      }
-      return true;
-    } catch (DateTimeParseException e) {
-      throw new IllegalArgumentException("Invalid date format. Please use dd.MM.yyyy", e);
+  public static void isValidDate(LocalDate input) {
+    if (input.isBefore(LocalDate.now())) {
+      throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
     }
   }
 }

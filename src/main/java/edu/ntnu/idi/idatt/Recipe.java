@@ -18,11 +18,11 @@ public class Recipe {
   /**
    * .
    *
-   * @param name name
-   * @param description description
-   * @param procedure procedure
+   * @param name         name
+   * @param description  description
+   * @param procedure    procedure
    * @param newGroceries groceries
-   * @param servings servings
+   * @param servings     servings
    */
   public Recipe(
       String name, String description, String procedure,
@@ -125,9 +125,9 @@ public class Recipe {
    */
   @Override
   public String toString() {
-   //StringBuilder string = new StringBuilder();
+    //StringBuilder string = new StringBuilder();
 
-   //groceries.forEach(string.append(Grocery.getName()));
+    //groceries.forEach(string.append(Grocery.getName()));
     return "test";
   }
 }

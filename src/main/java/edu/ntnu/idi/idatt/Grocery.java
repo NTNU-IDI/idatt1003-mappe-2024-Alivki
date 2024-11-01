@@ -2,7 +2,7 @@ package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.util.Objects;
 
 /**
  * Represents a grocery item with its details and operations.
@@ -26,39 +26,21 @@ public class Grocery {
    *                       Only day, month and year variables.
    * @param quantity       Total quantity of the grocery.
    *                       Float because we need precision when measuring the grocery.
-   * @throws IllegalArgumentException If string parameters is null.
-   * @throws IllegalArgumentException If float values are negative.
-   * @throws IllegalArgumentException If name is over 32 characters long.
-   * @throws IllegalArgumentException If price is above 10000.
-   * @throws IllegalArgumentException If quantity is above 1000.
-   * @throws IllegalArgumentException If try block throws DateTimeParseException, wrong format.
-   * @throws IllegalArgumentException If expiration date is in the past.
    */
   public Grocery(String name, String unit, float price, String expirationDate, float quantity)
       throws IllegalArgumentException {
-    if (name == null || unit == null || expirationDate == null) {
-      throw new IllegalArgumentException("Grocery info can not be null");
-    }
+    LocalDate parsedDateInput =
+        LocalDate.parse(expirationDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    InputValidation.isValidDate(parsedDateInput);
 
-    if (name.isEmpty() || unit.isEmpty() || expirationDate.isEmpty()) {
-      throw new IllegalArgumentException("Grocery info can not be null");
-    }
+    InputValidation.isNotEmpty(name);
+    InputValidation.isNotEmpty(unit);
+    InputValidation.isNotEmpty(expirationDate);
 
-    if (price < 0 || quantity < 0) {
-      throw new IllegalArgumentException("The price or quantity can not be negative");
-    }
+    InputValidation.nameUnder32Char(name);
 
-    if (name.length() > 32) {
-      throw new IllegalArgumentException("The name can not be above 32 characters");
-    }
-
-    if (price > 10000) {
-      throw new IllegalArgumentException("The price can not be above 10000 characters");
-    }
-
-    if (quantity > 1000) {
-      throw new IllegalArgumentException("The quantity can not be above 1000 characters");
-    }
+    InputValidation.isValidFloat(price);
+    InputValidation.isValidFloat(quantity);
 
     this.name = name;
     this.unit = unit.toUpperCase();
@@ -66,7 +48,7 @@ public class Grocery {
 
     this.quantity = roundIfStk(quantity, unit);
 
-    this.expirationDate = parseDateInput(expirationDate);
+    this.expirationDate = parsedDateInput;
   }
 
   /**
@@ -121,9 +103,7 @@ public class Grocery {
    * @throws IllegalArgumentException If the quantity is negative or above 1000.
    */
   public void increaseQuantity(float quantity) throws IllegalArgumentException {
-    if (quantity < 0 || quantity > 1000) {
-      throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
-    }
+    InputValidation.isValidFloat(quantity);
 
     this.quantity += roundIfStk(quantity, unit);
   }
@@ -135,9 +115,7 @@ public class Grocery {
    * @throws IllegalArgumentException If the quantity is negative or above 1000.
    */
   public void decreaseQuantity(float quantity) throws IllegalArgumentException {
-    if (quantity < 0 || quantity > 1000) {
-      throw new IllegalArgumentException("Quantity has to be above 0 or under 1000");
-    }
+    InputValidation.isValidFloat(quantity);
 
     this.quantity -= roundIfStk(quantity, unit);
   }
@@ -151,18 +129,46 @@ public class Grocery {
    */
   @Override
   public String toString() {
-    String names = this.name;
+    String outputName = this.name;
     if (this.name.length() > 10) {
-      names = name.substring(0, 10) + "..";
+      outputName = name.substring(0, 10) + "..";
     }
 
     String priceUnit = String.format("%.2f%s", this.quantity, this.unit);
 
-    return String.format("| %-12s | %-8s  | %.2fkr        | %s       |%n",
-        names,
-        priceUnit,
-        this.price,
-        this.expirationDate);
+    return String.format("| %-12s | %-8s  | %.2fkr        | %s       |%n", outputName, priceUnit,
+        this.price, this.expirationDate);
+  }
+
+  /**
+   * .
+   *
+   * @param obj input grocery from the user
+   * @return boolean
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+
+    Grocery grocery = (Grocery) obj;
+
+    return Objects.equals(name, grocery.name);
+  }
+
+  /**
+   * .
+   *
+   * @return int hashcode
+   */
+  @Override
+  public int hashCode() {
+    return name.hashCode();
   }
 
   /**
@@ -173,25 +179,6 @@ public class Grocery {
       return Math.round(quantity);
     } else {
       return quantity;
-    }
-  }
-
-  /**
-   * .
-   *
-   * @param inputExpirationDate expirationdate
-   * @return LocalDate
-   */
-  private LocalDate parseDateInput(String inputExpirationDate) {
-    try {
-      LocalDate parsedDateInput =
-          LocalDate.parse(inputExpirationDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-      if (parsedDateInput.isBefore(LocalDate.now())) {
-        throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
-      }
-      return parsedDateInput;
-    } catch (DateTimeParseException e) {
-      throw new IllegalArgumentException("Invalid date format. Please use dd.MM.yyyy", e);
     }
   }
 }

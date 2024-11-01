@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.sound.midi.Receiver;
@@ -53,13 +54,33 @@ public class TextUserInterface {
     String name1 = scanner.nextLine();
     String name2 = scanner.nextLine();
 
-    fridge.addGrocery(name1, "l", 110f, "28.11.2025", 1.2f);
-    fridge.addGrocery(name2, "stk", 110f, "28.11.2024", 1.2f);
-    printGroceries();
+    try {
+      Grocery grocery = new Grocery(name1, "l", 1.2f, "23.11.2024", 100f);
+      fridge.addGrocery(grocery);
+      Grocery grocery1 = new Grocery(name2, "l", 100f, "23.11.2024", 1f);
+      fridge.addGrocery(grocery1);
+    } catch (IllegalArgumentException | DateTimeParseException e) {
+      if (e instanceof DateTimeParseException) {
+        System.err.print("Invalid date format, please use dd.MM.yyyy");
+        return;
+      }
+      System.out.print(e.getMessage());
+    }
+
+    //fridge.addGrocery(name1, "l", 110f, "28.11.2025", 1.2f);
+    //fridge.addGrocery(name2, "stk", 110f, "28.11.2024", 1.2f);
+    fridge.printGrocery(name1);
+    fridge.printFridgeContent();
+    fridge.decreaseQuantity(name1, 100f);
+    fridge.increaseQuantity(name2, 2f);
+    fridge.removeGrocery(name2);
+    fridge.addGrocery(new Grocery("test", "l", 10f, "23.11.2024", 20f));
+    fridge.bestBeforeDate("23.11.2025");
+
 
     //fridge.decreaseQuantity("cheese", 2.4f);
 
-    fridge.findGrocery("cheese");
+    //fridge.findGrocery("cheese");
 
     //ocalDate test = LocalDate.of(2026, 12, 31);
     //fridge.bestBeforeDate(test);
