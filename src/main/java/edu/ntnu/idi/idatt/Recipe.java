@@ -148,9 +148,9 @@ public class Recipe {
     //return String.format("%s%n %s%n Number of servings: %s%n%n %s%n%n Ingredients:%n%s",
     //    name, description, servings, procedure, string);
 
-    string.append(printTest());
+    string.append(printRecipeHeader());
     string.append(printTest1(groceries, description, servings, procedure));
-    string.append("+--------------+-----------+-----------------+------------------+\n");
+    string.append("+----------------+------------------------------------------+\n");
 
     return string.toString();
   }
@@ -158,23 +158,33 @@ public class Recipe {
   /**
    * .
    */
-  public String printTest() {
-    return String.format("+---------------------------------------------------------------+%n")
-        + String.format("|                           Recipe                              |%n")
-        + String.format("+---------------------------------------------------------------+%n");
+  public String printRecipeHeader() {
+    int totalWidth = 61;
+    int leftPadding = (totalWidth - 2 - name.length()) / 2;
+    int rightPadding = (totalWidth - 2 - name.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
+
+    return String.format("+-----------------------------------------------------------+%n")
+        + String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", name, "")
+        + String.format("+----------------+------------------------------------------+%n");
   }
 
-  public String printTest1(Map<Integer, Grocery> groceriesss, String description, int servings,
+  public String printTest1(Map<Integer, Grocery> groceries, String description, int servings,
                            String procedure) {
     StringBuilder string = new StringBuilder();
 
-    String[] descriptionSplit = description.split("(?<=\\G.{20})");
-    String[] procedureSplit = procedure.split("(?<=\\G.{20})");
+    String[] descriptionSplit = description.split("(?<=\\G.{40})");
+    String[] procedureSplit = procedure.split("(?<=\\G.{40})");
 
     ArrayList<String> groceryCol = new ArrayList<>();
+    groceryCol.add("Ingredients:");
     ArrayList<String> infoCol = new ArrayList<>();
 
-    int numberOfRows = descriptionSplit.length + procedureSplit.length + 2;
+    int numberOfRows;
+    if (groceries.size() > descriptionSplit.length + procedureSplit.length + 2) {
+      numberOfRows = groceries.size() + 1;
+    } else {
+      numberOfRows = descriptionSplit.length + procedureSplit.length + 2;
+    }
 
     for (int i = 0; i < numberOfRows; i++) {
       if (i < descriptionSplit.length) {
@@ -182,25 +192,28 @@ public class Recipe {
       } else if (i == descriptionSplit.length) {
         infoCol.add(String.format("Number of servings: %d", servings));
       } else if (i == descriptionSplit.length + 1) {
-        infoCol.add("------------------");
-      } else if (i > descriptionSplit.length + 2
+        infoCol.add("-".repeat(40));
+      } else if (i >= descriptionSplit.length + 2
           && i < descriptionSplit.length + procedureSplit.length + 2) {
-        infoCol.add(procedureSplit[i - (descriptionSplit.length + 4)]);
-      } else if (i > descriptionSplit.length + procedureSplit.length + 2) {
+        infoCol.add(procedureSplit[i - (descriptionSplit.length + 2)]);
+      } else {
         infoCol.add(" ");
       }
     }
 
-    for (int i = 0; i < numberOfRows; i++) {
-      if (i < groceriesss.size()) {
-        groceryCol.add(groceriesss.get(i).getName());
-      } else {
-        groceryCol.add(" ");
+    int i = 0;
+    for (Map.Entry<Integer, Grocery> entry : groceries.entrySet()) {
+      if (i < numberOfRows) {
+        groceryCol.add(entry.getValue().getName());
       }
+      i++;
+    }
+    while (groceryCol.size() < numberOfRows) {
+      groceryCol.add(" ");
     }
 
-    for (int i = 0; i < numberOfRows; i++) {
-      string.append(String.format("| %-14s | %-12s |%n", groceryCol.get(i), infoCol.get(i)));
+    for (int j = 0; j < numberOfRows; j++) {
+      string.append(String.format("| %-14s | %-40s |%n", groceryCol.get(j), infoCol.get(j)));
     }
 
     return string.toString();
