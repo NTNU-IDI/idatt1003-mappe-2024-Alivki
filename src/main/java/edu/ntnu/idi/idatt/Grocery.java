@@ -136,8 +136,8 @@ public class Grocery {
 
     String priceUnit = String.format("%.2f%s", this.quantity, this.unit);
 
-    return String.format("| %-12s | %-8s  | %.2fkr        | %s       |%n", outputName, priceUnit,
-        this.price, this.expirationDate);
+    return String.format("| %-12s | %-8s  | %.2f%-12s        | %s       |%n", outputName, priceUnit,
+        this.price, "kr", this.expirationDate);
   }
 
   /**

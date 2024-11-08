@@ -201,24 +201,25 @@ public class Fridge {
   }
 
   /**
-   * .
+   * Made my own binary search because it was fun. And so I did not have to make a list
+   * for the built-in Collections.binarySearch that needs a list of names and the search term.
    *
    * @return return index
    */
   public int findIndex(Grocery inputGrocery) {
-    int low = 0;
-    int high = groceries.size();
+    int left = 0;
+    int right = groceries.size();
 
-    while (low < high) {
-      int mid = (low + high) / 2;
+    while (left < right) {
+      int mid = (left + right) / 2;
       if (groceries.get(mid).getName().compareTo(inputGrocery.getName()) < 0) {
-        low = mid + 1;
+        left = mid + 1;
       } else {
-        high = mid;
+        right = mid;
       }
     }
 
-    return low;
+    return left;
   }
 
   /**
