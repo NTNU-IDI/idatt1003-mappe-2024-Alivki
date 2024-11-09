@@ -29,16 +29,17 @@ public class Recipe {
       List<Grocery> newGroceries, int servings) {
     this.groceries = new HashMap<>();
 
+    InputValidation.isNotEmpty(name);
+    InputValidation.isNotEmpty(description);
+    InputValidation.isNotEmpty(procedure);
+    InputValidation.isValidInteger(servings);
+
     this.name = name;
     this.description = description;
     this.procedure = procedure;
     this.servings = servings;
 
     addGroceries(newGroceries);
-    //int key = 0;
-    //for (Grocery grocery : newGroceries) {
-    //  this.groceries.put(key + 1, grocery);
-    //}
   }
 
   /**
@@ -181,45 +182,45 @@ public class Recipe {
    * @return string
    */
   public String calculateRecipeBody(Map<Integer, Grocery> groceries, String description,
-                                    int servings,
-                                    String procedure) {
+                                    int servings, String procedure) {
     StringBuilder string = new StringBuilder();
 
     String[] descriptionSplit = description.split("(?<=\\G.{40})");
     String[] procedureSplit = procedure.split("(?<=\\G.{40})");
 
-    ArrayList<String> groceryCol = new ArrayList<>();
-    groceryCol.add("Ingredients:");
-    ArrayList<String> infoCol = new ArrayList<>();
-
     int numberOfRows =
         Math.max(groceries.size() + 3, descriptionSplit.length + procedureSplit.length + 2);
 
-    for (int i = 0; i < numberOfRows; i++) {
-      if (i < descriptionSplit.length) {
-        infoCol.add(descriptionSplit[i]);
-      } else if (i == descriptionSplit.length) {
-        infoCol.add(String.format("Number of servings: %d", servings));
-      } else if (i == descriptionSplit.length + 1) {
-        infoCol.add("-".repeat(40));
-      } else if (i >= descriptionSplit.length + 2
-          && i < descriptionSplit.length + procedureSplit.length + 2) {
-        infoCol.add(procedureSplit[i - (descriptionSplit.length + 2)]);
-      } else {
-        infoCol.add(" ");
-      }
+    ArrayList<String> groceryColum = calculateGroceryColum(numberOfRows);
+    ArrayList<String> infoColum =
+        calculateDescriptionColum(descriptionSplit, procedureSplit, numberOfRows);
+
+    for (int j = 0; j < numberOfRows; j++) {
+      string.append(String.format("| %-17s | %-40s |%n", groceryColum.get(j), infoColum.get(j)));
     }
+
+    return string.toString();
+  }
+
+  /**
+   * .
+   *
+   * @param numberOfRows tes
+   * @return test
+   */
+  private ArrayList<String> calculateGroceryColum(int numberOfRows) {
+    ArrayList<String> groceryColum = new ArrayList<>();
+
+    groceryColum.add("Ingredients:");
 
     int i = 0;
     for (Map.Entry<Integer, Grocery> entry : groceries.entrySet()) {
-      String outputName = entry.getValue().getName();
-
-      if (entry.getValue().getName().length() > 10) {
-        outputName = outputName.substring(0, 8) + "..";
-      }
+      String outputName =
+          entry.getValue().getName().length() > 10 ? shotenName(entry.getValue().getName()) :
+              entry.getValue().getName();
 
       if (i < numberOfRows) {
-        groceryCol.add(String.format("%-10s%5.2f%s",
+        groceryColum.add(String.format("%-10s%5.2f%s",
             outputName,
             entry.getValue().getQuantity(),
             entry.getValue().getUnit()));
@@ -227,21 +228,57 @@ public class Recipe {
       i++;
     }
 
-    while (groceryCol.size() < numberOfRows - 1) {
-      groceryCol.add(" ");
+    while (groceryColum.size() < numberOfRows - 1) {
+      groceryColum.add(" ");
     }
 
-    if (groceryCol.size() == numberOfRows - 1) {
+    if (groceryColum.size() == numberOfRows - 1) {
       double totalPrice = groceries.values().stream()
           .mapToDouble(Grocery::getPrice)
           .reduce(0.0f, Double::sum);
-      groceryCol.add(String.format("Price %.1fkr", totalPrice));
+      groceryColum.add(String.format("Price %.1fkr", totalPrice));
     }
 
-    for (int j = 0; j < numberOfRows; j++) {
-      string.append(String.format("| %-17s | %-40s |%n", groceryCol.get(j), infoCol.get(j)));
+    return groceryColum;
+  }
+
+  /**
+   * .
+   *
+   * @param descriptionSplit fes
+   * @param procedureSplit   sef
+   * @param numberOfRows     fes
+   * @return fes
+   */
+  private ArrayList<String> calculateDescriptionColum(String[] descriptionSplit,
+                                                      String[] procedureSplit, int numberOfRows) {
+    ArrayList<String> infoColum = new ArrayList<>();
+
+    for (int i = 0; i < numberOfRows; i++) {
+      if (i < descriptionSplit.length) {
+        infoColum.add(descriptionSplit[i]);
+      } else if (i == descriptionSplit.length) {
+        infoColum.add(String.format("Number of servings: %d", servings));
+      } else if (i == descriptionSplit.length + 1) {
+        infoColum.add("-".repeat(40));
+      } else if (i >= descriptionSplit.length + 2
+          && i < descriptionSplit.length + procedureSplit.length + 2) {
+        infoColum.add(procedureSplit[i - (descriptionSplit.length + 2)]);
+      } else {
+        infoColum.add(" ");
+      }
     }
 
-    return string.toString();
+    return infoColum;
+  }
+
+  /**
+   * .
+   *
+   * @param inputName awd
+   * @return awd
+   */
+  private String shotenName(String inputName) {
+    return inputName.substring(0, 8) + "..";
   }
 }

@@ -34,6 +34,18 @@ public class InputValidation {
   /**
    * .
    *
+   * @param input int
+   * @throws IllegalArgumentException If input is negative or over 10000.
+   */
+  public static void isValidInteger(int input) {
+    if (input < 0 || input > 100) {
+      throw new IllegalArgumentException("Servings has to be between 0 and 100");
+    }
+  }
+
+  /**
+   * .
+   *
    * @param input string
    * @throws IllegalArgumentException If name is over 32 characters long.
    */
