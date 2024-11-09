@@ -134,6 +134,29 @@ public class Recipe {
 
   /**
    * .
+   */
+  public String printRecipeHeader() {
+    String inputName = name;
+    int leftPadding;
+    int rightPadding;
+    int totalWidth = 64;
+
+    if (inputName.length() > 57) {
+      inputName = inputName.substring(0, 57) + "...";
+      leftPadding = 1;
+      rightPadding = 1;
+    } else {
+      leftPadding = (totalWidth - 2 - inputName.length()) / 2;
+      rightPadding = (totalWidth - 2 - inputName.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
+    }
+
+    return String.format("+--------------------------------------------------------------+%n")
+        + String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputName, "")
+        + String.format("+-------------------+------------------------------------------+%n");
+  }
+
+  /**
+   * .
    *
    * @return string test
    */
@@ -150,22 +173,9 @@ public class Recipe {
 
     string.append(printRecipeHeader());
     string.append(printTest1(groceries, description, servings, procedure));
-    string.append("+----------------+------------------------------------------+\n");
+    string.append("+-------------------+------------------------------------------+\n");
 
     return string.toString();
-  }
-
-  /**
-   * .
-   */
-  public String printRecipeHeader() {
-    int totalWidth = 61;
-    int leftPadding = (totalWidth - 2 - name.length()) / 2;
-    int rightPadding = (totalWidth - 2 - name.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
-
-    return String.format("+-----------------------------------------------------------+%n")
-        + String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", name, "")
-        + String.format("+----------------+------------------------------------------+%n");
   }
 
   public String printTest1(Map<Integer, Grocery> groceries, String description, int servings,
@@ -180,8 +190,8 @@ public class Recipe {
     ArrayList<String> infoCol = new ArrayList<>();
 
     int numberOfRows;
-    if (groceries.size() > descriptionSplit.length + procedureSplit.length + 2) {
-      numberOfRows = groceries.size() + 1;
+    if (groceries.size() + 3 > descriptionSplit.length + procedureSplit.length + 2) {
+      numberOfRows = groceries.size() + 3;
     } else {
       numberOfRows = descriptionSplit.length + procedureSplit.length + 2;
     }
@@ -203,17 +213,34 @@ public class Recipe {
 
     int i = 0;
     for (Map.Entry<Integer, Grocery> entry : groceries.entrySet()) {
+      String outputName = entry.getValue().getName();
+
+      if (entry.getValue().getName().length() > 10) {
+        outputName = outputName.substring(0, 8) + "..";
+      }
+
       if (i < numberOfRows) {
-        groceryCol.add(entry.getValue().getName());
+        groceryCol.add(String.format("%-10s%5.2f%s",
+            outputName,
+            entry.getValue().getQuantity(),
+            entry.getValue().getUnit()));
       }
       i++;
     }
-    while (groceryCol.size() < numberOfRows) {
+
+    while (groceryCol.size() < numberOfRows - 1) {
       groceryCol.add(" ");
     }
 
+    if (groceryCol.size() == numberOfRows - 1) {
+      double totalPrice = groceries.values().stream()
+          .mapToDouble(Grocery::getPrice)
+          .reduce(0.0f, Double::sum);
+      groceryCol.add(String.format("Price %.1fkr", totalPrice));
+    }
+
     for (int j = 0; j < numberOfRows; j++) {
-      string.append(String.format("| %-14s | %-40s |%n", groceryCol.get(j), infoCol.get(j)));
+      string.append(String.format("| %-17s | %-40s |%n", groceryCol.get(j), infoCol.get(j)));
     }
 
     return string.toString();

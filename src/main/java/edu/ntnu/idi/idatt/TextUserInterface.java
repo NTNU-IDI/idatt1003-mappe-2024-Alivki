@@ -37,8 +37,11 @@ public class TextUserInterface {
     test.add(new Grocery("milk", "l", 50, "23.11.2024", 1.4f));
     test1.add(new Grocery("salsa", "l", 100, "23.11.2024", 0.2f));
     test1.add(new Grocery("test","kg",100,"23.11.2024", 4f));
+    test1.add(new Grocery("wow","kg",100,"23.11.2024", 4f));
+    test1.add(new Grocery("Dette er en vare","kg",100,"23.11.2024", 4f));test1.add(new Grocery("test","kg",100,"23.11.2024", 4f));
+    test1.add(new Grocery("øasdhf","kg",100,"23.11.2024", 4f));
 
-    recipe = new Recipe("Taco", "en meksikans rett", "putt alt sammen", test, 4);
+    recipe = new Recipe("Taco", "Taco er en maksikansk rett som Norge har gjort sin egen som alle Nordmenn spiser på freager!", "For å lage denne retten kutter du alle ingrediensene i biter. Steker kjøtt eller kyllig. Så legger man det alt i en lefse.", test, 4);
 
     recipe.addGroceries(test1);
     //recipe.removeGroceries(test2);
