@@ -134,8 +134,24 @@ public class Recipe {
 
   /**
    * .
+   *
+   * @return string test
    */
-  public String printRecipeHeader() {
+  @Override
+  public String toString() {
+    StringBuilder string = new StringBuilder();
+
+    string.append(calculateRecipeHeader());
+    string.append(calculateRecipeBody(groceries, description, servings, procedure));
+    string.append("+-------------------+------------------------------------------+\n");
+
+    return string.toString();
+  }
+
+  /**
+   * .
+   */
+  public String calculateRecipeHeader() {
     String inputName = name;
     int leftPadding;
     int rightPadding;
@@ -158,28 +174,15 @@ public class Recipe {
   /**
    * .
    *
-   * @return string test
+   * @param groceries   groceries
+   * @param description description
+   * @param servings    servings
+   * @param procedure   procedure
+   * @return string
    */
-  @Override
-  public String toString() {
-    StringBuilder string = new StringBuilder();
-
-    //groceries.forEach((k, v) ->
-    //        string.append(v.getName() + "\n")
-    //);
-
-    //return String.format("%s%n %s%n Number of servings: %s%n%n %s%n%n Ingredients:%n%s",
-    //    name, description, servings, procedure, string);
-
-    string.append(printRecipeHeader());
-    string.append(printTest1(groceries, description, servings, procedure));
-    string.append("+-------------------+------------------------------------------+\n");
-
-    return string.toString();
-  }
-
-  public String printTest1(Map<Integer, Grocery> groceries, String description, int servings,
-                           String procedure) {
+  public String calculateRecipeBody(Map<Integer, Grocery> groceries, String description,
+                                    int servings,
+                                    String procedure) {
     StringBuilder string = new StringBuilder();
 
     String[] descriptionSplit = description.split("(?<=\\G.{40})");
@@ -189,12 +192,8 @@ public class Recipe {
     groceryCol.add("Ingredients:");
     ArrayList<String> infoCol = new ArrayList<>();
 
-    int numberOfRows;
-    if (groceries.size() + 3 > descriptionSplit.length + procedureSplit.length + 2) {
-      numberOfRows = groceries.size() + 3;
-    } else {
-      numberOfRows = descriptionSplit.length + procedureSplit.length + 2;
-    }
+    int numberOfRows =
+        Math.max(groceries.size() + 3, descriptionSplit.length + procedureSplit.length + 2);
 
     for (int i = 0; i < numberOfRows; i++) {
       if (i < descriptionSplit.length) {
