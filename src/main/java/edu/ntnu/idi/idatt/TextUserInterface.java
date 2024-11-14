@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import javax.sound.midi.Receiver;
 
@@ -27,11 +28,33 @@ public class TextUserInterface {
    * .
    */
   public void start() {
-    addGrocery();
-    //testRecipe();
+    //addGrocery();
+    testRecipe();
   }
 
   public void testRecipe() {
+    HashMap<Grocery, Float> test = new HashMap<>();
+    Grocery test1 = new Grocery("Cheese", "kg", 0);
+    Grocery test2 = new Grocery("Milk", "L", 0);
+    float test1Quan = 2f;
+    float test2Quan = 1.5f;
+
+    test.put(test1, test1Quan);
+    test.put(test2, test2Quan);
+
+    String name = "taco";
+    String description = "Meksikans rett som norge har gjort sin egen";
+    String procedure = "Putt alt sammen på en lefse";
+    int servings = 4;
+
+    InputValidation.isNotEmpty(name);
+    InputValidation.isNotEmpty(description);
+    InputValidation.isNotEmpty(procedure);
+    InputValidation.isValidInteger(servings);
+
+    Recipe recipee = new Recipe(name, description, procedure, test, servings);
+
+    System.out.print(recipee);
   }
 
   /**

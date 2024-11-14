@@ -12,7 +12,7 @@ public class Recipe {
   private final String name;
   private final String description;
   private final String procedure;
-  private final Map<Integer, Grocery> groceries;
+  private final Map<Grocery, Float> groceries;
   private final int servings;
 
   /**
@@ -26,13 +26,8 @@ public class Recipe {
    */
   public Recipe(
       String name, String description, String procedure,
-      List<Grocery> newGroceries, int servings) {
+      Map<Grocery, Float> newGroceries, int servings) {
     this.groceries = new HashMap<>();
-
-    InputValidation.isNotEmpty(name);
-    InputValidation.isNotEmpty(description);
-    InputValidation.isNotEmpty(procedure);
-    InputValidation.isValidInteger(servings);
 
     this.name = name;
     this.description = description;
@@ -74,7 +69,7 @@ public class Recipe {
    *
    * @return groceries
    */
-  public Map<Integer, Grocery> getGroceries() {
+  public Map<Grocery, Float> getGroceries() {
     return groceries;
   }
 
@@ -90,46 +85,38 @@ public class Recipe {
   /**
    * .
    */
-  public void addGroceries(List<Grocery> newGroceries) {
+  public void addGroceries(Map<Grocery, Float> newGroceries) {
     if (groceries.isEmpty()) {
-      int key = 0;
-
-      for (Grocery grocery : newGroceries) {
-        this.groceries.put(key, grocery);
-        key += 1;
-      }
+      this.groceries.putAll(newGroceries);
 
       System.out.println("Recipe was successfully created!");
       return;
     }
 
-    for (Grocery grocery : newGroceries) {
-      if (groceries.containsValue(grocery)) {
+    newGroceries.forEach((grocery, quantity) -> {
+      if (groceries.containsKey(grocery)) {
         System.out.printf("%s is already in recipe!%n", grocery.getName());
       }
 
-      groceries.put(groceries.size(), grocery);
+      groceries.put(grocery, quantity);
       System.out.printf("%s was added to the recipe!%n", grocery.getName());
-    }
+    });
   }
 
   /**
    * .
    */
-  public void removeGroceries(List<Grocery> removeGroceries) {
-    for (Grocery grocery : removeGroceries) {
-      if (groceries.containsValue(grocery)) {
-        Integer key = groceries.entrySet().stream()
-            .filter(entry -> entry.getValue().getName().equalsIgnoreCase(grocery.getName()))
-            .map(Map.Entry::getKey).findFirst().orElse(null);
+  public void removeGroceries(List<String> removeGroceries) {
+    for (String groceryName : removeGroceries) {
+      groceries.forEach((grocery, quantity) -> {
+        if (grocery.getName().equalsIgnoreCase(groceryName)) {
+          groceries.remove(grocery);
 
-        groceries.remove(key, grocery);
+          System.out.printf("%s was removed from recipe!%n", grocery.getName());
+        }
+      });
 
-        System.out.printf("%s was removed from recipe!%n", grocery.getName());
-        return;
-      }
-
-      System.out.printf("%s is not in recipe!%n", grocery.getName());
+      System.out.printf("%s is not in recipe!%n", groceryName);
     }
   }
 
@@ -181,7 +168,7 @@ public class Recipe {
    * @param procedure   procedure
    * @return string
    */
-  public String calculateRecipeBody(Map<Integer, Grocery> groceries, String description,
+  public String calculateRecipeBody(Map<Grocery, Float> groceries, String description,
                                     int servings, String procedure) {
     StringBuilder string = new StringBuilder();
 
@@ -214,16 +201,16 @@ public class Recipe {
     groceryColum.add("Ingredients:");
 
     int i = 0;
-    for (Map.Entry<Integer, Grocery> entry : groceries.entrySet()) {
+    for (Map.Entry<Grocery, Float> entry : groceries.entrySet()) {
       String outputName =
-          entry.getValue().getName().length() > 10 ? shotenName(entry.getValue().getName()) :
-              entry.getValue().getName();
+          entry.getKey().getName().length() > 10 ? shotenName(entry.getKey().getName()) :
+              entry.getKey().getName();
 
       if (i < numberOfRows) {
         groceryColum.add(String.format("%-10s%5.2f%s",
             outputName,
-            2f,
-            entry.getValue().getUnit()));
+            entry.getValue(),
+            entry.getKey().getUnit()));
       }
       i++;
     }
@@ -233,7 +220,7 @@ public class Recipe {
     }
 
     if (groceryColum.size() == numberOfRows - 1) {
-      double totalPrice = groceries.values().stream()
+      double totalPrice = groceries.keySet().stream()
           .mapToDouble(Grocery::getPrice)
           .reduce(0.0f, Double::sum);
       groceryColum.add(String.format("Price %.1fkr", totalPrice));
