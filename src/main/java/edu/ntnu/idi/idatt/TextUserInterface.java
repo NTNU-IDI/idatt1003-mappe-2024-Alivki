@@ -13,14 +13,15 @@ import javax.sound.midi.Receiver;
  */
 public class TextUserInterface {
   private Fridge fridge;
+  private Cookbook cookbook;
   private Scanner scanner;
-  public Recipe recipe;
 
   /**
    * .
    */
   public void init() {
     this.fridge = new Fridge();
+    this.cookbook = new Cookbook();
     scanner = new Scanner(System.in);
   }
 
@@ -42,7 +43,7 @@ public class TextUserInterface {
     test.put(test1, test1Quan);
     test.put(test2, test2Quan);
 
-    String name = "taco";
+    String name = "taco jasdflkasdfljkasdf lkasjdf";
     String description = "Meksikans rett som norge har gjort sin egen";
     String procedure = "Putt alt sammen på en lefse";
     int servings = 4;
@@ -54,7 +55,9 @@ public class TextUserInterface {
 
     Recipe recipee = new Recipe(name, description, procedure, test, servings);
 
-    System.out.print(recipee);
+    cookbook.addRecipe(recipee);
+
+    cookbook.printCookbookContent();
   }
 
   /**

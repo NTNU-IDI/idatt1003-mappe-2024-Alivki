@@ -65,7 +65,8 @@ public class Fridge {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
     if (foundGrocery.isEmpty()) {
-      System.out.printf("You do no have %s in the fridge!%n", inputName);
+      System.out.printf("You do no have %s in the fridge!%n" +
+          "", inputName);
       return;
     }
 
