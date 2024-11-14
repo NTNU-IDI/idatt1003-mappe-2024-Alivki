@@ -14,7 +14,7 @@ import java.util.Optional;
  * encapsulation(hides implementation from the user) and collects objects in indexed sequence.
  */
 public class Fridge {
-  private final List<Grocery> groceries;
+  private final List<GroceryItem> groceries;
 
   /**
    * Using array list because it is dynamic array with many useful methods.
@@ -26,7 +26,7 @@ public class Fridge {
   /**
    * .
    */
-  public List<Grocery> getGroceries() {
+  public List<GroceryItem> getGroceries() {
     return groceries;
   }
 
@@ -38,10 +38,10 @@ public class Fridge {
    *
    * @param newGrocery the new grocery.
    */
-  public void addGrocery(Grocery newGrocery) {
+  public void addGrocery(GroceryItem newGrocery) {
     if (groceries.isEmpty()) {
       groceries.add(newGrocery);
-      System.out.printf("%s was successfully added!", newGrocery.getName());
+      System.out.printf("%s was successfully added!%n", newGrocery.getGrocery().getName());
       return;
     }
 
@@ -53,7 +53,7 @@ public class Fridge {
     }
 
     groceries.add(findIndex(newGrocery), newGrocery);
-    System.out.printf("%n%s was successfully added!%n", newGrocery.getName());
+    System.out.printf("%n%s was successfully added!%n", newGrocery.getGrocery().getName());
   }
 
   /**
@@ -62,14 +62,14 @@ public class Fridge {
    * @param inputName The name of the grocery to search for.
    */
   public void printGrocery(String inputName) {
-    Optional<Grocery> foundGrocery = findGrocery(inputName);
+    Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
     if (foundGrocery.isEmpty()) {
-      System.out.printf("You do no have %s in the fridge!", inputName);
+      System.out.printf("You do no have %s in the fridge!%n", inputName);
       return;
     }
 
-    System.out.print(printFridgeHeader());
+    System.out.print(printFridgeHeader(inputName));
     System.out.print(foundGrocery.get());
     System.out.format("+--------------+-----------+-----------------+------------------+%n");
   }
@@ -80,10 +80,10 @@ public class Fridge {
    * @param inputName The name of the grocery to search for.
    */
   public void removeGrocery(String inputName) {
-    Optional<Grocery> foundGrocery = findGrocery(inputName);
+    Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
     if (foundGrocery.isEmpty()) {
-      System.out.printf("You do no have %s in the fridge!", inputName);
+      System.out.printf("You do no have %s in the fridge!%n", inputName);
       return;
     }
 
@@ -98,10 +98,10 @@ public class Fridge {
    * @param quantity  The quantity to increase grocery quantity with.
    */
   public void increaseQuantity(String inputName, float quantity) {
-    Optional<Grocery> foundGrocery = findGrocery(inputName);
+    Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
     if (foundGrocery.isEmpty()) {
-      System.out.printf("You do no have %s in the fridge!", inputName);
+      System.out.printf("You do no have %s in the fridge!%n", inputName);
       return;
     }
 
@@ -118,10 +118,10 @@ public class Fridge {
    * @param quantity  The quantity to decrease grocery quantity with.
    */
   public void decreaseQuantity(String inputName, float quantity) {
-    Optional<Grocery> foundGrocery = findGrocery(inputName);
+    Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
     if (foundGrocery.isEmpty()) {
-      System.out.println("You do no have this grocery in the Fridge!");
+      System.out.printf("You do no have this grocery in the Fridge!%n");
       return;
     }
 
@@ -144,7 +144,8 @@ public class Fridge {
    * @param inputDate The date to check against the expiration date of the grocery item.
    */
   public void bestBeforeDate(String inputDate) {
-    LocalDate parsedInputDate = LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    LocalDate parsedInputDate =
+        LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
     if (groceries.stream()
         .noneMatch(grocery -> grocery.getExpirationDate().isBefore(parsedInputDate.plusDays(1)))) {
@@ -152,13 +153,13 @@ public class Fridge {
       return;
     }
 
-    System.out.print(printFridgeHeader());
+    System.out.print(printFridgeHeader("Fridge content"));
     groceries.stream()
         .filter(grocery -> grocery.getExpirationDate().isBefore(parsedInputDate.plusDays(1)))
-        .sorted(Comparator.comparing(Grocery::getExpirationDate))
-        .map(Grocery::toString)
+        .sorted(Comparator.comparing(GroceryItem::getExpirationDate))
+        .map(GroceryItem::toString)
         .forEach(System.out::print);
-    System.out.format("+--------------+-----------+-----------------+------------------+%n");
+    System.out.format("+--------------+-------------+-----------------+------------------+%n");
   }
 
   /**
@@ -167,20 +168,20 @@ public class Fridge {
    */
   public void printFridgeContent() {
     if (groceries.isEmpty()) {
-      System.out.println("There is no groceries in your fridge!");
+      System.out.printf("There is no groceries in your fridge!%n");
       return;
     }
 
-    System.out.print(printFridgeHeader());
-    groceries.stream().map(Grocery::toString).forEach(System.out::print);
-    System.out.format("+--------------+-----------+-----------------+------------------+%n");
+    System.out.print(printFridgeHeader("Fridge content"));
+    groceries.stream().map(GroceryItem::toString).forEach(System.out::print);
+    System.out.format("+--------------+-------------+-----------------+------------------+%n");
   }
 
   /**
    * .
    */
-  public boolean groceryExist(Grocery inputGrocery) {
-    for (Grocery grocery : groceries) {
+  public boolean groceryExist(GroceryItem inputGrocery) {
+    for (GroceryItem grocery : groceries) {
       if (grocery.equals(inputGrocery)) {
         return true;
       }
@@ -191,9 +192,9 @@ public class Fridge {
   /**
    * .
    */
-  public Optional<Grocery> findGrocery(String inputName) {
-    for (Grocery grocery : groceries) {
-      if (grocery.getName().equalsIgnoreCase(inputName)) {
+  public Optional<GroceryItem> findGrocery(String inputName) {
+    for (GroceryItem grocery : groceries) {
+      if (grocery.getGrocery().getName().equalsIgnoreCase(inputName)) {
         return Optional.of(grocery);
       }
     }
@@ -206,13 +207,14 @@ public class Fridge {
    *
    * @return return index
    */
-  public int findIndex(Grocery inputGrocery) {
+  public int findIndex(GroceryItem inputGrocery) {
     int left = 0;
     int right = groceries.size();
 
     while (left < right) {
       int mid = (left + right) / 2;
-      if (groceries.get(mid).getName().compareTo(inputGrocery.getName()) < 0) {
+      if (groceries.get(mid).getGrocery().getName().compareTo(inputGrocery.getGrocery().getName())
+          < 0) {
         left = mid + 1;
       } else {
         right = mid;
@@ -225,12 +227,35 @@ public class Fridge {
   /**
    * Printing header for grocery content table.
    */
-  private String printFridgeHeader() {
-    return String.format("+---------------------------------------------------------------+%n")
-        + String.format("|                       Fridge contents                         |%n")
-        + String.format("+--------------+-----------+-----------------+------------------+%n")
-        + String.format("| Name         | Quantity  | Price per unit  | Expiration date  |%n")
-        + String.format("+--------------+-----------+-----------------+------------------+%n");
+  private String printFridgeHeader(String title) {
+    return String.format("+-----------------------------------------------------------------+%n")
+        + centerString(title, 67)
+        + String.format("+--------------+-------------+-----------------+------------------+%n")
+        + String.format("| Name         | Quantity    | Price per unit  | Expiration date  |%n")
+        + String.format("+--------------+-------------+-----------------+------------------+%n");
+  }
+
+  /**
+   * .
+   *
+   * @param inputString test
+   * @param rowLength tet
+   * @return test
+   */
+  private String centerString(String inputString, int rowLength) {
+    int leftPadding;
+    int rightPadding;
+
+    if (inputString.length() > rowLength - 4) {
+      inputString = inputString.substring(0, rowLength - 4) + "...";
+      leftPadding = 1;
+      rightPadding = 1;
+    } else {
+      leftPadding = (rowLength - 2 - inputString.length()) / 2;
+      rightPadding = (rowLength - 2 - inputString.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
+    }
+
+    return String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputString, "");
   }
 
   /**

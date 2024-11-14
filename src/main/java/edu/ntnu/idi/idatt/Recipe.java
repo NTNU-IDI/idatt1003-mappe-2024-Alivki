@@ -222,7 +222,7 @@ public class Recipe {
       if (i < numberOfRows) {
         groceryColum.add(String.format("%-10s%5.2f%s",
             outputName,
-            entry.getValue().getQuantity(),
+            2f,
             entry.getValue().getUnit()));
       }
       i++;

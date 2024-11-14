@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -26,27 +27,11 @@ public class TextUserInterface {
    * .
    */
   public void start() {
-    //addGrocery();
-    testRecipe();
+    addGrocery();
+    //testRecipe();
   }
 
   public void testRecipe() {
-    ArrayList<Grocery> test = new ArrayList<>();
-    ArrayList<Grocery> test1 = new ArrayList<>();
-    test.add(new Grocery("cheese", "kg", 100, "23.11.2024", 1.4f));
-    test.add(new Grocery("milk", "l", 50, "23.11.2024", 1.4f));
-    test1.add(new Grocery("salsa", "l", 100, "23.11.2024", 0.2f));
-    test1.add(new Grocery("test","kg",100,"23.11.2024", 4f));
-    test1.add(new Grocery("wow","kg",100,"23.11.2024", 4f));
-    test1.add(new Grocery("Dette er en vare","kg",100,"23.11.2024", 4f));test1.add(new Grocery("test","kg",100,"23.11.2024", 4f));
-    test1.add(new Grocery("øasdhf","kg",100,"23.11.2024", 4f));
-
-    recipe = new Recipe("Taco", "Taco er en maksikansk rett som Norge har gjort sin egen som alle Nordmenn spiser på freager!", "For å lage denne retten kutter du alle ingrediensene i biter. Steker kjøtt eller kyllig. Så legger man det alt i en lefse.", test, 4);
-
-    recipe.addGroceries(test1);
-    //recipe.removeGroceries(test2);
-
-    System.out.println(recipe.toString());
   }
 
   /**
@@ -55,13 +40,22 @@ public class TextUserInterface {
   private void addGrocery() {
     System.out.println("\nEnter grocery name: ");
     String name1 = scanner.nextLine();
-    String name2 = scanner.nextLine();
+    String unit = "stk";
+    float price = 1f;
+    String inputExpir = "23.11.2024";
+    float quant = 1f;
+    LocalDate expir = null;
 
     try {
-      Grocery grocery = new Grocery(name1, "l", 1.2f, "23.11.2024", 100f);
-      fridge.addGrocery(grocery);
-      Grocery grocery1 = new Grocery(name2, "l", 100f, "23.11.2024", 1f);
-      fridge.addGrocery(grocery1);
+      expir = LocalDate.parse(inputExpir, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+      InputValidation.isNotEmpty(unit);
+      InputValidation.isNotEmpty(inputExpir);
+      InputValidation.isNotEmpty(name1);
+      InputValidation.isValidFloat(quant);
+      InputValidation.isValidFloat(price);
+      InputValidation.nameUnder32Char(name1);
+
+      InputValidation.isValidDate(expir);
     } catch (IllegalArgumentException | DateTimeParseException e) {
       if (e instanceof DateTimeParseException) {
         System.err.print("Invalid date format, please use dd.MM.yyyy");
@@ -69,6 +63,14 @@ public class TextUserInterface {
       }
       System.err.print(e.getMessage());
     }
+
+    Grocery grocery = new Grocery(name1, unit, price);
+    GroceryItem groceryItem = new GroceryItem(grocery, expir, quant);
+
+    fridge.addGrocery(groceryItem);
+    fridge.printGrocery("cheese");
+
+    printGroceries();
   }
 
   /**

@@ -6,6 +6,15 @@ import java.time.LocalDate;
  * .
  */
 public class InputValidation {
+  private final String[] allowedUnits =
+      {"grams", "g", "kilos", "kilo", "kg", "liters", "liter", "l", "stk", "units", "unit"};
+
+  /**
+   * .
+   */
+  public static void validUnit(String input) {
+    
+  }
 
   /**
    * .
