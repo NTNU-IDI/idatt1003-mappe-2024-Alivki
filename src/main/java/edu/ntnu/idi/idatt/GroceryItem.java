@@ -92,7 +92,7 @@ public class GroceryItem {
         grocery.getName().length() > 12 ? shotenName(grocery.getName(), 10) : grocery.getName();
 
     String priceUnit = String.format("%.2f%s", this.quantity, grocery.getUnit());
-    String totalPrice = String.format("%.2f%s", grocery.getPrice() * quantity, "kr");
+    String totalPrice = String.format("%.2f%s", grocery.getPrice(), "kr");
 
 
     return String.format("| %-12s | %-11s | %-15s | %-16s |%n", name, priceUnit,

@@ -72,7 +72,7 @@ public class Fridge {
 
     System.out.print(printFridgeHeader(inputName));
     System.out.print(foundGrocery.get());
-    System.out.format("+--------------+-----------+-----------------+------------------+%n");
+    System.out.format("+--------------+-------------+-----------------+------------------+%n");
   }
 
   /**

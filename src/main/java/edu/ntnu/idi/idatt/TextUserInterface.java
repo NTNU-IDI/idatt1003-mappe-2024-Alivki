@@ -3,10 +3,8 @@ package edu.ntnu.idi.idatt;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import javax.sound.midi.Receiver;
 
 /**
  * .
@@ -33,6 +31,9 @@ public class TextUserInterface {
     //testRecipe();
   }
 
+  /**
+   * .
+   */
   public void testRecipe() {
     HashMap<Grocery, Float> test = new HashMap<>();
     Grocery test1 = new Grocery("Cheese", "kg", 0);
@@ -66,9 +67,9 @@ public class TextUserInterface {
   private void addGrocery() {
     System.out.println("\nEnter grocery name: ");
     String name1 = scanner.nextLine();
-    float price = 1f;
+    float price = 140f;
     String inputExpir = "23.11.2024";
-    String quants = "2.2 stk";
+    String quants = "1.2 kg";
     Object[] quantUnit = null;
     LocalDate expir = null;
 
@@ -89,7 +90,12 @@ public class TextUserInterface {
       System.err.print(e.getMessage());
     }
 
-    Grocery grocery = new Grocery(name1, (String) quantUnit[1], price);
+    float pricePerUnit = price / (float) quantUnit[0];
+    System.out.println(price);
+    System.out.println(pricePerUnit);
+    System.out.println(quantUnit[0]);
+
+    Grocery grocery = new Grocery(name1, (String) quantUnit[1], pricePerUnit);
     GroceryItem groceryItem = new GroceryItem(grocery, expir, (float) quantUnit[0]);
 
     fridge.addGrocery(groceryItem);
