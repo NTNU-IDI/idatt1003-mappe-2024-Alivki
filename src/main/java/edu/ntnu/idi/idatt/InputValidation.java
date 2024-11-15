@@ -155,7 +155,7 @@ public class InputValidation {
    */
   public static void isValidDate(LocalDate input) {
     if (input.isBefore(LocalDate.now())) {
-      throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
+    //  throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
     }
   }
 }

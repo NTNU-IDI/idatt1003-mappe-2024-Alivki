@@ -29,8 +29,6 @@ public class TextUserInterface {
    */
   public void start() {
     menu();
-    //addGrocery();
-    //testRecipe();
   }
 
   /**
@@ -40,10 +38,14 @@ public class TextUserInterface {
     int choose = -1;
 
     do {
-      System.out.println("--------- Menu ---------");
-      System.out.println("1. Edit and see your fridge");
-      System.out.println("2. Edit and see your cookbook");
-      System.out.println("0. Exit program");
+      System.out.println("----------------------------------------------");
+      System.out.println("                    Menu");
+      System.out.println("----------------------------------------------");
+      System.out.println("\n    1. Edit and see your fridge");
+      System.out.println("    2. Edit and see your cookbook");
+      System.out.println("\n    0. Exit program");
+      System.out.println("\n----------------------------------------------");
+      System.out.println("\nType in the number you want:");
 
       try {
         choose = scanner.nextInt();
@@ -78,15 +80,20 @@ public class TextUserInterface {
     int choose = -1;
 
     do {
-      System.out.println("--------- Fridge menu ---------");
-      System.out.println("1. Add a grocery to the fridge");
-      System.out.println("2. Remove grocery from the fridge");
-      System.out.println("3. Increase quantity to a grocery");
-      System.out.println("4. Decrease quantity to a grocery");
-      System.out.println("5. See fridge overview");
-      System.out.println("6. See a specific item");
-      System.out.println("8. Go back to menu");
-      System.out.println("0. Exit program");
+      System.out.println("----------------------------------------------");
+      System.out.println("                 Fridge menu");
+      System.out.println("----------------------------------------------");
+      System.out.println("\n    1. Add a grocery to the fridge");
+      System.out.println("    2. Remove grocery from the fridge");
+      System.out.println("    3. Increase quantity to a grocery");
+      System.out.println("    4. Decrease quantity to a grocery");
+      System.out.println("    5. See fridge overview and total price");
+      System.out.println("    6. See a specific item");
+      System.out.println("    7. See all groceries that has expired");
+      System.out.println("\n    8. Go back to menu");
+      System.out.println("    0. Exit program");
+      System.out.println("\n----------------------------------------------");
+      System.out.println("\nType in the number you want:");
 
       try {
         choose = scanner.nextInt();
@@ -122,6 +129,10 @@ public class TextUserInterface {
           printGrocery();
           return;
         }
+        case 7 -> {
+          expiredGroceries();
+          return;
+        }
         case 8 -> {
           menu();
           return;
@@ -142,7 +153,7 @@ public class TextUserInterface {
     LocalDate parsedExpirationDate = null;
 
     System.out.println("Write the grocery name");
-    String name = scanner.nextLine();
+    String name = scanner.nextLine().toLowerCase();
 
     System.out.println("Write the total price you payed for the grocery");
     float price = scanner.nextFloat();
@@ -202,6 +213,15 @@ public class TextUserInterface {
     String inputName = scanner.nextLine();
 
     fridge.printGrocery(inputName);
+    fridgeMenu();
+  }
+
+  /**
+   * -
+   */
+  private void expiredGroceries() {
+    LocalDate today = LocalDate.now();
+    fridge.bestBeforeDate(today);
     fridgeMenu();
   }
 

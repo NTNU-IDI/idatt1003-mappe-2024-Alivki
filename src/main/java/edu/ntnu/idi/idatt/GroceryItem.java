@@ -91,12 +91,12 @@ public class GroceryItem {
     String name =
         grocery.getName().length() > 12 ? shotenName(grocery.getName(), 10) : grocery.getName();
 
-    String priceUnit = String.format("%.2f%s", this.quantity, grocery.getUnit());
-    String totalPrice = String.format("%.2f%s", grocery.getPrice(), "kr");
+    String unit = String.format("%.2f%s", this.quantity, grocery.getUnit());
+    String price = String.format("%.2f%s", grocery.getPrice(), "kr");
 
 
-    return String.format("| %-12s | %-11s | %-15s | %-16s |%n", name, priceUnit,
-        totalPrice, expirationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+    return String.format("| %-12s | %-11s | %-15s | %-16s |%n", name, unit,
+        price, expirationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
   }
 
   /**

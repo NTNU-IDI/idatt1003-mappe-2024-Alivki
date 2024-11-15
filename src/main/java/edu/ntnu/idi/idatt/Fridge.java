@@ -144,22 +144,26 @@ public class Fridge {
    *
    * @param inputDate The date to check against the expiration date of the grocery item.
    */
-  public void bestBeforeDate(String inputDate) {
-    LocalDate parsedInputDate =
-        LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+  public void bestBeforeDate(LocalDate inputDate) {
+    //LocalDate parsedInputDate =
+    //    LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 
     if (groceries.stream()
-        .noneMatch(grocery -> grocery.getExpirationDate().isBefore(parsedInputDate.plusDays(1)))) {
+        .noneMatch(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))) {
       System.out.printf("You have no groceries with a expiration date before %s.%n", inputDate);
       return;
     }
 
-    System.out.print(printFridgeHeader("Fridge content"));
+    final String totalPrice = String.format("%.2f %s", totalExpiredPrice(inputDate), "kr");
+
+    System.out.print(printFridgeHeader("Expired groceries"));
     groceries.stream()
-        .filter(grocery -> grocery.getExpirationDate().isBefore(parsedInputDate.plusDays(1)))
+        .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))
         .sorted(Comparator.comparing(GroceryItem::getExpirationDate))
         .map(GroceryItem::toString)
         .forEach(System.out::print);
+    System.out.format("+--------------+-------------+-----------------+------------------+%n");
+    System.out.format("| Total price: %-51s| %n", totalPrice);
     System.out.format("+--------------+-------------+-----------------+------------------+%n");
   }
 
@@ -173,15 +177,38 @@ public class Fridge {
       return;
     }
 
+    final String totalPrice = String.format("%.2f %s", totalPrice(), "kr");
+
     System.out.print(printFridgeHeader("Fridge content"));
     groceries.stream().map(GroceryItem::toString).forEach(System.out::print);
+    System.out.format("+--------------+-------------+-----------------+------------------+%n");
+    System.out.format("| Total price: %-51s| %n", totalPrice);
     System.out.format("+--------------+-------------+-----------------+------------------+%n");
   }
 
   /**
    * .
    */
-  public boolean groceryExist(GroceryItem inputGrocery) {
+  private float totalExpiredPrice(LocalDate inputDate) {
+    return groceries.stream()
+        .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))
+        .map(GroceryItem -> GroceryItem.getGrocery().getPrice() * GroceryItem.getQuantity())
+        .reduce(0.0f, Float::sum);
+  }
+
+  /**
+   * .
+   */
+  private float totalPrice() {
+    return groceries.stream()
+        .map(GroceryItem -> GroceryItem.getGrocery().getPrice() * GroceryItem.getQuantity())
+        .reduce(0.0f, Float::sum);
+  }
+
+  /**
+   * .
+   */
+  private boolean groceryExist(GroceryItem inputGrocery) {
     for (GroceryItem grocery : groceries) {
       if (grocery.equals(inputGrocery)) {
         return true;
@@ -193,7 +220,7 @@ public class Fridge {
   /**
    * .
    */
-  public Optional<GroceryItem> findGrocery(String inputName) {
+  private Optional<GroceryItem> findGrocery(String inputName) {
     for (GroceryItem grocery : groceries) {
       if (grocery.getGrocery().getName().equalsIgnoreCase(inputName)) {
         return Optional.of(grocery);
@@ -208,7 +235,7 @@ public class Fridge {
    *
    * @return return index
    */
-  public int findIndex(GroceryItem inputGrocery) {
+  private int findIndex(GroceryItem inputGrocery) {
     int left = 0;
     int right = groceries.size();
 
@@ -240,7 +267,7 @@ public class Fridge {
    * .
    *
    * @param inputString test
-   * @param rowLength tet
+   * @param rowLength   tet
    * @return test
    */
   private String centerString(String inputString, int rowLength) {
@@ -253,7 +280,8 @@ public class Fridge {
       rightPadding = 1;
     } else {
       leftPadding = (rowLength - 2 - inputString.length()) / 2;
-      rightPadding = (rowLength - 2 - inputString.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
+      rightPadding =
+          (rowLength - 2 - inputString.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
     }
 
     return String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputString, "");
