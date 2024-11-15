@@ -110,15 +110,15 @@ public class TextUserInterface {
           return;
         }
         case 2 -> {
-          System.out.println("test");
+          removeGrocery();
           return;
         }
         case 3 -> {
-          System.out.println("test");
+          increaseQuantity();
           return;
         }
         case 4 -> {
-          System.out.println("test");
+          decreaseQuantity();
           return;
         }
         case 5 -> {
@@ -194,6 +194,61 @@ public class TextUserInterface {
 
     fridge.addGrocery(newGroceryItem);
 
+    fridgeMenu();
+  }
+
+  /**
+   * .
+   */
+  private void removeGrocery() {
+    System.out.println("Write the name of the grocery you want to remove.");
+    final String groceryName = scanner.nextLine();
+
+    fridge.removeGrocery(groceryName);
+    fridgeMenu();
+  }
+
+  /**
+   * .
+   */
+  private void increaseQuantity() {
+    System.out.println("Write the grocery you want to add more of.");
+    final String groceryName = scanner.nextLine();
+
+    System.out.println("Write how much you are adding the grocery in the format without unit");
+    float addQuantity = scanner.nextFloat();
+    scanner.nextLine();
+
+    try {
+      InputValidation.isValidFloat(addQuantity);
+    } catch (IllegalArgumentException e) {
+      System.err.print(e.getMessage());
+      addGrocery();
+    }
+
+    fridge.increaseQuantity(groceryName, addQuantity);
+    fridgeMenu();
+  }
+
+  /**
+   * .
+   */
+  private void decreaseQuantity() {
+    System.out.println("Write the grocery you want to add more of.");
+    final String groceryName = scanner.nextLine();
+
+    System.out.println("Write how much you are adding the grocery in the format without unit");
+    float removeQuantity = scanner.nextFloat();
+    scanner.nextLine();
+
+    try {
+      InputValidation.isValidFloat(removeQuantity);
+    } catch (IllegalArgumentException e) {
+      System.err.print(e.getMessage());
+      addGrocery();
+    }
+
+    fridge.increaseQuantity(groceryName, removeQuantity);
     fridgeMenu();
   }
 
