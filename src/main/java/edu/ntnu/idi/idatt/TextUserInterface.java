@@ -29,8 +29,8 @@ public class TextUserInterface {
    * .
    */
   public void start() {
-    //addGrocery();
-    testRecipe();
+    addGrocery();
+    //testRecipe();
   }
 
   public void testRecipe() {
@@ -66,18 +66,17 @@ public class TextUserInterface {
   private void addGrocery() {
     System.out.println("\nEnter grocery name: ");
     String name1 = scanner.nextLine();
-    String unit = "stk";
     float price = 1f;
     String inputExpir = "23.11.2024";
-    float quant = 1f;
+    String quants = "2.2 stk";
+    Object[] quantUnit = null;
     LocalDate expir = null;
 
     try {
       expir = LocalDate.parse(inputExpir, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-      InputValidation.isNotEmpty(unit);
+      quantUnit = InputValidation.unitConversion(quants);
       InputValidation.isNotEmpty(inputExpir);
       InputValidation.isNotEmpty(name1);
-      InputValidation.isValidFloat(quant);
       InputValidation.isValidFloat(price);
       InputValidation.nameUnder32Char(name1);
 
@@ -90,8 +89,8 @@ public class TextUserInterface {
       System.err.print(e.getMessage());
     }
 
-    Grocery grocery = new Grocery(name1, unit, price);
-    GroceryItem groceryItem = new GroceryItem(grocery, expir, quant);
+    Grocery grocery = new Grocery(name1, (String) quantUnit[1], price);
+    GroceryItem groceryItem = new GroceryItem(grocery, expir, (float) quantUnit[0]);
 
     fridge.addGrocery(groceryItem);
     fridge.printGrocery("cheese");

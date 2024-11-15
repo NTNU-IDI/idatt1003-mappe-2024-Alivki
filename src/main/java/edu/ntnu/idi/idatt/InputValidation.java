@@ -1,19 +1,102 @@
 package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * .
  */
 public class InputValidation {
-  private final String[] allowedUnits =
-      {"grams", "g", "kilos", "kilo", "kg", "liters", "liter", "l", "stk", "units", "unit"};
+  public static final Map<String, Float> weightConversionFactors = new HashMap<>();
+  public static final Map<String, Float> volumConversionFactors = new HashMap<>();
+
+  static {
+    weightConversionFactors.put("g", 0.001f);
+    weightConversionFactors.put("kg", 1.0f);
+
+    volumConversionFactors.put("ml", 0.001f);
+    volumConversionFactors.put("ds", 0.01f);
+    volumConversionFactors.put("cn", 0.1f);
+    volumConversionFactors.put("l", 1.0f);
+  }
 
   /**
    * .
+   *
+   * @param input test
+   * @return test
    */
-  public static void validUnit(String input) {
-    
+  public static Object[] unitConversion(String input) {
+    float quantityInput = 0;
+    String unitInput = "";
+
+    Pattern pattern = Pattern.compile("([0-9. ]+)([a-zA-Z]+)");
+    Matcher splitInput = pattern.matcher(input);
+
+    while (splitInput.find()) {
+      if (splitInput.group(1) != null) {
+        quantityInput = Float.parseFloat(splitInput.group(1));
+        isValidFloat(quantityInput);
+      } else {
+        throw new IllegalArgumentException("Has to have a quantity and can not be empty!");
+      }
+      if (splitInput.group(2) != null) {
+        unitInput = splitInput.group(2);
+      } else {
+        throw new IllegalArgumentException("Has to have unit and can not be empty!");
+      }
+    }
+
+    if (weightConversionFactors.containsKey(unitInput.toLowerCase())) {
+      quantityInput = convertWeight(quantityInput, unitInput);
+      unitInput = "kg";
+    }
+    if (volumConversionFactors.containsKey(unitInput.toLowerCase())) {
+      quantityInput = convertVolume(quantityInput, unitInput);
+      unitInput = "l";
+    }
+    if (unitInput.equalsIgnoreCase("stk")) {
+      quantityInput = Math.round(quantityInput);
+    }
+
+    return new Object[] {quantityInput, unitInput};
+  }
+
+  /**
+   * .
+   *
+   * @param value test
+   * @param unit  test
+   * @return test
+   */
+  private static float convertWeight(float value, String unit) {
+    float factor = weightConversionFactors.get(unit.toLowerCase());
+
+    if (factor == 0) {
+      throw new IllegalArgumentException("Unsupported weight unit!" + unit);
+    }
+
+    return factor * value;
+  }
+
+  /**
+   * .
+   *
+   * @param value test
+   * @param unit  test
+   * @return test
+   */
+  private static float convertVolume(float value, String unit) {
+    float factor = volumConversionFactors.get(unit.toLowerCase());
+
+    if (factor == 0) {
+      throw new IllegalArgumentException("Unsupported volum unit!");
+    }
+
+    return factor * value;
   }
 
   /**

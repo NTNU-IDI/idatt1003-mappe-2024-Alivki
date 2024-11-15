@@ -30,6 +30,13 @@ public class Cookbook {
   /**
    * .
    */
+  public void removeRecipe(String name) {
+
+  }
+
+  /**
+   * .
+   */
   public void printCookbookContent() {
     if (recipes.isEmpty()) {
       System.out.printf("There is no groceries in your fridge!%n");
