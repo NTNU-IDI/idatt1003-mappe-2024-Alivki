@@ -28,7 +28,8 @@ public class TextUserInterface {
    * .
    */
   public void start() {
-    menu();
+    //menu();
+    testRecipe();
   }
 
   /**
@@ -351,8 +352,8 @@ public class TextUserInterface {
     test.put(test1, test1Quan);
     test.put(test2, test2Quan);
 
-    String name = "taco jasdflkasdfljkasdf lkasjdf";
-    String description = "Meksikans rett som norge har gjort sin egen";
+    String name = "Taco";
+    String description = "Meksikans rett som norge har gjort sin egen, den er bla";
     String procedure = "Putt alt sammen på en lefse";
     int servings = 4;
 

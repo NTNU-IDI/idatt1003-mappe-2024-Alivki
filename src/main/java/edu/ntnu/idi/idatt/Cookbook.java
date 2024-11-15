@@ -30,7 +30,18 @@ public class Cookbook {
   /**
    * .
    */
-  public void removeRecipe(String name) {
+  public void removeRecipe(String inputName) {
+    if (recipes.isEmpty()) {
+      System.out.println("No recipes in the cookbook");
+    }
+
+    recipes.removeIf(recipe -> recipe.getName().equalsIgnoreCase(inputName));
+  }
+
+  /**
+   * .
+   */
+  public void canMakeRecipe() {
 
   }
 
@@ -51,11 +62,15 @@ public class Cookbook {
    * Printing header for cookbook content table.
    */
   private String printCookbookHeader(String title) {
-    return String.format("+-----------------------------------------------------------------+%n")
-        + centerString(title, 67)
-        + String.format("+--------------+-------------------------------+------------------+%n")
-        + String.format("| Recipe name  | Short description             | Can make?        |%n")
-        + String.format("+--------------+-------------------------------+------------------+%n");
+    return String.format(
+        "+----------------------------------------------------------------------------+%n")
+        + centerString(title, 78)
+        + String.format(
+        "+------------------+---------------------------------------------+-----------+%n")
+        + String.format(
+        "| Recipe name      | Short description                           | Can make? |%n")
+        + String.format(
+        "+------------------+---------------------------------------------+-----------+%n");
   }
 
   /**
@@ -66,10 +81,16 @@ public class Cookbook {
 
     for (Recipe recipe : recipes) {
       String recipeName =
-          recipe.getName().length() > 12 ? shortenName(recipe.getName(), 10) : recipe.getName();
+          recipe.getName().length() > 16 ? shortenName(recipe.getName(), 14) : recipe.getName();
 
-      string.append(String.format("| %-12s | %-25s |     |%n", recipeName, recipe.getDescription()));
-      string.append("+--------------+-------------------------------+------------------+\n");
+      String recipeDescription =
+          recipe.getDescription().length() > 43 ? shortenName(recipe.getDescription(), 41) :
+              recipe.getDescription();
+
+      string.append(
+          String.format("| %-16s | %-43s | %-9s |%n", recipeName, recipeDescription, "yes"));
+      string.append(
+          "+------------------+---------------------------------------------+-----------+\n");
     }
 
     return string.toString();
