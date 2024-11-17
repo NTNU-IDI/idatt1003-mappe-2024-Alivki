@@ -2,18 +2,22 @@ package edu.ntnu.idi.idatt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * .
  */
 public class Cookbook {
   private final List<Recipe> recipes;
+  private final Fridge fridge;
+
 
   /**
    * Using array list because it is dynamic array with many useful methods.
    */
-  public Cookbook() {
+  public Cookbook(Fridge fridge) {
     recipes = new ArrayList<>();
+    this.fridge = fridge;
   }
 
   /**
@@ -25,6 +29,7 @@ public class Cookbook {
     }
 
     recipes.add(recipe);
+    System.out.println("Recipe is added to the cookbook.");
   }
 
   /**
@@ -36,13 +41,62 @@ public class Cookbook {
     }
 
     recipes.removeIf(recipe -> recipe.getName().equalsIgnoreCase(inputName));
+    System.out.printf("Recipe for %s was removed from the cookbook!", inputName);
   }
 
   /**
    * .
    */
-  public void canMakeRecipe() {
+  public boolean canMakeRecipe(Recipe recipeToCheck) {
+    List<GroceryItem> groceries = fridge.getGroceries();
+    Map<Grocery, Float> neededGroceries = recipeToCheck.getGroceries();
+    int missingGrocery = 0;
 
+    if (groceries.isEmpty()) {
+      return false;
+    }
+
+    for (Grocery neededGrocery : neededGroceries.keySet()) {
+      for (GroceryItem groceryItem : groceries) {
+        if (!neededGrocery.getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
+          missingGrocery += 1;
+        }
+      }
+    }
+
+    return missingGrocery == 0;
+  }
+
+  /**
+   * .
+   */
+  public List<String> missingGroceries(Recipe recipeToCheck) {
+    ArrayList<String> missingGroceries = new ArrayList<>();
+    List<GroceryItem> groceries = fridge.getGroceries();
+    Map<Grocery, Float> neededGroceries = recipeToCheck.getGroceries();
+    int missingGrocery = 0;
+
+    for (Grocery neededGrocery : neededGroceries.keySet()) {
+      for (GroceryItem groceryItem : groceries) {
+        if (!neededGrocery.getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
+          missingGrocery += 1;
+          missingGroceries.add(groceryItem.getGrocery().getName());
+        }
+      }
+    }
+
+    if (missingGrocery > 2) {
+      missingGroceries.clear();
+      missingGroceries.add("Missing more then 2 groceries to make this recipe");
+      return missingGroceries;
+    }
+
+    if (missingGrocery < 3 && missingGrocery > 0) {
+      return missingGroceries;
+    }
+
+    missingGroceries.add("No groceries missing!");
+    return missingGroceries;
   }
 
   /**
@@ -87,8 +141,10 @@ public class Cookbook {
           recipe.getDescription().length() > 43 ? shortenName(recipe.getDescription(), 41) :
               recipe.getDescription();
 
+      String canMake = canMakeRecipe(recipe) ? "Yes" : "No";
+
       string.append(
-          String.format("| %-16s | %-43s | %-9s |%n", recipeName, recipeDescription, "yes"));
+          String.format("| %-16s | %-43s | %-9s |%n", recipeName, recipeDescription, canMake));
       string.append(
           "+------------------+---------------------------------------------+-----------+\n");
     }

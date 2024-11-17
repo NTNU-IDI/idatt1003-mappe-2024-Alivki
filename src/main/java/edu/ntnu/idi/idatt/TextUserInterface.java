@@ -20,7 +20,7 @@ public class TextUserInterface {
    */
   public void init() {
     this.fridge = new Fridge();
-    this.cookbook = new Cookbook();
+    this.cookbook = new Cookbook(fridge);
     scanner = new Scanner(System.in);
   }
 
@@ -288,14 +288,18 @@ public class TextUserInterface {
     int choose = -1;
 
     do {
-      System.out.println("--------- Cookbook menu ---------");
-      System.out.println("1. Add recipe");
-      System.out.println("2. Remove recipe");
-      System.out.println("3. See all recipes");
-      System.out.println("4. See recipe");
-      System.out.println("5. See total cookbook price");
-      System.out.println("8. Go back to menu");
-      System.out.println("0. Exit program");
+      System.out.println("----------------------------------------------");
+      System.out.println("                Cookbook menu");
+      System.out.println("----------------------------------------------");
+      System.out.println("\n    1. Add recipe");
+      System.out.println("    2. Remove recipe");
+      System.out.println("    3. See all recipes");
+      System.out.println("    4. See recipe");
+      System.out.println("    5. See total cookbook price");
+      System.out.println("\n    8. Go back to menu");
+      System.out.println("    0. Exit program");
+      System.out.println("\n----------------------------------------------");
+      System.out.println("\nType in the number you want:");
 
       try {
         choose = scanner.nextInt();
@@ -363,6 +367,8 @@ public class TextUserInterface {
     InputValidation.isValidInteger(servings);
 
     Recipe recipee = new Recipe(name, description, procedure, test, servings);
+
+    fridge.addGrocery(new GroceryItem(test1, LocalDate.now(), 2.2f));
 
     cookbook.addRecipe(recipee);
 
