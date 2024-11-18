@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -28,8 +29,8 @@ public class TextUserInterface {
    * .
    */
   public void start() {
-    //menu();
-    testRecipe();
+    menu();
+    //testRecipe();
   }
 
   /**
@@ -293,9 +294,9 @@ public class TextUserInterface {
       System.out.println("----------------------------------------------");
       System.out.println("\n    1. Add recipe");
       System.out.println("    2. Remove recipe");
-      System.out.println("    3. See all recipes");
+      System.out.println("    3. See cookbook");
       System.out.println("    4. See recipe");
-      System.out.println("    5. See total cookbook price");
+      System.out.println("    5. See recipe suggestions");
       System.out.println("\n    8. Go back to menu");
       System.out.println("    0. Exit program");
       System.out.println("\n----------------------------------------------");
@@ -312,7 +313,7 @@ public class TextUserInterface {
 
       switch (choose) {
         case 1 -> {
-          System.out.println("test");
+          addRecipe();
           return;
         }
         case 2 -> {
@@ -320,11 +321,11 @@ public class TextUserInterface {
           return;
         }
         case 3 -> {
-          System.out.println("test");
+          printCookbook();
           return;
         }
         case 4 -> {
-          System.out.println("test");
+          seeRecipe();
           return;
         }
         case 5 -> {
@@ -341,6 +342,91 @@ public class TextUserInterface {
 
       System.out.println();
     } while (choose != 0);
+  }
+
+  /**
+   * .
+   */
+  private void addRecipe() {
+    Object[] quantityAndUnitObj = null;
+    Map<Grocery, Float> groceries = new HashMap<>();
+
+    System.out.println("Write the recipe name");
+    String name = scanner.nextLine().toLowerCase();
+
+    System.out.println("Write a short description for the recipe.");
+    String description = scanner.nextLine();
+
+    System.out.println("Write the procedure for the recipe.");
+    String procedure = scanner.nextLine();
+
+    String groceryInput = "1";
+    while (Integer.parseInt(groceryInput) != 0) {
+      System.out.println("Write the grocery name,");
+      groceryInput = scanner.nextLine();
+
+      System.out.println("Write the quantity of the grocery.");
+      System.out.println("Example: 2.2kg, 2l, 200g");
+      System.out.println("\n Input 0 when done:");
+
+      String groceryQuantityAndUnit = scanner.nextLine();
+
+      try {
+        quantityAndUnitObj = InputValidation.unitConversion(groceryQuantityAndUnit);
+      } catch (IllegalArgumentException e) {
+        System.err.println(e.getMessage());
+        addRecipe();
+      }
+
+      Grocery newGrocery = new Grocery(groceryInput, (String) quantityAndUnitObj[1], 0f);
+
+      groceries.put(newGrocery, (Float) quantityAndUnitObj[0]);
+
+      if (!groceryInput.equalsIgnoreCase("0")) {
+        groceryInput = "1";
+      }
+    }
+
+    System.out.println("Write how many servings this recipe will produce.");
+    int servings = scanner.nextInt();
+    scanner.nextLine();
+
+    try {
+      InputValidation.isNotEmpty(name);
+      InputValidation.isNotEmpty(description);
+      InputValidation.isNotEmpty(procedure);
+      InputValidation.nameUnder32Char(name);
+      InputValidation.isValidInteger(servings);
+    } catch (IllegalArgumentException e) {
+      System.err.print(e.getMessage());
+      addRecipe();
+    }
+
+    Recipe newRecipe =
+        new Recipe(name, description, procedure, groceries, servings);
+
+    cookbook.addRecipe(newRecipe);
+
+    cookbookMenu();
+  }
+
+  /**
+   * .
+   */
+  public void printCookbook() {
+    cookbook.printCookbookContent();
+    cookbookMenu();
+  }
+
+  /**
+   * .
+   */
+  private void seeRecipe() {
+    System.out.println("Write the name of the recipe.");
+    String name = scanner.nextLine();
+
+    cookbook.printRecipe(name);
+    cookbookMenu();
   }
 
   /**

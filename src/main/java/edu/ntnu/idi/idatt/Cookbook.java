@@ -3,6 +3,7 @@ package edu.ntnu.idi.idatt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * .
@@ -100,6 +101,22 @@ public class Cookbook {
   }
 
   /**
+   * Finding a specific grocery by name.
+   *
+   * @param inputName The name of the grocery to search for.
+   */
+  public void printRecipe(String inputName) {
+    Optional<Recipe> foundRecipe = findRecipe(inputName);
+
+    if (foundRecipe.isEmpty()) {
+      System.out.printf("%s is not in the cookbook!%n", inputName);
+      return;
+    }
+
+    System.out.print(foundRecipe.get());
+  }
+
+  /**
    * .
    */
   public void printCookbookContent() {
@@ -110,6 +127,44 @@ public class Cookbook {
 
     System.out.print(printCookbookHeader("Cookbook"));
     System.out.print(printCookbookBody());
+  }
+
+  /**
+   * .
+   */
+  public String recipeSuggestions() {
+
+    return "test";
+  }
+
+  /**
+   * .
+   */
+  private Optional<Recipe> findRecipe(String inputName) {
+    for (Recipe recipe : recipes) {
+      if (recipe.getName().equalsIgnoreCase(inputName)) {
+        return Optional.of(recipe);
+      }
+    }
+    return Optional.empty();
+  }
+
+  /**
+   * .
+   */
+  public void printRecipeSuggestions() {
+    if (recipes.isEmpty()) {
+      System.out.printf("There is no groceries in your fridge!%n");
+      return;
+    }
+
+    System.out.print(printCookbookHeader("Recipe suggestions"));
+    System.out.printf(
+        "+----------------------------------------------------------------------------+%n");
+    System.out.print(centerString("Recipe suggestions", 78));
+    System.out.printf(
+        "+----------------------------------------------------------------------------+%n");
+    System.out.print(recipeSuggestions());
   }
 
   /**
