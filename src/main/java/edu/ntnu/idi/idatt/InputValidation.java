@@ -11,16 +11,16 @@ import java.util.regex.Pattern;
  */
 public class InputValidation {
   public static final Map<String, Float> weightConversionFactors = new HashMap<>();
-  public static final Map<String, Float> volumConversionFactors = new HashMap<>();
+  public static final Map<String, Float> volumeConversionFactors = new HashMap<>();
 
   static {
     weightConversionFactors.put("g", 0.001f);
     weightConversionFactors.put("kg", 1.0f);
 
-    volumConversionFactors.put("ml", 0.001f);
-    volumConversionFactors.put("ds", 0.01f);
-    volumConversionFactors.put("cn", 0.1f);
-    volumConversionFactors.put("l", 1.0f);
+    volumeConversionFactors.put("ml", 0.001f);
+    volumeConversionFactors.put("ds", 0.01f);
+    volumeConversionFactors.put("cn", 0.1f);
+    volumeConversionFactors.put("l", 1.0f);
   }
 
   /**
@@ -54,7 +54,7 @@ public class InputValidation {
       quantityInput = convertWeight(quantityInput, unitInput);
       unitInput = "kg";
     }
-    if (volumConversionFactors.containsKey(unitInput.toLowerCase())) {
+    if (volumeConversionFactors.containsKey(unitInput.toLowerCase())) {
       quantityInput = convertVolume(quantityInput, unitInput);
       unitInput = "l";
     }
@@ -90,7 +90,7 @@ public class InputValidation {
    * @return test
    */
   private static float convertVolume(float value, String unit) {
-    float factor = volumConversionFactors.get(unit.toLowerCase());
+    float factor = volumeConversionFactors.get(unit.toLowerCase());
 
     if (factor == 0) {
       throw new IllegalArgumentException("Unsupported volum unit!");
