@@ -1,7 +1,6 @@
 package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,22 +37,20 @@ public class Fridge {
    *
    * @param newGrocery the new grocery.
    */
-  public void addGrocery(GroceryItem newGrocery) {
+  public String addGrocery(GroceryItem newGrocery) {
     if (groceries.isEmpty()) {
       groceries.add(newGrocery);
-      System.out.printf("%s was successfully added!%n", newGrocery.getGrocery().getName());
-      return;
+      return String.format("%s was successfully added!%n", newGrocery.getGrocery().getName());
     }
 
     if (groceryExist(newGrocery)) {
       newGrocery.increaseQuantity(newGrocery.getQuantity());
-      System.out.printf(
+      return String.format(
           "%nGrocery is all ready in fridge. Increased the quantity of the grocery!%n");
-      return;
     }
 
     groceries.add(findIndex(newGrocery), newGrocery);
-    System.out.printf("%n%s was successfully added!%n", newGrocery.getGrocery().getName());
+    return String.format("%n%s was successfully added!%n", newGrocery.getGrocery().getName());
   }
 
   /**
@@ -61,18 +58,14 @@ public class Fridge {
    *
    * @param inputName The name of the grocery to search for.
    */
-  public void printGrocery(String inputName) {
+  public String printGrocery(String inputName) {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
-    if (foundGrocery.isEmpty()) {
-      System.out.printf("You do no have %s in the fridge!%n" +
-          "", inputName);
-      return;
-    }
+    return foundGrocery.map(groceryItem -> String.format(
+            "%s%s+--------------+-------------+-----------------+------------------+%n",
+            printFridgeHeader(inputName), groceryItem))
+        .orElseGet(() -> String.format("You do not have %s in the fridge%n", inputName));
 
-    System.out.print(printFridgeHeader(inputName));
-    System.out.print(foundGrocery.get());
-    System.out.format("+--------------+-------------+-----------------+------------------+%n");
   }
 
   /**
@@ -80,16 +73,15 @@ public class Fridge {
    *
    * @param inputName The name of the grocery to search for.
    */
-  public void removeGrocery(String inputName) {
+  public String removeGrocery(String inputName) {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
     if (foundGrocery.isEmpty()) {
-      System.out.printf("You do no have %s in the fridge!%n", inputName);
-      return;
+      return String.format("You do not have %s in the fridge!%n", inputName);
     }
 
     groceries.remove(foundGrocery.get());
-    System.out.printf("%n%s was removed.%n", inputName);
+    return String.format("%n%s was removed.%n", inputName);
   }
 
   /**
@@ -98,16 +90,15 @@ public class Fridge {
    * @param inputName The name of the grocery to search for.
    * @param quantity  The quantity to increase grocery quantity with.
    */
-  public void increaseQuantity(String inputName, float quantity) {
+  public String increaseQuantity(String inputName, float quantity) {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
     if (foundGrocery.isEmpty()) {
-      System.out.printf("You do no have %s in the fridge!%n", inputName);
-      return;
+      return String.format("You do not have %s in the fridge!%n", inputName);
     }
 
     foundGrocery.get().increaseQuantity(quantity);
-    System.out.printf("%n%s increase in quantity.%n", inputName);
+    return String.format("%n%s increase in the quantity %n", inputName);
   }
 
   /**
@@ -118,22 +109,20 @@ public class Fridge {
    * @param inputName The name of the grocery to search for.
    * @param quantity  The quantity to decrease grocery quantity with.
    */
-  public void decreaseQuantity(String inputName, float quantity) {
+  public String decreaseQuantity(String inputName, float quantity) {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
 
     if (foundGrocery.isEmpty()) {
-      System.out.printf("You do no have this grocery in the Fridge!%n");
-      return;
+      return String.format("You do not have this grocery in the fridge%n");
     }
 
     if (foundGrocery.get().getQuantity() - quantity <= 0) {
       removeGrocery(inputName);
-      System.out.print("After decreasing quantity there was nothing left of the grocery!");
-      return;
+      return "After decreasing quantity there was nothing left of the grocery!";
     }
 
     foundGrocery.get().decreaseQuantity(quantity);
-    System.out.printf("%s decrease in quantity.%n", inputName);
+    return String.format("%s decrease in quantity.%n", inputName);
   }
 
 
@@ -144,46 +133,50 @@ public class Fridge {
    *
    * @param inputDate The date to check against the expiration date of the grocery item.
    */
-  public void bestBeforeDate(LocalDate inputDate) {
-    //LocalDate parsedInputDate =
-    //    LocalDate.parse(inputDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-
+  public String bestBeforeDate(LocalDate inputDate) {
     if (groceries.stream()
         .noneMatch(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))) {
-      System.out.printf("You have no groceries with a expiration date before %s.%n", inputDate);
-      return;
+      return String.format("You have no groceries with a expiration date before %s.%n", inputDate);
     }
 
     final String totalPrice = String.format("%.2f %s", totalExpiredPrice(inputDate), "kr");
 
-    System.out.print(printFridgeHeader("Expired groceries"));
+    StringBuilder outputStringOfGroceryItems = new StringBuilder();
     groceries.stream()
         .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))
         .sorted(Comparator.comparing(GroceryItem::getExpirationDate))
-        .map(GroceryItem::toString)
-        .forEach(System.out::print);
-    System.out.format("+--------------+-------------+-----------------+------------------+%n");
-    System.out.format("| Total price: %-51s| %n", totalPrice);
-    System.out.format("+--------------+-------------+-----------------+------------------+%n");
+        .map(groceryItem -> String.format("%s", groceryItem))
+        .forEach(outputStringOfGroceryItems::append);
+
+    return String.format(
+        "%s"
+            + "%s+--------------+-------------+-----------------+------------------+%n"
+            + "| Total price: %-51s| %n"
+            + "+--------------+-------------+-----------------+------------------+%n",
+        printFridgeHeader("Expired groceries"), outputStringOfGroceryItems.toString(), totalPrice);
   }
 
   /**
    * Printing all groceries in fridge in table.
    * If there is no groceries it prints error message to user.
    */
-  public void printFridgeContent() {
+  public String printFridgeContent() {
     if (groceries.isEmpty()) {
-      System.out.printf("There is no groceries in your fridge!%n");
-      return;
+      return String.format("There is no groceries in your fridge!%n");
     }
 
     final String totalPrice = String.format("%.2f %s", totalPrice(), "kr");
 
-    System.out.print(printFridgeHeader("Fridge content"));
-    groceries.stream().map(GroceryItem::toString).forEach(System.out::print);
-    System.out.format("+--------------+-------------+-----------------+------------------+%n");
-    System.out.format("| Total price: %-51s| %n", totalPrice);
-    System.out.format("+--------------+-------------+-----------------+------------------+%n");
+    StringBuilder outputGroceries = new StringBuilder();
+    groceries.stream().map(groceryItem -> String.format("%s", groceryItem))
+        .forEach(outputGroceries::append);
+
+    return String.format("%s"
+            + "%s"
+            + "+--------------+-------------+-----------------+------------------+%n"
+            + "| Total price: %-51s| %n"
+            + "+--------------+-------------+-----------------+------------------+%n",
+        printFridgeHeader("Fridge content"), outputGroceries, totalPrice);
   }
 
   /**
@@ -192,7 +185,7 @@ public class Fridge {
   private float totalExpiredPrice(LocalDate inputDate) {
     return groceries.stream()
         .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))
-        .map(GroceryItem -> GroceryItem.getGrocery().getPrice() * GroceryItem.getQuantity())
+        .map(groceryItem -> groceryItem.getGrocery().getPrice() * groceryItem.getQuantity())
         .reduce(0.0f, Float::sum);
   }
 
@@ -201,7 +194,7 @@ public class Fridge {
    */
   private float totalPrice() {
     return groceries.stream()
-        .map(GroceryItem -> GroceryItem.getGrocery().getPrice() * GroceryItem.getQuantity())
+        .map(groceryItem -> groceryItem.getGrocery().getPrice() * groceryItem.getQuantity())
         .reduce(0.0f, Float::sum);
   }
 

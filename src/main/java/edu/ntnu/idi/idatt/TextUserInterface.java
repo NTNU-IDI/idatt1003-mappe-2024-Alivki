@@ -194,7 +194,7 @@ public class TextUserInterface {
     GroceryItem newGroceryItem =
         new GroceryItem(newGrocery, parsedExpirationDate, (float) quantityAndUnitObj[0]);
 
-    fridge.addGrocery(newGroceryItem);
+    System.out.print(fridge.addGrocery(newGroceryItem));
 
     fridgeMenu();
   }
@@ -206,7 +206,7 @@ public class TextUserInterface {
     System.out.println("Write the name of the grocery you want to remove.");
     final String groceryName = scanner.nextLine();
 
-    fridge.removeGrocery(groceryName);
+    System.out.print(fridge.removeGrocery(groceryName));
     fridgeMenu();
   }
 
@@ -228,7 +228,7 @@ public class TextUserInterface {
       addGrocery();
     }
 
-    fridge.increaseQuantity(groceryName, addQuantity);
+    System.out.print(fridge.increaseQuantity(groceryName, addQuantity));
     fridgeMenu();
   }
 
@@ -250,7 +250,7 @@ public class TextUserInterface {
       addGrocery();
     }
 
-    fridge.increaseQuantity(groceryName, removeQuantity);
+    System.out.print(fridge.decreaseQuantity(groceryName, removeQuantity));
     fridgeMenu();
   }
 
@@ -258,7 +258,7 @@ public class TextUserInterface {
    * .
    */
   private void printGroceries() {
-    fridge.printFridgeContent();
+    System.out.print(fridge.printFridgeContent());
     fridgeMenu();
   }
 
@@ -269,16 +269,16 @@ public class TextUserInterface {
     System.out.println("Write the name of the grocery you are looking for.");
     String inputName = scanner.nextLine();
 
-    fridge.printGrocery(inputName);
+    System.out.print(fridge.printGrocery(inputName));
     fridgeMenu();
   }
 
   /**
-   * -
+   * .
    */
   private void expiredGroceries() {
     LocalDate today = LocalDate.now();
-    fridge.bestBeforeDate(today);
+    System.out.print(fridge.bestBeforeDate(today));
     fridgeMenu();
   }
 
@@ -352,8 +352,8 @@ public class TextUserInterface {
     Map<Grocery, Float> groceries = new HashMap<>();
 
     System.out.println("Write the recipe name");
-    String name = scanner.nextLine().toLowerCase();
 
+    String name = scanner.nextLine().toLowerCase();
     System.out.println("Write a short description for the recipe.");
     String description = scanner.nextLine();
 
