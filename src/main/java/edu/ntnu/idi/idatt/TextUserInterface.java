@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -30,7 +31,6 @@ public class TextUserInterface {
    */
   public void start() {
     menu();
-    //testRecipe();
   }
 
   /**
@@ -54,7 +54,7 @@ public class TextUserInterface {
         scanner.nextLine();
       } catch (InputMismatchException e) {
         System.out.println("Choose a number!");
-        scanner.next();
+        scanner.nextLine();
         continue;
       }
 
@@ -102,7 +102,7 @@ public class TextUserInterface {
         scanner.nextLine();
       } catch (InputMismatchException e) {
         System.out.println("Choose a number!");
-        scanner.next();
+        scanner.nextLine();
         continue;
       }
 
@@ -152,47 +152,40 @@ public class TextUserInterface {
    */
   private void addGrocery() {
     Object[] quantityAndUnitObj = null;
-    LocalDate parsedExpirationDate = null;
-
-    System.out.println("Write the grocery name");
-    String name = scanner.nextLine().toLowerCase();
-
-    System.out.println("Write the total price you payed for the grocery");
-    float price = scanner.nextFloat();
-    scanner.nextLine();
-
-    System.out.println("Write the quantity and the unit of the grocery");
-    System.out.println("Example: 2 kg, 1.5 L");
-    String quantityAndUnit = scanner.nextLine();
-
-    System.out.println("Write the expiration date of the grocery in the format dd.MM.yyyy");
-    String expirationDate = scanner.nextLine();
+    LocalDate expirationDate = null;
+    String groceryName = "";
+    String quantityAndUnit = "";
+    float price = 0;
 
     try {
-      parsedExpirationDate =
-          LocalDate.parse(expirationDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-      quantityAndUnitObj = InputValidation.unitConversion(quantityAndUnit);
-      InputValidation.isNotEmpty(expirationDate);
-      InputValidation.isNotEmpty(name);
-      InputValidation.isValidFloat(price);
-      InputValidation.nameUnder32Char(name);
+      System.out.println("Write the grocery name");
+      groceryName = Utils.stingInput();
 
-      InputValidation.isValidDate(parsedExpirationDate);
-    } catch (IllegalArgumentException | DateTimeParseException e) {
+      System.out.println("Write the total price you payed for the grocery");
+      price = Utils.floatInput();
+
+      System.out.println("Write the quantity and the unit of the grocery");
+      System.out.println("Example: 2 kg, 1.5 L");
+      quantityAndUnit = Utils.stingInput();
+      quantityAndUnitObj = InputValidation.unitConversion(quantityAndUnit);
+
+      System.out.println("Write the expiration date of the grocery in the format dd.MM.yyyy");
+      expirationDate = Utils.dateInput();
+    } catch (IllegalArgumentException | InputMismatchException | DateTimeParseException e) {
       if (e instanceof DateTimeParseException) {
         System.err.print("Invalid date format, please use dd.MM.yyyy");
         addGrocery();
         return;
       }
-      System.err.print(e.getMessage());
+      System.err.println(e.getMessage());
       addGrocery();
     }
 
     float pricePerUnit = price / (float) quantityAndUnitObj[0];
 
-    Grocery newGrocery = new Grocery(name, (String) quantityAndUnitObj[1], pricePerUnit);
+    Grocery newGrocery = new Grocery(groceryName, (String) quantityAndUnitObj[1], pricePerUnit);
     GroceryItem newGroceryItem =
-        new GroceryItem(newGrocery, parsedExpirationDate, (float) quantityAndUnitObj[0]);
+        new GroceryItem(newGrocery, expirationDate, (float) quantityAndUnitObj[0]);
 
     System.out.print(fridge.addGrocery(newGroceryItem));
 
@@ -203,8 +196,15 @@ public class TextUserInterface {
    * .
    */
   private void removeGrocery() {
-    System.out.println("Write the name of the grocery you want to remove.");
-    final String groceryName = scanner.nextLine();
+    String groceryName = "";
+
+    try {
+      System.out.println("Write the name of the grocery you want to remove.");
+      groceryName = Utils.stingInput();
+    } catch (IllegalArgumentException e) {
+      System.err.println(e.getMessage());
+      removeGrocery();
+    }
 
     System.out.print(fridge.removeGrocery(groceryName));
     fridgeMenu();
@@ -214,21 +214,21 @@ public class TextUserInterface {
    * .
    */
   private void increaseQuantity() {
-    System.out.println("Write the grocery you want to add more of.");
-    final String groceryName = scanner.nextLine();
-
-    System.out.println("Write how much you are adding the grocery in the format without unit");
-    float addQuantity = scanner.nextFloat();
-    scanner.nextLine();
+    String groceryName = "";
+    float inputQuantity = 0;
 
     try {
-      InputValidation.isValidFloat(addQuantity);
+      System.out.println("Write the grocery you want to add more of.");
+      groceryName = Utils.stingInput();
+
+      System.out.println("Write how much you are adding the grocery in the format without unit");
+      inputQuantity = Utils.floatInput();
     } catch (IllegalArgumentException e) {
-      System.err.print(e.getMessage());
-      addGrocery();
+      System.err.println(e.getMessage());
+      increaseQuantity();
     }
 
-    System.out.print(fridge.increaseQuantity(groceryName, addQuantity));
+    System.out.print(fridge.increaseQuantity(groceryName, inputQuantity));
     fridgeMenu();
   }
 
@@ -236,21 +236,21 @@ public class TextUserInterface {
    * .
    */
   private void decreaseQuantity() {
-    System.out.println("Write the grocery you want to add more of.");
-    final String groceryName = scanner.nextLine();
-
-    System.out.println("Write how much you are adding the grocery in the format without unit");
-    float removeQuantity = scanner.nextFloat();
-    scanner.nextLine();
+    String groceryName = "";
+    float inputQuantity = 0;
 
     try {
-      InputValidation.isValidFloat(removeQuantity);
+      System.out.println("Write the name of the grocery you want to decrease the quantity of.");
+      groceryName = Utils.stingInput();
+
+      System.out.println("Write how much you want to remove without unit");
+      inputQuantity = Utils.floatInput();
     } catch (IllegalArgumentException e) {
-      System.err.print(e.getMessage());
-      addGrocery();
+      System.err.println(e.getMessage());
+      increaseQuantity();
     }
 
-    System.out.print(fridge.decreaseQuantity(groceryName, removeQuantity));
+    System.out.print(fridge.decreaseQuantity(groceryName, inputQuantity));
     fridgeMenu();
   }
 
@@ -266,10 +266,17 @@ public class TextUserInterface {
    * .
    */
   private void printGrocery() {
-    System.out.println("Write the name of the grocery you are looking for.");
-    String inputName = scanner.nextLine();
+    String groceryName = "";
 
-    System.out.print(fridge.printGrocery(inputName));
+    try {
+      System.out.println("Write the name of the grocery you are looking for.");
+      groceryName = Utils.stingInput();
+    } catch (IllegalArgumentException e) {
+      System.err.println(e.getMessage());
+      removeGrocery();
+    }
+
+    System.out.print(fridge.printGrocery(groceryName));
     fridgeMenu();
   }
 
@@ -307,7 +314,7 @@ public class TextUserInterface {
         scanner.nextLine();
       } catch (InputMismatchException e) {
         System.out.println("Choose a number!");
-        scanner.next();
+        scanner.nextLine();
         continue;
       }
 
@@ -427,37 +434,5 @@ public class TextUserInterface {
 
     cookbook.printRecipe(name);
     cookbookMenu();
-  }
-
-  /**
-   * .
-   */
-  public void testRecipe() {
-    HashMap<Grocery, Float> test = new HashMap<>();
-    Grocery test1 = new Grocery("Cheese", "kg", 0);
-    Grocery test2 = new Grocery("Milk", "L", 0);
-    float test1Quan = 2f;
-    float test2Quan = 1.5f;
-
-    test.put(test1, test1Quan);
-    test.put(test2, test2Quan);
-
-    String name = "Taco";
-    String description = "Meksikans rett som norge har gjort sin egen, den er bla";
-    String procedure = "Putt alt sammen på en lefse";
-    int servings = 4;
-
-    InputValidation.isNotEmpty(name);
-    InputValidation.isNotEmpty(description);
-    InputValidation.isNotEmpty(procedure);
-    InputValidation.isValidInteger(servings);
-
-    Recipe recipee = new Recipe(name, description, procedure, test, servings);
-
-    fridge.addGrocery(new GroceryItem(test1, LocalDate.now(), 2.2f));
-
-    cookbook.addRecipe(recipee);
-
-    cookbook.printCookbookContent();
   }
 }

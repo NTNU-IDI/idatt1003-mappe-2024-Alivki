@@ -8,14 +8,15 @@ import java.util.Scanner;
  * .
  */
 public class Utils {
-  Scanner scanner = new Scanner(System.in);
+  static Scanner scanner = new Scanner(System.in);
+
 
   /**
    * .
    *
    * @return string
    */
-  public String stingInput() {
+  public static String stingInput() {
     String input = scanner.nextLine();
 
     InputValidation.isNotEmpty(input);
@@ -28,7 +29,7 @@ public class Utils {
    *
    * @return string
    */
-  public int intInput() {
+  public static int intInput() {
     int input = scanner.nextInt();
     scanner.nextLine();
 
@@ -42,7 +43,7 @@ public class Utils {
    *
    * @return string
    */
-  public float floatInput() {
+  public static float floatInput() {
     float input = scanner.nextFloat();
     scanner.nextLine();
 
@@ -56,7 +57,7 @@ public class Utils {
    *
    * @return string
    */
-  public LocalDate dateInput() {
+  public static LocalDate dateInput() {
     String input = scanner.nextLine();
 
     return LocalDate.parse(input, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
