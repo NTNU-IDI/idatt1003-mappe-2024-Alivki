@@ -86,8 +86,7 @@ public class GroceryItem {
    *
    * @return A string containing the name, quantity, unit and expiration date.
    */
-  @Override
-  public String toString() {
+  public String groceryOutput() {
     String name =
         grocery.getName().length() > 12 ? shotenName(grocery.getName(), 10) : grocery.getName();
 
@@ -98,6 +97,13 @@ public class GroceryItem {
     return String.format("| %-12s | %-11s | %-15s | %-16s |%n", name, unit,
         price, expirationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
   }
+
+  /**
+   * .
+   */
+  //@Override
+  //public String toString() {
+  //}
 
   /**
    * .
