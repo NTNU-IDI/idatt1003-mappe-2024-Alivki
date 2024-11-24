@@ -21,20 +21,17 @@ public class Recipe {
    * @param name         name
    * @param description  description
    * @param procedure    procedure
-   * @param newGroceries groceries
    * @param servings     servings
    */
   public Recipe(
-      String name, String description, String procedure,
-      Map<Grocery, Float> newGroceries, int servings) {
-    this.groceries = new HashMap<>();
-
+      String name, String description, String procedure, int servings) {
     this.name = name;
     this.description = description;
     this.procedure = procedure;
     this.servings = servings;
+    this.groceries = new HashMap<>();
 
-    addGroceries(newGroceries);
+    //addGroceries(newGroceries);
   }
 
   /**
@@ -85,39 +82,37 @@ public class Recipe {
   /**
    * .
    */
-  public void addGroceries(Map<Grocery, Float> newGroceries) {
+  public String addGroceries(Map<Grocery, Float> newGroceries) {
     if (groceries.isEmpty()) {
       this.groceries.putAll(newGroceries);
 
-      System.out.println("Recipe was successfully created!");
-      return;
+      return "Recipe was successfully created!";
     }
 
     newGroceries.forEach((grocery, quantity) -> {
-      if (groceries.containsKey(grocery)) {
-        System.out.printf("%s is already in recipe!%n", grocery.getName());
+      if (!groceries.containsKey(grocery)) {
+        groceries.put(grocery, quantity);
+        //return String.format("%s was added to the recipe!%n", grocery.getName());
       }
-
-      groceries.put(grocery, quantity);
-      System.out.printf("%s was added to the recipe!%n", grocery.getName());
+      //return String.format("%s is already in recipe!%n", grocery.getName());
     });
+
+    return "All groceries added";
   }
 
   /**
    * .
    */
-  public void removeGroceries(List<String> removeGroceries) {
+  public String removeGroceries(List<String> removeGroceries) {
     for (String groceryName : removeGroceries) {
       groceries.forEach((grocery, quantity) -> {
         if (grocery.getName().equalsIgnoreCase(groceryName)) {
           groceries.remove(grocery);
-
-          System.out.printf("%s was removed from recipe!%n", grocery.getName());
         }
       });
-
-      System.out.printf("%s is not in recipe!%n", groceryName);
     }
+
+    return "All groceries were removed from the recipe!";
   }
 
   /**
@@ -129,8 +124,8 @@ public class Recipe {
   public String toString() {
     StringBuilder string = new StringBuilder();
 
-    string.append(calculateRecipeHeader());
-    string.append(calculateRecipeBody(groceries, description, servings, procedure));
+    string.append(makeRecipeHeader());
+    string.append(makeRecipeBody(groceries, description, servings, procedure));
     string.append("+-------------------+------------------------------------------+\n");
 
     return string.toString();
@@ -139,7 +134,7 @@ public class Recipe {
   /**
    * .
    */
-  public String calculateRecipeHeader() {
+  public String makeRecipeHeader() {
     String inputName = name;
     int leftPadding;
     int rightPadding;
@@ -168,8 +163,8 @@ public class Recipe {
    * @param procedure   procedure
    * @return string
    */
-  public String calculateRecipeBody(Map<Grocery, Float> groceries, String description,
-                                    int servings, String procedure) {
+  public String makeRecipeBody(Map<Grocery, Float> groceries, String description,
+                               int servings, String procedure) {
     StringBuilder string = new StringBuilder();
 
     String[] descriptionSplit = description.split("(?<=\\G.{40})");
@@ -180,7 +175,7 @@ public class Recipe {
 
     ArrayList<String> groceryColum = calculateGroceryColum(numberOfRows);
     ArrayList<String> infoColum =
-        calculateDescriptionColum(descriptionSplit, procedureSplit, numberOfRows);
+        makeDescriptionColum(descriptionSplit, procedureSplit, numberOfRows);
 
     for (int j = 0; j < numberOfRows; j++) {
       string.append(String.format("| %-17s | %-40s |%n", groceryColum.get(j), infoColum.get(j)));
@@ -203,7 +198,7 @@ public class Recipe {
     int i = 0;
     for (Map.Entry<Grocery, Float> entry : groceries.entrySet()) {
       String outputName =
-          entry.getKey().getName().length() > 10 ? shotenName(entry.getKey().getName()) :
+          entry.getKey().getName().length() > 10 ? shortenName(entry.getKey().getName()) :
               entry.getKey().getName();
 
       if (i < numberOfRows) {
@@ -237,8 +232,8 @@ public class Recipe {
    * @param numberOfRows     fes
    * @return fes
    */
-  private ArrayList<String> calculateDescriptionColum(String[] descriptionSplit,
-                                                      String[] procedureSplit, int numberOfRows) {
+  private ArrayList<String> makeDescriptionColum(String[] descriptionSplit,
+                                                 String[] procedureSplit, int numberOfRows) {
     ArrayList<String> infoColum = new ArrayList<>();
 
     for (int i = 0; i < numberOfRows; i++) {
@@ -265,7 +260,7 @@ public class Recipe {
    * @param inputName awd
    * @return awd
    */
-  private String shotenName(String inputName) {
+  private String shortenName(String inputName) {
     return inputName.substring(0, 8) + "..";
   }
 }
