@@ -30,39 +30,51 @@ public class InputValidation {
    * @return test
    */
   public static Object[] unitConversion(String input) {
-    float quantityInput = 0;
-    String unitInput = "";
+    Object[] parsedInput = parseInput(input);
 
-    Pattern pattern = Pattern.compile("([0-9. ]+)([a-zA-Z]+)");
-    Matcher splitInput = pattern.matcher(input);
+    float quantity = (Float) parsedInput[0];
+    String unit = (String) parsedInput[1];
 
-    while (splitInput.find()) {
-      if (splitInput.group(1) != null) {
-        quantityInput = Float.parseFloat(splitInput.group(1));
-        isValidFloat(quantityInput);
-      } else {
-        throw new IllegalArgumentException("Has to have a quantity and can not be empty!");
+    if (weightConversionFactors.containsKey(unit.toLowerCase())) {
+      quantity = convertWeight(quantity, unit);
+      unit = "kg";
+    } else if (volumeConversionFactors.containsKey(unit.toLowerCase())) {
+      quantity = convertVolume(quantity, unit);
+      unit = "l";
+    } else if (unit.equalsIgnoreCase("stk")) {
+      quantity = Math.round(quantity);
+    }
+
+    return new Object[] {quantity, unit};
+  }
+
+  /**
+   * .
+   *
+   * @param input test
+   * @return test
+   */
+  public static Object[] parseInput(String input) {
+    if (input == null || input.trim().isEmpty()) {
+      throw new IllegalArgumentException("Input for quantity and unit cannot be null or empty");
+    }
+
+    Pattern pattern = Pattern.compile("^\\s*([+-]?\\d*\\.?\\d+)\\s*([a-zA-Z]+)\\s*$");
+    Matcher matcher = pattern.matcher(input);
+
+    if (matcher.matches()) {
+      String numberPart = matcher.group(1);
+      String textPart = matcher.group(2);
+
+      try {
+        float number = Float.parseFloat(numberPart);
+        return new Object[] {number, textPart};
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Invalid number format: " + numberPart);
       }
-      if (splitInput.group(2) != null) {
-        unitInput = splitInput.group(2);
-      } else {
-        throw new IllegalArgumentException("Has to have unit and can not be empty!");
-      }
+    } else {
+      throw new IllegalArgumentException("Input must contain a numeric value and a text unit.");
     }
-
-    if (weightConversionFactors.containsKey(unitInput.toLowerCase())) {
-      quantityInput = convertWeight(quantityInput, unitInput);
-      unitInput = "kg";
-    }
-    if (volumeConversionFactors.containsKey(unitInput.toLowerCase())) {
-      quantityInput = convertVolume(quantityInput, unitInput);
-      unitInput = "l";
-    }
-    if (unitInput.equalsIgnoreCase("stk")) {
-      quantityInput = Math.round(quantityInput);
-    }
-
-    return new Object[] {quantityInput, unitInput};
   }
 
   /**
@@ -113,6 +125,15 @@ public class InputValidation {
 
   /**
    * .
+   */
+  public static void isValidString(String input) {
+    if (!input.matches("^[a-zA-Z0!@#$%^&*()_+={};':|,.<>/? ]+$")) {
+      throw new IllegalArgumentException("The input string can only contain characters");
+    }
+  }
+
+  /**
+   * .
    *
    * @param input float
    * @throws IllegalArgumentException If input is negative or over 10000.
@@ -155,7 +176,7 @@ public class InputValidation {
    */
   public static void isValidDate(LocalDate input) {
     if (input.isBefore(LocalDate.now())) {
-    //  throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
+      //  throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
     }
   }
 }

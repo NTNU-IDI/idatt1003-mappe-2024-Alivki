@@ -16,7 +16,19 @@ public class Utils {
    *
    * @return string
    */
-  public static String stingInput() {
+  public static String stringInput() {
+    String input = scanner.nextLine();
+
+    InputValidation.isNotEmpty(input);
+    InputValidation.isValidString(input);
+
+    return input;
+  }
+
+  /**
+   * .
+   */
+  public static String quantityAndUnitInput() {
     String input = scanner.nextLine();
 
     InputValidation.isNotEmpty(input);
