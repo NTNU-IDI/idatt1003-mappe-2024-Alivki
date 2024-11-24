@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * .
@@ -100,13 +101,6 @@ public class GroceryItem {
 
   /**
    * .
-   */
-  //@Override
-  //public String toString() {
-  //}
-
-  /**
-   * .
    *
    * @param inputName awd
    * @return awd
@@ -124,5 +118,32 @@ public class GroceryItem {
     } else {
       return quantity;
     }
+  }
+
+  /**
+   * .
+   */
+  //@Override
+  //public String toString() {
+  //}
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+
+    GroceryItem groceryItem = (GroceryItem) obj;
+
+    return Objects.equals(grocery.getName(), groceryItem.getGrocery().getName());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(grocery.getName());
   }
 }
