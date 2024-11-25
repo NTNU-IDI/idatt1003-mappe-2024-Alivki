@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -42,8 +43,14 @@ public class Utils {
    * @return string
    */
   public static int intInput() {
-    int input = scanner.nextInt();
-    scanner.nextLine();
+    int input;
+
+    try {
+      input = scanner.nextInt();
+      scanner.nextLine();
+    } catch (InputMismatchException e) {
+      throw new IllegalArgumentException("The input has to be number!");
+    }
 
     InputValidation.isValidInteger(input);
 

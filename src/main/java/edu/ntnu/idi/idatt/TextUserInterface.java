@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
+import jdk.jshell.execution.Util;
 
 /**
  * .
@@ -290,7 +291,7 @@ public class TextUserInterface {
   /**
    * .
    */
-  public void cookbookMenu() {
+  private void cookbookMenu() {
     int choose = -1;
 
     do {
@@ -322,7 +323,7 @@ public class TextUserInterface {
           return;
         }
         case 2 -> {
-          System.out.println("test");
+          removeRecipe();
           return;
         }
         case 3 -> {
@@ -355,26 +356,47 @@ public class TextUserInterface {
   private void addRecipe() {
     Object[] quantityAndUnitObj = null;
     Map<Grocery, Float> groceries = new HashMap<>();
+    String recipeName = "";
+    String recipeDescription = "";
+    String recipeProcedure = "";
+    int recipeServings = 0;
 
-    System.out.println("Write the recipe name");
+    try {
+      System.out.println("Write the recipe name");
+      recipeName = Utils.stringInput();
 
-    String name = scanner.nextLine().toLowerCase();
-    System.out.println("Write a short description for the recipe.");
-    String description = scanner.nextLine();
+      System.out.println("Write a short description for the recipe.");
+      recipeDescription = Utils.stringInput();
 
-    System.out.println("Write the procedure for the recipe.");
-    String procedure = scanner.nextLine();
+      System.out.println("Write the procedure for the recipe.");
+      recipeProcedure = Utils.stringInput();
 
-    String groceryInput = "1";
-    while (Integer.parseInt(groceryInput) != 0) {
-      System.out.println("Write the grocery name,");
-      groceryInput = scanner.nextLine();
+      System.out.println("Write how many servings this recipe will produce.");
+      recipeServings = Utils.intInput();
+    } catch (IllegalArgumentException e) {
+      System.err.println(e.getMessage());
+      addRecipe();
+    }
+
+    System.out.println("Next step is to input all groceries in needed in the recipe.");
+    System.out.println(
+        "When you are done inputting all the groceries write 0 instead of grocery name.");
+
+    String groceryName = "1";
+    while (Integer.parseInt(groceryName) != 0) {
+      System.out.println("Write the grocery name.");
+      groceryName = Utils.quantityAndUnitInput();
+
+      if (groceryName.equalsIgnoreCase("0")) {
+        break;
+      }
 
       System.out.println("Write the quantity of the grocery.");
       System.out.println("Example: 2.2kg, 2l, 200g");
-      System.out.println("\n Input 0 when done:");
+      String groceryQuantityAndUnit = Utils.quantityAndUnitInput();
 
-      String groceryQuantityAndUnit = scanner.nextLine();
+      System.out.println("Write the price per unit of the grocery");
+      float pricePerUnit = Utils.floatInput();
 
       try {
         quantityAndUnitObj = InputValidation.unitConversion(groceryQuantityAndUnit);
@@ -383,37 +405,20 @@ public class TextUserInterface {
         addRecipe();
       }
 
-      Grocery newGrocery = new Grocery(groceryInput, (String) quantityAndUnitObj[1], 0f);
+      Grocery newGrocery = new Grocery(groceryName, (String) quantityAndUnitObj[1], pricePerUnit);
 
       groceries.put(newGrocery, (Float) quantityAndUnitObj[0]);
 
-      if (!groceryInput.equalsIgnoreCase("0")) {
-        groceryInput = "1";
+      if (!groceryName.equalsIgnoreCase("0")) {
+        groceryName = "1";
       }
     }
 
-    System.out.println("Write how many servings this recipe will produce.");
-    int servings = scanner.nextInt();
-    scanner.nextLine();
-
-    try {
-      InputValidation.isNotEmpty(name);
-      InputValidation.isValidString(name);
-      InputValidation.isNotEmpty(description);
-      InputValidation.isNotEmpty(procedure);
-      InputValidation.nameUnder32Char(name);
-      InputValidation.isValidInteger(servings);
-    } catch (IllegalArgumentException e) {
-      System.err.print(e.getMessage());
-      addRecipe();
-    }
-
     Recipe newRecipe =
-        new Recipe(name, description, procedure, servings);
+        new Recipe(recipeName, recipeDescription, recipeProcedure, recipeServings);
 
     System.out.println(newRecipe.addGroceries(groceries));
-
-    cookbook.addRecipe(newRecipe);
+    System.out.println(cookbook.addRecipe(newRecipe));
 
     cookbookMenu();
   }
@@ -421,8 +426,21 @@ public class TextUserInterface {
   /**
    * .
    */
-  public void printCookbook() {
-    cookbook.printCookbookContent();
+  private void removeRecipe() {
+    String recipeName;
+
+    System.out.println("Write the name of the recipe.");
+    recipeName = Utils.stringInput();
+
+    System.out.println(cookbook.removeRecipe(recipeName));
+    cookbookMenu();
+  }
+
+  /**
+   * .
+   */
+  private void printCookbook() {
+    System.out.println(cookbook.printCookbookContent());
     cookbookMenu();
   }
 
@@ -430,10 +448,12 @@ public class TextUserInterface {
    * .
    */
   private void seeRecipe() {
-    System.out.println("Write the name of the recipe.");
-    String name = scanner.nextLine();
+    String recipeName;
 
-    cookbook.printRecipe(name);
+    System.out.println("Write the name of the recipe.");
+    recipeName = Utils.stringInput();
+
+    System.out.println(cookbook.printRecipe(recipeName));
     cookbookMenu();
   }
 }

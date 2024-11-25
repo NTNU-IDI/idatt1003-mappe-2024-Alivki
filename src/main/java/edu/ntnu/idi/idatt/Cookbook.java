@@ -104,28 +104,25 @@ public class Cookbook {
    *
    * @param inputName The name of the grocery to search for.
    */
-  public void printRecipe(String inputName) {
+  public String printRecipe(String inputName) {
     Optional<Recipe> foundRecipe = findRecipe(inputName);
 
     if (foundRecipe.isEmpty()) {
-      System.out.printf("%s is not in the cookbook!%n", inputName);
-      return;
+      return String.format("%s is not in the cookbook!%n", inputName);
     }
 
-    System.out.print(foundRecipe.get().printRecipe());
+    return foundRecipe.get().printRecipe();
   }
 
   /**
    * .
    */
-  public void printCookbookContent() {
+  public String printCookbookContent() {
     if (recipes.isEmpty()) {
-      System.out.printf("There is no groceries in your fridge!%n");
-      return;
+      return String.format("There is no groceries in your fridge!%n");
     }
 
-    System.out.print(printCookbookHeader("Cookbook"));
-    System.out.print(printCookbookBody());
+    return String.format("%s%s", printCookbookHeader("Cookbook"), printCookbookBody());
   }
 
   /**
