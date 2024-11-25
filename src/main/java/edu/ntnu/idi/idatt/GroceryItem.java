@@ -126,7 +126,6 @@ public class GroceryItem {
   //@Override
   //public String toString() {
   //}
-
   @Override
   public boolean equals(Object obj) {
     if (this == obj) {
@@ -139,7 +138,8 @@ public class GroceryItem {
 
     GroceryItem groceryItem = (GroceryItem) obj;
 
-    return Objects.equals(grocery.getName(), groceryItem.getGrocery().getName());
+    return Objects.equals(grocery.getName().toLowerCase(),
+        groceryItem.getGrocery().getName().toLowerCase());
   }
 
   @Override

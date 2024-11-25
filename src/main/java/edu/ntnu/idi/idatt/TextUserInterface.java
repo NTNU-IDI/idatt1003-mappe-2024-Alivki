@@ -1,8 +1,6 @@
 package edu.ntnu.idi.idatt;
 
-import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -159,14 +157,14 @@ public class TextUserInterface {
 
     try {
       System.out.println("Write the grocery name");
-      groceryName = Utils.stingInput();
+      groceryName = Utils.stringInput();
 
       System.out.println("Write the total price you payed for the grocery");
       price = Utils.floatInput();
 
       System.out.println("Write the quantity and the unit of the grocery");
       System.out.println("Example: 2 kg, 1.5 L");
-      quantityAndUnit = Utils.stingInput();
+      quantityAndUnit = Utils.quantityAndUnitInput();
       quantityAndUnitObj = InputValidation.unitConversion(quantityAndUnit);
 
       System.out.println("Write the expiration date of the grocery in the format dd.MM.yyyy");
@@ -200,7 +198,7 @@ public class TextUserInterface {
 
     try {
       System.out.println("Write the name of the grocery you want to remove.");
-      groceryName = Utils.stingInput();
+      groceryName = Utils.stringInput();
     } catch (IllegalArgumentException e) {
       System.err.println(e.getMessage());
       removeGrocery();
@@ -219,7 +217,7 @@ public class TextUserInterface {
 
     try {
       System.out.println("Write the grocery you want to add more of.");
-      groceryName = Utils.stingInput();
+      groceryName = Utils.stringInput();
 
       System.out.println("Write how much you are adding the grocery in the format without unit");
       inputQuantity = Utils.floatInput();
@@ -241,7 +239,7 @@ public class TextUserInterface {
 
     try {
       System.out.println("Write the name of the grocery you want to decrease the quantity of.");
-      groceryName = Utils.stingInput();
+      groceryName = Utils.stringInput();
 
       System.out.println("Write how much you want to remove without unit");
       inputQuantity = Utils.floatInput();
@@ -270,7 +268,7 @@ public class TextUserInterface {
 
     try {
       System.out.println("Write the name of the grocery you are looking for.");
-      groceryName = Utils.stingInput();
+      groceryName = Utils.stringInput();
     } catch (IllegalArgumentException e) {
       System.err.println(e.getMessage());
       removeGrocery();
@@ -400,6 +398,7 @@ public class TextUserInterface {
 
     try {
       InputValidation.isNotEmpty(name);
+      InputValidation.isValidString(name);
       InputValidation.isNotEmpty(description);
       InputValidation.isNotEmpty(procedure);
       InputValidation.nameUnder32Char(name);
@@ -410,7 +409,9 @@ public class TextUserInterface {
     }
 
     Recipe newRecipe =
-        new Recipe(name, description, procedure, groceries, servings);
+        new Recipe(name, description, procedure, servings);
+
+    System.out.println(newRecipe.addGroceries(groceries));
 
     cookbook.addRecipe(newRecipe);
 

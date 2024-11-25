@@ -127,7 +127,7 @@ public class InputValidation {
    * .
    */
   public static void isValidString(String input) {
-    if (!input.matches("^[a-zA-Z0!@#$%^&*()_+={};':|,.<>/? ]+$")) {
+    if (!input.matches("^[a-zA-Z0!@#$%^&*()_+={};':|,.<>/?øæå ]+$")) {
       throw new IllegalArgumentException("The input string can only contain characters");
     }
   }

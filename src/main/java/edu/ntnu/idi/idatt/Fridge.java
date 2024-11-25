@@ -234,7 +234,8 @@ public class Fridge {
 
     while (left < right) {
       int mid = (left + right) / 2;
-      if (groceries.get(mid).getGrocery().getName().compareTo(inputGrocery.getGrocery().getName())
+      if (groceries.get(mid).getGrocery().getName().toLowerCase()
+          .compareTo(inputGrocery.getGrocery().getName().toLowerCase())
           < 0) {
         left = mid + 1;
       } else {
