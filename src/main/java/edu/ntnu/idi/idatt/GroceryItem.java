@@ -87,9 +87,9 @@ public class GroceryItem {
    *
    * @return A string containing the name, quantity, unit and expiration date.
    */
-  public String groceryOutput() {
+  public String printGrocery() {
     String name =
-        grocery.getName().length() > 12 ? shotenName(grocery.getName(), 10) : grocery.getName();
+        grocery.getName().length() > 12 ? shortenName(grocery.getName(), 10) : grocery.getName();
 
     String unit = String.format("%.2f%s", this.quantity, grocery.getUnit());
     String price = String.format("%.2f%s", grocery.getPrice(), "kr");
@@ -105,8 +105,8 @@ public class GroceryItem {
    * @param inputName awd
    * @return awd
    */
-  private String shotenName(String inputName, int shotenFrom) {
-    return inputName.substring(0, shotenFrom) + "..";
+  private String shortenName(String inputName, int shortenFrom) {
+    return inputName.substring(0, shortenFrom) + "..";
   }
 
   /**

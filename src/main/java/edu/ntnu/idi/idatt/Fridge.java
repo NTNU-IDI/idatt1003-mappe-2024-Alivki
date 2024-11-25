@@ -63,7 +63,7 @@ public class Fridge {
 
     return foundGrocery.map(groceryItem -> String.format(
             "%s%s+--------------+-------------+-----------------+------------------+%n",
-            printFridgeHeader(inputName), groceryItem.groceryOutput()))
+            printFridgeHeader(inputName), groceryItem.printGrocery()))
         .orElseGet(() -> String.format("You do not have %s in the fridge%n", inputName));
 
   }
@@ -145,7 +145,7 @@ public class Fridge {
     groceries.stream()
         .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))
         .sorted(Comparator.comparing(GroceryItem::getExpirationDate))
-        .map(groceryItem -> String.format("%s", groceryItem.groceryOutput()))
+        .map(groceryItem -> String.format("%s", groceryItem.printGrocery()))
         .forEach(outputStringOfGroceryItems::append);
 
     return String.format(
@@ -168,7 +168,7 @@ public class Fridge {
     final String totalPrice = String.format("%.2f %s", totalPrice(), "kr");
 
     StringBuilder outputGroceries = new StringBuilder();
-    groceries.stream().map(groceryItem -> String.format("%s", groceryItem.groceryOutput()))
+    groceries.stream().map(groceryItem -> String.format("%s", groceryItem.printGrocery()))
         .forEach(outputGroceries::append);
 
     return String.format("%s"

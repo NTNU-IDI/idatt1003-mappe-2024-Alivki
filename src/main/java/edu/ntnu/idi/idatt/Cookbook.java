@@ -12,7 +12,6 @@ public class Cookbook {
   private final List<Recipe> recipes;
   private final Fridge fridge;
 
-
   /**
    * Using array list because it is dynamic array with many useful methods.
    */
@@ -24,25 +23,25 @@ public class Cookbook {
   /**
    * .
    */
-  public void addRecipe(Recipe recipe) {
+  public String addRecipe(Recipe recipe) {
     if (recipes.contains(recipe)) {
-      System.out.println("Recipe is already in the cookbook!");
+      return "Recipe is already in the cookbook!";
     }
 
     recipes.add(recipe);
-    System.out.println("Recipe is added to the cookbook.");
+    return "Recipe was added to the cookbook!";
   }
 
   /**
    * .
    */
-  public void removeRecipe(String inputName) {
+  public String removeRecipe(String inputName) {
     if (recipes.isEmpty()) {
-      System.out.println("No recipes in the cookbook");
+      return "You have no recipes in the cookbook!";
     }
 
     recipes.removeIf(recipe -> recipe.getName().equalsIgnoreCase(inputName));
-    System.out.printf("Recipe for %s was removed from the cookbook!", inputName);
+    return String.format("Recipe for %s was removed from the cookbook!", inputName);
   }
 
   /**
@@ -113,7 +112,7 @@ public class Cookbook {
       return;
     }
 
-    System.out.print(foundRecipe.get());
+    System.out.print(foundRecipe.get().printRecipe());
   }
 
   /**
@@ -237,7 +236,7 @@ public class Cookbook {
    * @param inputName awd
    * @return awd
    */
-  private String shortenName(String inputName, int shotenFrom) {
-    return inputName.substring(0, shotenFrom) + "..";
+  private String shortenName(String inputName, int shortenFrom) {
+    return inputName.substring(0, shortenFrom) + "..";
   }
 }

@@ -30,8 +30,6 @@ public class Recipe {
     this.procedure = procedure;
     this.servings = servings;
     this.groceries = new HashMap<>();
-
-    //addGroceries(newGroceries);
   }
 
   /**
@@ -92,9 +90,7 @@ public class Recipe {
     newGroceries.forEach((grocery, quantity) -> {
       if (!groceries.containsKey(grocery)) {
         groceries.put(grocery, quantity);
-        //return String.format("%s was added to the recipe!%n", grocery.getName());
       }
-      //return String.format("%s is already in recipe!%n", grocery.getName());
     });
 
     return "All groceries added";
@@ -120,8 +116,7 @@ public class Recipe {
    *
    * @return string test
    */
-  @Override
-  public String toString() {
+  public String printRecipe() {
     StringBuilder string = new StringBuilder();
 
     string.append(makeRecipeHeader());
@@ -130,6 +125,7 @@ public class Recipe {
 
     return string.toString();
   }
+
 
   /**
    * .
@@ -173,7 +169,7 @@ public class Recipe {
     int numberOfRows =
         Math.max(groceries.size() + 3, descriptionSplit.length + procedureSplit.length + 2);
 
-    ArrayList<String> groceryColum = calculateGroceryColum(numberOfRows);
+    ArrayList<String> groceryColum = makeGroceryColum(numberOfRows);
     ArrayList<String> infoColum =
         makeDescriptionColum(descriptionSplit, procedureSplit, numberOfRows);
 
@@ -190,7 +186,7 @@ public class Recipe {
    * @param numberOfRows tes
    * @return test
    */
-  private ArrayList<String> calculateGroceryColum(int numberOfRows) {
+  private ArrayList<String> makeGroceryColum(int numberOfRows) {
     ArrayList<String> groceryColum = new ArrayList<>();
 
     groceryColum.add("Ingredients:");
@@ -263,4 +259,13 @@ public class Recipe {
   private String shortenName(String inputName) {
     return inputName.substring(0, 8) + "..";
   }
+
+  /**
+   * .
+   *
+   * @return string test
+   */
+  //@Override
+  //public String toString() {
+  //}
 }
