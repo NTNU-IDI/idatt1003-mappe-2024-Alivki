@@ -127,7 +127,7 @@ public class InputValidation {
    * .
    */
   public static void isValidString(String input) {
-    if (!input.matches("^[a-zA-Z0!@#$%^&*()_+={};':|,.<>/?øæå ]+$")) {
+    if (!input.matches("^[a-zA-Z0!@#$%^&*()_+={};':|,.<>/?øæå]+$")) {
       throw new IllegalArgumentException("The input string can only contain characters");
     }
   }
@@ -152,7 +152,7 @@ public class InputValidation {
    */
   public static void isValidInteger(int input) {
     if (input < 0 || input > 100) {
-      throw new IllegalArgumentException("Servings has to be between 0 and 100");
+      throw new IllegalArgumentException("Integer input has to be between 0 and 100");
     }
   }
 
@@ -165,18 +165,6 @@ public class InputValidation {
   public static void nameUnder32Char(String input) {
     if (input.length() > 32) {
       throw new IllegalArgumentException("The name has to be under 32 character!");
-    }
-  }
-
-  /**
-   * .
-   *
-   * @param input local date
-   * @throws IllegalArgumentException If expiration date is in the past.
-   */
-  public static void isValidDate(LocalDate input) {
-    if (input.isBefore(LocalDate.now())) {
-      //  throw new IllegalArgumentException("Expiration date has gone out. Date is in the past.");
     }
   }
 }

@@ -25,7 +25,7 @@ public class GroceryItem {
    */
   public GroceryItem(Grocery grocery, LocalDate expirationDate, float quantity) {
     InputValidation.isValidFloat(quantity);
-    InputValidation.isValidDate(expirationDate);
+    //InputValidation.isValidDate(expirationDate);
 
     this.grocery = grocery;
     this.expirationDate = expirationDate;

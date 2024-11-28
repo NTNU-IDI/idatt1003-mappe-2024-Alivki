@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.utils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -20,26 +21,58 @@ public class UserInput {
 
   /**
    * .
+   *
+   * @return test
    */
-  public static int menuNumberSelect() {
-    int input = -1;
-
-    try {
-      input = scanner.nextInt();
-      scanner.nextLine();
-    } catch (InputMismatchException e) {
-      scanner.nextLine();
-      System.err.println("Choose a number!");
+  public static int intInput() {
+    while (true) {
+      try {
+        int input = scanner.nextInt();
+        scanner.nextLine();
+        InputValidation.isValidInteger(input);
+        return input;
+      } catch (InputMismatchException e) {
+        System.out.println("Invalid input! Please enter a valid number.");
+        scanner.nextLine();
+      } catch (IllegalArgumentException e) {
+        System.out.println(e.getMessage());
+      }
     }
+  }
 
-    return input;
+  /**
+   * .
+   *
+   * @return test
+   */
+  public static String nameInput() {
+    while (true) {
+      try {
+        String input = scanner.nextLine();
+        InputValidation.isNotEmpty(input);
+        InputValidation.isValidString(input);
+        InputValidation.nameUnder32Char(input);
+        input = input.trim();
+        return input;
+      } catch (IllegalArgumentException e) {
+        System.err.println(e.getMessage());
+        System.err.println("Please try again!");
+      }
+    }
   }
 
   /**
    * .
    */
-  public static void enterKeyPress() {
-    scanner.nextLine();
+  public static Object[] unitAndQuantityInput() {
+    while (true) {
+      try {
+        String input = scanner.nextLine();
+        return InputValidation.unitConversion(input);
+      } catch (IllegalArgumentException e) {
+        System.err.println(e.getMessage());
+      }
+    }
   }
 
   /**
@@ -48,43 +81,15 @@ public class UserInput {
    * @return string
    */
   public static String stringInput() {
-    String input = scanner.nextLine();
-
-    InputValidation.isNotEmpty(input);
-    InputValidation.isValidString(input);
-
-    return input;
-  }
-
-  /**
-   * .
-   */
-  public static String quantityAndUnitInput() {
-    String input = scanner.nextLine();
-
-    InputValidation.isNotEmpty(input);
-
-    return input;
-  }
-
-  /**
-   * .
-   *
-   * @return string
-   */
-  public static int intInput() {
-    int input;
-
-    try {
-      input = scanner.nextInt();
-      scanner.nextLine();
-    } catch (InputMismatchException e) {
-      throw new IllegalArgumentException("The input has to be number!");
+    while (true) {
+      try {
+        String input = scanner.nextLine();
+        InputValidation.isNotEmpty(input);
+        return input;
+      } catch (IllegalArgumentException e) {
+        System.err.println(e.getMessage());
+      }
     }
-
-    InputValidation.isValidInteger(input);
-
-    return input;
   }
 
   /**
@@ -93,12 +98,19 @@ public class UserInput {
    * @return string
    */
   public static float floatInput() {
-    float input = scanner.nextFloat();
-    scanner.nextLine();
-
-    InputValidation.isValidFloat(input);
-
-    return input;
+    while (true) {
+      try {
+        float input = scanner.nextFloat();
+        scanner.nextLine();
+        InputValidation.isValidFloat(input);
+        return input;
+      } catch (InputMismatchException e) {
+        System.out.println("Invalid input! Please enter a valid floating point number.");
+        scanner.nextLine();
+      } catch (IllegalArgumentException e) {
+        System.out.println(e.getMessage());
+      }
+    }
   }
 
   /**
@@ -107,8 +119,20 @@ public class UserInput {
    * @return string
    */
   public static LocalDate dateInput() {
-    String input = scanner.nextLine();
+    while (true) {
+      try {
+        String input = scanner.nextLine();
+        return LocalDate.parse(input, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+      } catch (DateTimeParseException e) {
+        System.err.println("Invalid date format. Please try again with the format dd.MM.yyyy!");
+      }
+    }
+  }
 
-    return LocalDate.parse(input, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+  /**
+   * .
+   */
+  public static void enterKeyPress() {
+    scanner.nextLine();
   }
 }
