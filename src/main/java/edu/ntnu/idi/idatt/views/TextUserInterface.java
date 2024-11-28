@@ -1,5 +1,11 @@
-package edu.ntnu.idi.idatt;
+package edu.ntnu.idi.idatt.views;
 
+import edu.ntnu.idi.idatt.models.Cookbook;
+import edu.ntnu.idi.idatt.models.Fridge;
+import edu.ntnu.idi.idatt.models.Grocery;
+import edu.ntnu.idi.idatt.models.GroceryItem;
+import edu.ntnu.idi.idatt.utils.InputValidation;
+import edu.ntnu.idi.idatt.models.Recipe;
 import edu.ntnu.idi.idatt.utils.FlushConsole;
 import edu.ntnu.idi.idatt.utils.UserInput;
 import java.time.LocalDate;
@@ -8,7 +14,6 @@ import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
-import jdk.jshell.execution.Util;
 
 /**
  * .

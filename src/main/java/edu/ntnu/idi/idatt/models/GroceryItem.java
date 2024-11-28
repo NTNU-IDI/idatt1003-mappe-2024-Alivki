@@ -1,5 +1,6 @@
-package edu.ntnu.idi.idatt;
+package edu.ntnu.idi.idatt.models;
 
+import edu.ntnu.idi.idatt.utils.InputValidation;
 import edu.ntnu.idi.idatt.utils.StringManipulation;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.ntnu.idi.idatt.models.Grocery;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import jdk.jfr.Description;

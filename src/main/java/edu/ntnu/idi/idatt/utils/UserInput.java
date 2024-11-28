@@ -1,6 +1,5 @@
 package edu.ntnu.idi.idatt.utils;
 
-import edu.ntnu.idi.idatt.InputValidation;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
