@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt;
 
+import edu.ntnu.idi.idatt.utils.StringManipulation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,12 +60,19 @@ public class Cookbook {
     for (Grocery neededGrocery : neededGroceries.keySet()) {
       for (GroceryItem groceryItem : groceries) {
         if (!neededGrocery.getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
-          missingGrocery += 1;
+          return false;
         }
       }
     }
 
     return missingGrocery == 0;
+  }
+
+  /**
+   * .
+   */
+  public String recipeSuggestions() {
+    return "test";
   }
 
   /**
@@ -128,14 +136,6 @@ public class Cookbook {
   /**
    * .
    */
-  public String recipeSuggestions() {
-
-    return "test";
-  }
-
-  /**
-   * .
-   */
   private Optional<Recipe> findRecipe(String inputName) {
     for (Recipe recipe : recipes) {
       if (recipe.getName().equalsIgnoreCase(inputName)) {
@@ -157,7 +157,7 @@ public class Cookbook {
     System.out.print(printCookbookHeader("Recipe suggestions"));
     System.out.printf(
         "+----------------------------------------------------------------------------+%n");
-    System.out.print(centerString("Recipe suggestions", 78));
+    System.out.print(StringManipulation.centerString("Recipe suggestions", 78));
     System.out.printf(
         "+----------------------------------------------------------------------------+%n");
     System.out.print(recipeSuggestions());
@@ -169,7 +169,7 @@ public class Cookbook {
   private String printCookbookHeader(String title) {
     return String.format(
         "+----------------------------------------------------------------------------+%n")
-        + centerString(title, 78)
+        + StringManipulation.centerString(title, 78)
         + String.format(
         "+------------------+---------------------------------------------+-----------+%n")
         + String.format(
@@ -186,10 +186,10 @@ public class Cookbook {
 
     for (Recipe recipe : recipes) {
       String recipeName =
-          recipe.getName().length() > 16 ? shortenName(recipe.getName(), 14) : recipe.getName();
+          recipe.getName().length() > 16 ? StringManipulation.shortenString(recipe.getName(), 14) : recipe.getName();
 
       String recipeDescription =
-          recipe.getDescription().length() > 43 ? shortenName(recipe.getDescription(), 41) :
+          recipe.getDescription().length() > 43 ? StringManipulation.shortenString(recipe.getDescription(), 41) :
               recipe.getDescription();
 
       String canMake = canMakeRecipe(recipe) ? "Yes" : "No";
@@ -201,39 +201,5 @@ public class Cookbook {
     }
 
     return string.toString();
-  }
-
-  /**
-   * .
-   *
-   * @param inputString test
-   * @param rowLength   tet
-   * @return test
-   */
-  private String centerString(String inputString, int rowLength) {
-    int leftPadding;
-    int rightPadding;
-
-    if (inputString.length() > rowLength - 4) {
-      inputString = inputString.substring(0, rowLength - 4) + "...";
-      leftPadding = 1;
-      rightPadding = 1;
-    } else {
-      leftPadding = (rowLength - 2 - inputString.length()) / 2;
-      rightPadding =
-          (rowLength - 2 - inputString.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
-    }
-
-    return String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputString, "");
-  }
-
-  /**
-   * .
-   *
-   * @param inputName awd
-   * @return awd
-   */
-  private String shortenName(String inputName, int shortenFrom) {
-    return inputName.substring(0, shortenFrom) + "..";
   }
 }

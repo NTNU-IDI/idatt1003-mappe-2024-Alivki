@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt;
 
+import edu.ntnu.idi.idatt.utils.StringManipulation;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -89,7 +90,8 @@ public class GroceryItem {
    */
   public String printGrocery() {
     String name =
-        grocery.getName().length() > 12 ? shortenName(grocery.getName(), 10) : grocery.getName();
+        grocery.getName().length() > 12 ? StringManipulation.shortenString(grocery.getName(), 10) :
+            grocery.getName();
 
     String unit = String.format("%.2f%s", this.quantity, grocery.getUnit());
     String price = String.format("%.2f%s", grocery.getPrice(), "kr");
@@ -97,16 +99,6 @@ public class GroceryItem {
 
     return String.format("| %-12s | %-11s | %-15s | %-16s |%n", name, unit,
         price, expirationDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-  }
-
-  /**
-   * .
-   *
-   * @param inputName awd
-   * @return awd
-   */
-  private String shortenName(String inputName, int shortenFrom) {
-    return inputName.substring(0, shortenFrom) + "..";
   }
 
   /**

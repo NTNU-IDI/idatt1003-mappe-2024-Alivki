@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt;
 
+import edu.ntnu.idi.idatt.utils.StringManipulation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +19,10 @@ public class Recipe {
   /**
    * .
    *
-   * @param name         name
-   * @param description  description
-   * @param procedure    procedure
-   * @param servings     servings
+   * @param name        name
+   * @param description description
+   * @param procedure   procedure
+   * @param servings    servings
    */
   public Recipe(
       String name, String description, String procedure, int servings) {
@@ -194,8 +195,9 @@ public class Recipe {
     int i = 0;
     for (Map.Entry<Grocery, Float> entry : groceries.entrySet()) {
       String outputName =
-          entry.getKey().getName().length() > 10 ? shortenName(entry.getKey().getName()) :
-              entry.getKey().getName();
+          entry.getKey().getName().length() > 10
+              ? StringManipulation.shortenString(entry.getKey().getName(), 8)
+              : entry.getKey().getName();
 
       if (i < numberOfRows) {
         groceryColum.add(String.format("%-10s%5.2f%s",
@@ -248,16 +250,6 @@ public class Recipe {
     }
 
     return infoColum;
-  }
-
-  /**
-   * .
-   *
-   * @param inputName awd
-   * @return awd
-   */
-  private String shortenName(String inputName) {
-    return inputName.substring(0, 8) + "..";
   }
 
   /**

@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt;
 
+import edu.ntnu.idi.idatt.utils.StringManipulation;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -251,33 +252,9 @@ public class Fridge {
    */
   private String printFridgeHeader(String title) {
     return String.format("+-----------------------------------------------------------------+%n")
-        + centerString(title, 67)
+        + StringManipulation.centerString(title, 67)
         + String.format("+--------------+-------------+-----------------+------------------+%n")
         + String.format("| Name         | Quantity    | Price per unit  | Expiration date  |%n")
         + String.format("+--------------+-------------+-----------------+------------------+%n");
-  }
-
-  /**
-   * .
-   *
-   * @param inputString test
-   * @param rowLength   tet
-   * @return test
-   */
-  private String centerString(String inputString, int rowLength) {
-    int leftPadding;
-    int rightPadding;
-
-    if (inputString.length() > rowLength - 4) {
-      inputString = inputString.substring(0, rowLength - 4) + "...";
-      leftPadding = 1;
-      rightPadding = 1;
-    } else {
-      leftPadding = (rowLength - 2 - inputString.length()) / 2;
-      rightPadding =
-          (rowLength - 2 - inputString.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
-    }
-
-    return String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputString, "");
   }
 }
