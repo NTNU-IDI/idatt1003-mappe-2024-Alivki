@@ -1,5 +1,7 @@
 package edu.ntnu.idi.idatt;
 
+import edu.ntnu.idi.idatt.utils.FlushConsole;
+import edu.ntnu.idi.idatt.utils.UserInput;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
@@ -36,9 +38,10 @@ public class TextUserInterface {
    * .
    */
   public void menu() {
-    int choose = -1;
+    int menuSelectInput = -1;
 
     do {
+      FlushConsole.clearConsole();
       System.out.println("----------------------------------------------");
       System.out.println("                    Menu");
       System.out.println("----------------------------------------------");
@@ -48,21 +51,16 @@ public class TextUserInterface {
       System.out.println("\n----------------------------------------------");
       System.out.println("\nType in the number you want:");
 
-      try {
-        choose = scanner.nextInt();
-        scanner.nextLine();
-      } catch (InputMismatchException e) {
-        System.out.println("Choose a number!");
-        scanner.nextLine();
-        continue;
-      }
+      menuSelectInput = UserInput.menuNumberSelect();
 
-      switch (choose) {
+      switch (menuSelectInput) {
         case 1 -> {
+          FlushConsole.clearConsole();
           fridgeMenu();
           return;
         }
         case 2 -> {
+          FlushConsole.clearConsole();
           cookbookMenu();
           return;
         }
@@ -71,14 +69,14 @@ public class TextUserInterface {
       }
 
       System.out.println();
-    } while (choose != 0);
+    } while (menuSelectInput != 0);
   }
 
   /**
    * .
    */
   public void fridgeMenu() {
-    int choose = -1;
+    int menuSelectInput = -1;
 
     do {
       System.out.println("----------------------------------------------");
@@ -96,16 +94,9 @@ public class TextUserInterface {
       System.out.println("\n----------------------------------------------");
       System.out.println("\nType in the number you want:");
 
-      try {
-        choose = scanner.nextInt();
-        scanner.nextLine();
-      } catch (InputMismatchException e) {
-        System.out.println("Choose a number!");
-        scanner.nextLine();
-        continue;
-      }
+      menuSelectInput = UserInput.menuNumberSelect();
 
-      switch (choose) {
+      switch (menuSelectInput) {
         case 1 -> {
           addGrocery();
           return;
@@ -143,13 +134,15 @@ public class TextUserInterface {
       }
 
       System.out.println();
-    } while (choose != 0);
+    } while (menuSelectInput != 0);
   }
 
   /**
    * .
    */
   private void addGrocery() {
+    FlushConsole.clearConsole();
+
     Object[] quantityAndUnitObj = null;
     LocalDate expirationDate = null;
     String groceryName = "";
@@ -158,25 +151,35 @@ public class TextUserInterface {
 
     try {
       System.out.println("Write the grocery name");
-      groceryName = Utils.stringInput();
+      groceryName = UserInput.stringInput();
 
+      FlushConsole.clearConsole();
       System.out.println("Write the total price you payed for the grocery");
-      price = Utils.floatInput();
+      price = UserInput.floatInput();
 
+      FlushConsole.clearConsole();
       System.out.println("Write the quantity and the unit of the grocery");
       System.out.println("Example: 2 kg, 1.5 L");
-      quantityAndUnit = Utils.quantityAndUnitInput();
+      quantityAndUnit = UserInput.quantityAndUnitInput();
       quantityAndUnitObj = InputValidation.unitConversion(quantityAndUnit);
 
+      FlushConsole.clearConsole();
       System.out.println("Write the expiration date of the grocery in the format dd.MM.yyyy");
-      expirationDate = Utils.dateInput();
+      expirationDate = UserInput.dateInput();
     } catch (IllegalArgumentException | InputMismatchException | DateTimeParseException e) {
       if (e instanceof DateTimeParseException) {
-        System.err.print("Invalid date format, please use dd.MM.yyyy");
+        FlushConsole.clearConsole();
+        System.err.print("Invalid date format, please use dd.MM.yyyy\n");
+
+        System.out.printf("%nPress enter to continue....");
+        UserInput.enterKeyPress();
+
         addGrocery();
         return;
       }
       System.err.println(e.getMessage());
+      System.out.print("%nPress enter to continue....");
+      UserInput.enterKeyPress();
       addGrocery();
     }
 
@@ -186,8 +189,13 @@ public class TextUserInterface {
     GroceryItem newGroceryItem =
         new GroceryItem(newGrocery, expirationDate, (float) quantityAndUnitObj[0]);
 
+    FlushConsole.clearConsole();
     System.out.print(fridge.addGrocery(newGroceryItem));
 
+    System.out.printf("%nPress enter to continue....");
+    UserInput.enterKeyPress();
+
+    FlushConsole.clearConsole();
     fridgeMenu();
   }
 
@@ -198,14 +206,21 @@ public class TextUserInterface {
     String groceryName = "";
 
     try {
+      FlushConsole.clearConsole();
       System.out.println("Write the name of the grocery you want to remove.");
-      groceryName = Utils.stringInput();
+      groceryName = UserInput.stringInput();
     } catch (IllegalArgumentException e) {
       System.err.println(e.getMessage());
       removeGrocery();
     }
 
+    FlushConsole.clearConsole();
     System.out.print(fridge.removeGrocery(groceryName));
+
+    System.out.printf("%nPress enter to continue....");
+    UserInput.enterKeyPress();
+
+    FlushConsole.clearConsole();
     fridgeMenu();
   }
 
@@ -217,17 +232,24 @@ public class TextUserInterface {
     float inputQuantity = 0;
 
     try {
+      FlushConsole.clearConsole();
       System.out.println("Write the grocery you want to add more of.");
-      groceryName = Utils.stringInput();
+      groceryName = UserInput.stringInput();
 
+      FlushConsole.clearConsole();
       System.out.println("Write how much you are adding the grocery in the format without unit");
-      inputQuantity = Utils.floatInput();
+      inputQuantity = UserInput.floatInput();
     } catch (IllegalArgumentException e) {
       System.err.println(e.getMessage());
       increaseQuantity();
     }
-
+    FlushConsole.clearConsole();
     System.out.print(fridge.increaseQuantity(groceryName, inputQuantity));
+
+    System.out.printf("%nPress enter to continue....");
+    UserInput.enterKeyPress();
+
+    FlushConsole.clearConsole();
     fridgeMenu();
   }
 
@@ -239,17 +261,25 @@ public class TextUserInterface {
     float inputQuantity = 0;
 
     try {
+      FlushConsole.clearConsole();
       System.out.println("Write the name of the grocery you want to decrease the quantity of.");
-      groceryName = Utils.stringInput();
+      groceryName = UserInput.stringInput();
 
+      FlushConsole.clearConsole();
       System.out.println("Write how much you want to remove without unit");
-      inputQuantity = Utils.floatInput();
+      inputQuantity = UserInput.floatInput();
     } catch (IllegalArgumentException e) {
       System.err.println(e.getMessage());
       increaseQuantity();
     }
 
+    FlushConsole.clearConsole();
     System.out.print(fridge.decreaseQuantity(groceryName, inputQuantity));
+
+    System.out.printf("%nPress enter to continue....");
+    UserInput.enterKeyPress();
+
+    FlushConsole.clearConsole();
     fridgeMenu();
   }
 
@@ -257,7 +287,17 @@ public class TextUserInterface {
    * .
    */
   private void printGroceries() {
-    System.out.print(fridge.printFridgeContent());
+    int menuSelectInput = -1;
+
+    do {
+      FlushConsole.clearConsole();
+      System.out.print(fridge.printFridgeContent());
+      System.out.printf("%n<- Go back to menu by entering 0:%n");
+
+      menuSelectInput = UserInput.menuNumberSelect();
+    } while (menuSelectInput != 0);
+
+    FlushConsole.clearConsole();
     fridgeMenu();
   }
 
@@ -266,16 +306,27 @@ public class TextUserInterface {
    */
   private void printGrocery() {
     String groceryName = "";
+    int menuSelectInput = -1;
 
-    try {
-      System.out.println("Write the name of the grocery you are looking for.");
-      groceryName = Utils.stringInput();
-    } catch (IllegalArgumentException e) {
-      System.err.println(e.getMessage());
-      removeGrocery();
-    }
+    do {
+      try {
+        FlushConsole.clearConsole();
+        System.out.println("Write the name of the grocery you are looking for.");
+        groceryName = UserInput.stringInput();
+      } catch (IllegalArgumentException e) {
+        System.err.println(e.getMessage());
+        printGrocery();
+      }
+      FlushConsole.clearConsole();
+      System.out.print(fridge.printGrocery(groceryName));
+      System.out.printf("%n<- Go back to menu by entering 0:%n");
 
-    System.out.print(fridge.printGrocery(groceryName));
+      menuSelectInput = UserInput.menuNumberSelect();
+
+    } while (menuSelectInput != 0);
+
+
+    FlushConsole.clearConsole();
     fridgeMenu();
   }
 
@@ -284,7 +335,18 @@ public class TextUserInterface {
    */
   private void expiredGroceries() {
     LocalDate today = LocalDate.now();
-    System.out.print(fridge.bestBeforeDate(today));
+    int optionSelect = -1;
+
+    do {
+      FlushConsole.clearConsole();
+      System.out.print(fridge.bestBeforeDate(today));
+      System.out.printf("%n<- Go back by entering 0:%n");
+
+      optionSelect = UserInput.menuNumberSelect();
+
+    } while (optionSelect != 0);
+
+    FlushConsole.clearConsole();
     fridgeMenu();
   }
 
@@ -292,7 +354,7 @@ public class TextUserInterface {
    * .
    */
   private void cookbookMenu() {
-    int choose = -1;
+    int menuSelectInput = -1;
 
     do {
       System.out.println("----------------------------------------------");
@@ -308,16 +370,9 @@ public class TextUserInterface {
       System.out.println("\n----------------------------------------------");
       System.out.println("\nType in the number you want:");
 
-      try {
-        choose = scanner.nextInt();
-        scanner.nextLine();
-      } catch (InputMismatchException e) {
-        System.out.println("Choose a number!");
-        scanner.nextLine();
-        continue;
-      }
+      menuSelectInput = UserInput.menuNumberSelect();
 
-      switch (choose) {
+      switch (menuSelectInput) {
         case 1 -> {
           addRecipe();
           return;
@@ -347,7 +402,7 @@ public class TextUserInterface {
       }
 
       System.out.println();
-    } while (choose != 0);
+    } while (menuSelectInput != 0);
   }
 
   /**
@@ -363,16 +418,16 @@ public class TextUserInterface {
 
     try {
       System.out.println("Write the recipe name");
-      recipeName = Utils.stringInput();
+      recipeName = UserInput.stringInput();
 
       System.out.println("Write a short description for the recipe.");
-      recipeDescription = Utils.stringInput();
+      recipeDescription = UserInput.stringInput();
 
       System.out.println("Write the procedure for the recipe.");
-      recipeProcedure = Utils.stringInput();
+      recipeProcedure = UserInput.stringInput();
 
       System.out.println("Write how many servings this recipe will produce.");
-      recipeServings = Utils.intInput();
+      recipeServings = UserInput.intInput();
     } catch (IllegalArgumentException e) {
       System.err.println(e.getMessage());
       addRecipe();
@@ -385,7 +440,7 @@ public class TextUserInterface {
     String groceryName = "1";
     while (Integer.parseInt(groceryName) != 0) {
       System.out.println("Write the grocery name.");
-      groceryName = Utils.quantityAndUnitInput();
+      groceryName = UserInput.quantityAndUnitInput();
 
       if (groceryName.equalsIgnoreCase("0")) {
         break;
@@ -393,10 +448,10 @@ public class TextUserInterface {
 
       System.out.println("Write the quantity of the grocery.");
       System.out.println("Example: 2.2kg, 2l, 200g");
-      String groceryQuantityAndUnit = Utils.quantityAndUnitInput();
+      String groceryQuantityAndUnit = UserInput.quantityAndUnitInput();
 
       System.out.println("Write the price per unit of the grocery");
-      float pricePerUnit = Utils.floatInput();
+      float pricePerUnit = UserInput.floatInput();
 
       try {
         quantityAndUnitObj = InputValidation.unitConversion(groceryQuantityAndUnit);
@@ -430,7 +485,7 @@ public class TextUserInterface {
     String recipeName;
 
     System.out.println("Write the name of the recipe.");
-    recipeName = Utils.stringInput();
+    recipeName = UserInput.stringInput();
 
     System.out.println(cookbook.removeRecipe(recipeName));
     cookbookMenu();
@@ -451,7 +506,7 @@ public class TextUserInterface {
     String recipeName;
 
     System.out.println("Write the name of the recipe.");
-    recipeName = Utils.stringInput();
+    recipeName = UserInput.stringInput();
 
     System.out.println(cookbook.printRecipe(recipeName));
     cookbookMenu();

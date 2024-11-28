@@ -280,12 +280,4 @@ public class Fridge {
 
     return String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputString, "");
   }
-
-  /**
-   * Clears the console.
-   */
-  private static void clearConsole() {
-    System.out.print("\033[H\033[2J");
-    System.out.flush();
-  }
 }
