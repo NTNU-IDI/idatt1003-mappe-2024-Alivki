@@ -13,6 +13,13 @@ public class UserInput {
   static Scanner scanner = new Scanner(System.in);
 
   /**
+   * Private constructor to prevent instantiation.
+   */
+  private UserInput() {
+    throw new UnsupportedOperationException("Utility class - cannot be instantiated");
+  }
+
+  /**
    * .
    */
   public static int menuNumberSelect() {
