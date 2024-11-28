@@ -1,5 +1,6 @@
-package edu.ntnu.idi.idatt;
+package edu.ntnu.idi.idatt.utils;
 
+import edu.ntnu.idi.idatt.InputValidation;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
@@ -8,9 +9,32 @@ import java.util.Scanner;
 /**
  * .
  */
-public class Utils {
+public class UserInput {
   static Scanner scanner = new Scanner(System.in);
 
+  /**
+   * .
+   */
+  public static int menuNumberSelect() {
+    int input = -1;
+
+    try {
+      input = scanner.nextInt();
+      scanner.nextLine();
+    } catch (InputMismatchException e) {
+      scanner.nextLine();
+      System.err.println("Choose a number!");
+    }
+
+    return input;
+  }
+
+  /**
+   * .
+   */
+  public static void enterKeyPress() {
+    scanner.nextLine();
+  }
 
   /**
    * .
