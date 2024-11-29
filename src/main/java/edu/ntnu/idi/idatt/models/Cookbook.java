@@ -127,7 +127,7 @@ public class Cookbook {
    */
   public String printCookbookContent() {
     if (recipes.isEmpty()) {
-      return String.format("There is no groceries in your fridge!%n");
+      return String.format("There is no recipes in your cookbook!%n");
     }
 
     return String.format("%s%s", printCookbookHeader("Cookbook"), printCookbookBody());
