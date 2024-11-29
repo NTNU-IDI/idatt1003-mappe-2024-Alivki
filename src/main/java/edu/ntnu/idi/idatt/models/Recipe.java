@@ -122,7 +122,7 @@ public class Recipe {
 
     string.append(makeRecipeHeader());
     string.append(makeRecipeBody(groceries, description, servings, procedure));
-    string.append("+-------------------+------------------------------------------+\n");
+    string.append("+--------------------+------------------------------------------+\n");
 
     return string.toString();
   }
@@ -135,7 +135,7 @@ public class Recipe {
     String inputName = name;
     int leftPadding;
     int rightPadding;
-    int totalWidth = 64;
+    int totalWidth = 65;
 
     if (inputName.length() > 57) {
       inputName = inputName.substring(0, 57) + "...";
@@ -146,9 +146,9 @@ public class Recipe {
       rightPadding = (totalWidth - 2 - inputName.length()) % 2 == 0 ? leftPadding : leftPadding + 1;
     }
 
-    return String.format("+--------------------------------------------------------------+%n")
+    return String.format("+---------------------------------------------------------------+%n")
         + String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputName, "")
-        + String.format("+-------------------+------------------------------------------+%n");
+        + String.format("+--------------------+------------------------------------------+%n");
   }
 
   /**
@@ -175,7 +175,7 @@ public class Recipe {
         makeDescriptionColum(descriptionSplit, procedureSplit, numberOfRows);
 
     for (int j = 0; j < numberOfRows; j++) {
-      string.append(String.format("| %-17s | %-40s |%n", groceryColum.get(j), infoColum.get(j)));
+      string.append(String.format("| %-18s | %-40s |%n", groceryColum.get(j), infoColum.get(j)));
     }
 
     return string.toString();
