@@ -117,12 +117,13 @@ public class Fridge {
       return String.format("You do not have this grocery in the fridge%n");
     }
 
-    if (foundGrocery.get().getQuantity() - quantity <= 0) {
+    foundGrocery.get().decreaseQuantity(quantity);
+
+    if (foundGrocery.get().getQuantity() == 0) {
       removeGrocery(inputName);
       return "After decreasing quantity there was nothing left of the grocery!";
     }
 
-    foundGrocery.get().decreaseQuantity(quantity);
     return String.format("%s decrease in quantity.%n", inputName);
   }
 
