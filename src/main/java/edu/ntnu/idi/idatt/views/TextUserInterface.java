@@ -6,12 +6,9 @@ import edu.ntnu.idi.idatt.models.Grocery;
 import edu.ntnu.idi.idatt.models.GroceryItem;
 import edu.ntnu.idi.idatt.models.Recipe;
 import edu.ntnu.idi.idatt.utils.FlushConsole;
-import edu.ntnu.idi.idatt.utils.InputValidation;
 import edu.ntnu.idi.idatt.utils.UserInput;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.Map;
 
 /**
@@ -335,7 +332,7 @@ public class TextUserInterface {
           return;
         }
         case 5 -> {
-          System.out.println("test");
+          printRecipeSuggestions();
           return;
         }
         case 8 -> {
@@ -411,7 +408,7 @@ public class TextUserInterface {
         new Recipe(recipeName, recipeDescription, recipeProcedure, recipeServings);
 
     FlushConsole.clearConsole();
-    System.out.println(newRecipe.addGroceries(groceries));
+    newRecipe.addGroceries(groceries);
     System.out.println(cookbook.addRecipe(newRecipe));
 
     System.out.printf("%nPress enter to continue....");
@@ -472,6 +469,15 @@ public class TextUserInterface {
 
       menuSelectInput = UserInput.intInput();
     } while (menuSelectInput != 0);
+
+    FlushConsole.clearConsole();
+    cookbookMenu();
+  }
+
+  private void printRecipeSuggestions() {
+    cookbook.missingGroceries("taco");
+    System.out.printf("%nPress enter to continue....");
+    UserInput.enterKeyPress();
 
     FlushConsole.clearConsole();
     cookbookMenu();

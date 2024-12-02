@@ -82,11 +82,10 @@ public class Recipe {
   /**
    * .
    */
-  public String addGroceries(Map<Grocery, Float> newGroceries) {
+  public void addGroceries(Map<Grocery, Float> newGroceries) {
     if (groceries.isEmpty()) {
       this.groceries.putAll(newGroceries);
-
-      return "Recipe was successfully created!";
+      return;
     }
 
     newGroceries.forEach((grocery, quantity) -> {
@@ -94,14 +93,12 @@ public class Recipe {
         groceries.put(grocery, quantity);
       }
     });
-
-    return "All groceries added";
   }
 
   /**
    * .
    */
-  public String removeGroceries(List<String> removeGroceries) {
+  public void removeGroceries(List<String> removeGroceries) {
     for (String groceryName : removeGroceries) {
       groceries.forEach((grocery, quantity) -> {
         if (grocery.getName().equalsIgnoreCase(groceryName)) {
@@ -109,8 +106,6 @@ public class Recipe {
         }
       });
     }
-
-    return "All groceries were removed from the recipe!";
   }
 
   /**

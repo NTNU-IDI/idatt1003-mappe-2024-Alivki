@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.models;
 
 import edu.ntnu.idi.idatt.utils.StringManipulation;
 import java.util.ArrayList;
+import java.util.IllegalFormatPrecisionException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class Cookbook {
    * .
    */
   public String addRecipe(Recipe recipe) {
-    if (recipes.contains(recipe)) {
+    if (recipeExist(recipe)) {
       return "Recipe is already in the cookbook!";
     }
 
@@ -51,60 +52,63 @@ public class Cookbook {
   public boolean canMakeRecipe(Recipe recipeToCheck) {
     List<GroceryItem> groceries = fridge.getGroceries();
     Map<Grocery, Float> neededGroceries = recipeToCheck.getGroceries();
-    int missingGrocery = 0;
 
-    if (groceries.isEmpty()) {
-      return false;
-    }
-
-    for (Grocery neededGrocery : neededGroceries.keySet()) {
-      for (GroceryItem groceryItem : groceries) {
-        if (!neededGrocery.getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
-          return false;
-        }
-      }
-    }
-
-    return missingGrocery == 0;
+    return neededGroceries.entrySet().stream().allMatch(entry -> groceries.stream().filter(
+            groceryItem -> groceryItem.getGrocery().getName()
+                .equalsIgnoreCase(entry.getKey().getName())).mapToDouble(GroceryItem::getQuantity)
+        .sum() >= entry.getValue());
   }
 
   /**
    * .
    */
-  public String recipeSuggestions() {
-    return "test";
-  }
-
-  /**
-   * .
-   */
-  public List<String> missingGroceries(Recipe recipeToCheck) {
+  public List<String> missingGroceries(String recipeName) {
+    Optional<Recipe> recipeToCheck = findRecipe(recipeName);
     ArrayList<String> missingGroceries = new ArrayList<>();
     List<GroceryItem> groceries = fridge.getGroceries();
-    Map<Grocery, Float> neededGroceries = recipeToCheck.getGroceries();
-    int missingGrocery = 0;
+    Map<Grocery, Float> neededGroceries = recipeToCheck.get().getGroceries();
 
-    for (Grocery neededGrocery : neededGroceries.keySet()) {
+    for (Map.Entry<Grocery, Float> entry : neededGroceries.entrySet()) {
+      boolean found = false;
       for (GroceryItem groceryItem : groceries) {
-        if (!neededGrocery.getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
-          missingGrocery += 1;
-          missingGroceries.add(groceryItem.getGrocery().getName());
+        if (entry.getKey().getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
+          found = true;
+          if (groceryItem.getQuantity() < entry.getValue()) {
+            float missingQuantity = entry.getValue() - groceryItem.getQuantity();
+            missingGroceries.add(groceryItem.getGrocery().getName() + " " + missingQuantity + groceryItem.getGrocery().getUnit());
+          }
+          break;
         }
+      }
+
+      if (!found) {
+        missingGroceries.add(entry.getKey().getName() + " " + entry.getValue() + entry.getKey().getUnit());
       }
     }
 
-    if (missingGrocery > 2) {
-      missingGroceries.clear();
-      missingGroceries.add("Missing more then 2 groceries to make this recipe");
-      return missingGroceries;
+    for (String test : missingGroceries) {
+      System.out.println(test);
     }
 
-    if (missingGrocery < 3 && missingGrocery > 0) {
-      return missingGroceries;
-    }
-
-    missingGroceries.add("No groceries missing!");
     return missingGroceries;
+  }
+
+  /**
+   * .
+   */
+  public void printRecipeSuggestions() {
+    if (recipes.isEmpty()) {
+      System.out.printf("There is no groceries in your fridge!%n");
+      return;
+    }
+
+    System.out.print(printCookbookHeader("Recipe suggestions"));
+    System.out.printf(
+        "+----------------------------------------------------------------------------+%n");
+    System.out.print(StringManipulation.centerString("Recipe suggestions", 78));
+    System.out.printf(
+        "+----------------------------------------------------------------------------+%n");
+    // System.out.print(recipeSuggestions());
   }
 
   /**
@@ -134,36 +138,6 @@ public class Cookbook {
   }
 
   /**
-   * .
-   */
-  private Optional<Recipe> findRecipe(String inputName) {
-    for (Recipe recipe : recipes) {
-      if (recipe.getName().equalsIgnoreCase(inputName)) {
-        return Optional.of(recipe);
-      }
-    }
-    return Optional.empty();
-  }
-
-  /**
-   * .
-   */
-  public void printRecipeSuggestions() {
-    if (recipes.isEmpty()) {
-      System.out.printf("There is no groceries in your fridge!%n");
-      return;
-    }
-
-    System.out.print(printCookbookHeader("Recipe suggestions"));
-    System.out.printf(
-        "+----------------------------------------------------------------------------+%n");
-    System.out.print(StringManipulation.centerString("Recipe suggestions", 78));
-    System.out.printf(
-        "+----------------------------------------------------------------------------+%n");
-    System.out.print(recipeSuggestions());
-  }
-
-  /**
    * Printing header for cookbook content table.
    */
   private String printCookbookHeader(String title) {
@@ -186,10 +160,12 @@ public class Cookbook {
 
     for (Recipe recipe : recipes) {
       String recipeName =
-          recipe.getName().length() > 16 ? StringManipulation.shortenString(recipe.getName(), 14) : recipe.getName();
+          recipe.getName().length() > 16 ? StringManipulation.shortenString(recipe.getName(), 14) :
+              recipe.getName();
 
       String recipeDescription =
-          recipe.getDescription().length() > 43 ? StringManipulation.shortenString(recipe.getDescription(), 41) :
+          recipe.getDescription().length() > 43
+              ? StringManipulation.shortenString(recipe.getDescription(), 41) :
               recipe.getDescription();
 
       String canMake = canMakeRecipe(recipe) ? "Yes" : "No";
@@ -201,5 +177,21 @@ public class Cookbook {
     }
 
     return string.toString();
+  }
+
+  /**
+   * .
+   */
+  private boolean recipeExist(Recipe inputRecipe) {
+    return recipes.stream().anyMatch(recipe -> recipe.equals(inputRecipe));
+  }
+
+  /**
+   * .
+   */
+  private Optional<Recipe> findRecipe(String inputName) {
+    return recipes.stream()
+        .filter(recipe -> recipe.getName().equalsIgnoreCase(inputName))
+        .findFirst();
   }
 }
