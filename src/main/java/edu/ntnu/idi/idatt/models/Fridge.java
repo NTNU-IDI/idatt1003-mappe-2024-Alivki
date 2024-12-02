@@ -204,24 +204,16 @@ public class Fridge {
    * .
    */
   private boolean groceryExist(GroceryItem inputGrocery) {
-    for (GroceryItem grocery : groceries) {
-      if (grocery.equals(inputGrocery)) {
-        return true;
-      }
-    }
-    return false;
+    return groceries.stream().anyMatch(groceryItem -> groceryItem.equals(inputGrocery));
   }
 
   /**
    * .
    */
   private Optional<GroceryItem> findGrocery(String inputName) {
-    for (GroceryItem grocery : groceries) {
-      if (grocery.getGrocery().getName().equalsIgnoreCase(inputName)) {
-        return Optional.of(grocery);
-      }
-    }
-    return Optional.empty();
+    return groceries.stream()
+        .filter(groceryItem -> groceryItem.getGrocery().getName().equalsIgnoreCase(inputName))
+        .findFirst();
   }
 
   /**
