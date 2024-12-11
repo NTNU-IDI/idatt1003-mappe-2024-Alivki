@@ -24,6 +24,23 @@ public class TextUserInterface {
   public void init() {
     this.fridge = new Fridge();
     this.cookbook = new Cookbook(fridge);
+
+    fridge.addGrocery(new GroceryItem(new Grocery("Cheese", "kg", 101), LocalDate.now(), 1));
+    fridge.addGrocery(new GroceryItem(new Grocery("Milk", "l", 45), LocalDate.now(), (float) 1.5));
+    fridge.addGrocery(new GroceryItem(new Grocery("Bread", "stk", 45), LocalDate.now(), 1));
+
+    Recipe taco = new Recipe("Taco",
+        "Taco is a normal dinner in Norway. Most people eat it on fridays.",
+        "To make the norwegian taco you choose your ingredients then put them on a tortilla.",
+        3);
+    Map<Grocery, Float> groceries = new HashMap<>();
+    groceries.put(new Grocery("Tortilla", "stk", 101), (float) 4);
+    groceries.put(new Grocery("Cheese", "kg", 101), (float) 0.2);
+    groceries.put(new Grocery("Meat", "kg", (float) 64.5), (float) 0.4);
+    groceries.put(new Grocery("Onion", "stk", 25), (float) 1);
+    groceries.put(new Grocery("Cucumber", "stk", 25), (float) 1);
+    taco.addGroceries(groceries);
+    cookbook.addRecipe(taco);
   }
 
   /**
