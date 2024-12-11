@@ -119,7 +119,7 @@ public class Fridge {
 
     foundGrocery.get().decreaseQuantity(quantity);
 
-    if (foundGrocery.get().getQuantity() == 0) {
+    if (foundGrocery.get().getQuantity() <= 0) {
       removeGrocery(inputName);
       return "After decreasing quantity there was nothing left of the grocery!";
     }
