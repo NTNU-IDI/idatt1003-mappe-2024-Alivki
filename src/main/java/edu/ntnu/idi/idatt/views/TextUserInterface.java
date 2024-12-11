@@ -492,9 +492,15 @@ public class TextUserInterface {
   }
 
   private void printRecipeSuggestions() {
-    cookbook.printRecipeSuggestions();
-    System.out.printf("%nPress enter to continue....");
-    UserInput.enterKeyPress();
+    int menuSelectInput = -1;
+
+    do {
+      FlushConsole.clearConsole();
+      cookbook.printRecipeSuggestions();
+      System.out.printf("%n<- Go back to menu by entering 0:%n");
+
+      menuSelectInput = UserInput.intInput();
+    } while (menuSelectInput != 0);
 
     FlushConsole.clearConsole();
     cookbookMenu();
