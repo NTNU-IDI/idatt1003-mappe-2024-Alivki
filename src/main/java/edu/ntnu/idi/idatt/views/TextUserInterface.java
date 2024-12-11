@@ -6,20 +6,30 @@ import edu.ntnu.idi.idatt.models.Grocery;
 import edu.ntnu.idi.idatt.models.GroceryItem;
 import edu.ntnu.idi.idatt.models.Recipe;
 import edu.ntnu.idi.idatt.utils.FlushConsole;
+import edu.ntnu.idi.idatt.utils.PrintMenus;
 import edu.ntnu.idi.idatt.utils.UserInput;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * .
+ * The {@code TextUserInterface} class is the text based user interface for the program.
+ * It initializes and starts the program by setting up the {@link Fridge} and {@link Cookbook}
  */
 public class TextUserInterface {
   private Fridge fridge;
   private Cookbook cookbook;
 
   /**
-   * .
+   * Initializes the program by setting up the fridge and cookbook with initial data.
+   * <p>
+   * This method:
+   * <ul>
+   *   <li>Creates a {@link Fridge} instance and adds predefined groceries to it.</li>
+   *   <li>Creates a {@link Cookbook} instance linked to the fridge and populates it with
+   *       a sample recipe, "Taco," including its required ingredients.</li>
+   * </ul>
+   * </p>
    */
   public void init() {
     this.fridge = new Fridge();
@@ -29,7 +39,7 @@ public class TextUserInterface {
     fridge.addGrocery(new GroceryItem(new Grocery("Milk", "l", 45), LocalDate.now(), (float) 1.5));
     fridge.addGrocery(new GroceryItem(new Grocery("Bread", "stk", 45), LocalDate.now(), 1));
 
-    Recipe taco = new Recipe("Taco",
+    final Recipe taco = new Recipe("Taco",
         "Taco is a normal dinner in Norway. Most people eat it on fridays.",
         "To make the norwegian taco you choose your ingredients then put them on a tortilla.",
         3);
@@ -44,28 +54,16 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Starts the application. This is the main loop of the application,
+   * presenting the menu, retrieving the selected menu choice from the user,
+   * and executing the selected functionality.
    */
   public void start() {
-    menu();
-  }
-
-  /**
-   * .
-   */
-  public void menu() {
     int menuSelectInput = -1;
 
     do {
       FlushConsole.clearConsole();
-      System.out.println("----------------------------------------------");
-      System.out.println("                    Menu");
-      System.out.println("----------------------------------------------");
-      System.out.println("\n    1. Edit and see your fridge");
-      System.out.println("    2. Edit and see your cookbook");
-      System.out.println("\n    0. Exit program");
-      System.out.println("\n----------------------------------------------");
-      System.out.println("\nType in the number you want:");
+      System.out.print(PrintMenus.printMainMenu());
 
       menuSelectInput = UserInput.intInput();
 
@@ -88,26 +86,13 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Method to handle all input and output for fridge menu.
    */
   public void fridgeMenu() {
     int menuSelectInput = -1;
 
     do {
-      System.out.println("----------------------------------------------");
-      System.out.println("                 Fridge menu");
-      System.out.println("----------------------------------------------");
-      System.out.println("\n    1. Add a grocery to the fridge");
-      System.out.println("    2. Remove grocery from the fridge");
-      System.out.println("    3. Increase quantity to a grocery");
-      System.out.println("    4. Decrease quantity to a grocery");
-      System.out.println("    5. See fridge overview and total price");
-      System.out.println("    6. See a specific item");
-      System.out.println("    7. See all groceries that has expired");
-      System.out.println("\n    8. Go back to menu");
-      System.out.println("    0. Exit program");
-      System.out.println("\n----------------------------------------------");
-      System.out.println("\nType in the number you want:");
+      System.out.println(PrintMenus.printFridgeMenu());
 
       menuSelectInput = UserInput.intInput();
 
@@ -141,7 +126,7 @@ public class TextUserInterface {
           return;
         }
         case 8 -> {
-          menu();
+          start();
           return;
         }
         case 0 -> System.out.println("Exiting...");
@@ -151,6 +136,10 @@ public class TextUserInterface {
     } while (menuSelectInput != 0);
   }
 
+  /**
+   * Asks the users for the necessary parameters to create a new grocery item.
+   * Then waits for enter input to shows the fridge menu again.
+   */
   private void addGrocery() {
     FlushConsole.clearConsole();
     System.out.println("Write the grocery name");
@@ -186,7 +175,8 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Ask users for necessary input for remove a grocery item.
+   * Then waits for enter input to shows the fridge menu again.
    */
   private void removeGrocery() {
     FlushConsole.clearConsole();
@@ -204,7 +194,8 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Asks user for necessary input to increase the quantity of a grocery item.
+   * Then waits for enter input to shows the fridge menu again.
    */
   private void increaseQuantity() {
     FlushConsole.clearConsole();
@@ -226,7 +217,8 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Asks user for necessary input to decrease the quantity of a grocery item.
+   * Then waits for enter input to shows the fridge menu again.
    */
   private void decreaseQuantity() {
     FlushConsole.clearConsole();
@@ -248,7 +240,8 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Prints all the groceries in the fridge.
+   * Then waits for user input to go back to fridge menu.
    */
   private void printGroceries() {
     int menuSelectInput = -1;
@@ -266,7 +259,9 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Asks user for name input. Then prints the grocery if found.
+   * Else it prints error message.
+   * Wait for user input to go back to fridge menu.
    */
   private void printGrocery() {
     int menuSelectInput = -1;
@@ -290,7 +285,7 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Prints all expired groceries then wait for user input to go back to fridge menu.
    */
   private void expiredGroceries() {
     LocalDate today = LocalDate.now();
@@ -310,24 +305,13 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Method to handle all input and output for cookbook menu.
    */
   private void cookbookMenu() {
     int menuSelectInput = -1;
 
     do {
-      System.out.println("----------------------------------------------");
-      System.out.println("                Cookbook menu");
-      System.out.println("----------------------------------------------");
-      System.out.println("\n    1. Add recipe");
-      System.out.println("    2. Remove recipe");
-      System.out.println("    3. See cookbook");
-      System.out.println("    4. See recipe");
-      System.out.println("    5. See recipe suggestions");
-      System.out.println("\n    8. Go back to menu");
-      System.out.println("    0. Exit program");
-      System.out.println("\n----------------------------------------------");
-      System.out.println("\nType in the number you want:");
+      System.out.println(PrintMenus.printCookbookMenu());
 
       menuSelectInput = UserInput.intInput();
 
@@ -353,7 +337,7 @@ public class TextUserInterface {
           return;
         }
         case 8 -> {
-          menu();
+          start();
           return;
         }
         case 0 -> System.out.println("Exiting...");
@@ -364,10 +348,12 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Asks user for necessary input to create new recipe object.
+   * Loops for the user to be able to input multiple groceries.
+   * Then shows the cookbook menu again.
    */
   private void addRecipe() {
-    Map<Grocery, Float> groceries = new HashMap<>();
+    final Map<Grocery, Float> groceries = new HashMap<>();
 
     FlushConsole.clearConsole();
     System.out.println("Write the recipe name");
@@ -436,7 +422,8 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Asks user for necessary input to remove a grocery.
+   * Then waits for enter input to show cookbook menu again.
    */
   private void removeRecipe() {
     FlushConsole.clearConsole();
@@ -452,7 +439,8 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Prints all recipes in the cookbook.
+   * Then waits for user input to show the cookbook menu again.
    */
   private void printCookbook() {
     int menuSelectInput = -1;
@@ -470,7 +458,9 @@ public class TextUserInterface {
   }
 
   /**
-   * .
+   * Asks user for name input, then shows the specific menu.
+   * Prints error message if recipe not found.
+   * Then wait for user input to show cookbook menu again.
    */
   private void seeRecipe() {
     int menuSelectInput = -1;
@@ -491,12 +481,16 @@ public class TextUserInterface {
     cookbookMenu();
   }
 
+  /**
+   * Prints the suggested recipes.
+   * Then waits for user input to show cookbook menu again.
+   */
   private void printRecipeSuggestions() {
     int menuSelectInput = -1;
 
     do {
       FlushConsole.clearConsole();
-      cookbook.printRecipeSuggestions();
+      System.out.print(cookbook.recipeSuggestions());
       System.out.printf("%n<- Go back to menu by entering 0:%n");
 
       menuSelectInput = UserInput.intInput();

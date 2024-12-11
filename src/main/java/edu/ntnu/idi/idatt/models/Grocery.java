@@ -1,7 +1,12 @@
 package edu.ntnu.idi.idatt.models;
 
 /**
- * Represents a grocery item with its details and operations.
+ * Represents a grocery with its details.
+ *
+ * <p>the {@code Grocery} class is designed to store
+ * information about the grocery item.</p>
+ *
+ * @author Alivki
  */
 public class Grocery {
   private final String name;
@@ -9,12 +14,12 @@ public class Grocery {
   private final float price;
 
   /**
-   * Constructs a new Grocery with all specified details.
+   * Constructs a new {@code Grocery} with all specified details.
    *
-   * @param name           The name of the grocery item.
-   * @param unit           Unit of measurement for the grocery.
-   * @param price          Price per unit of the grocery.
-   *                       Float because we need precision when measuring price per unit.
+   * @param name  The name of the grocery item.
+   * @param unit  Unit of measurement for the grocery.
+   * @param price Price per unit of the grocery.
+   *              Float because we need precision when measuring price per unit.
    */
   public Grocery(String name, String unit, float price) {
     this.name = name;
@@ -25,7 +30,7 @@ public class Grocery {
   /**
    * Gets the name of the grocery.
    *
-   * @return The name.
+   * @return a {@link String} containing the name.
    */
   public String getName() {
     return name;
@@ -34,7 +39,7 @@ public class Grocery {
   /**
    * Gets the unit of specified grocery.
    *
-   * @return The unit of measurement.
+   * @return a {@link String} containing the unit of measurement.
    */
   public String getUnit() {
     return unit;
@@ -43,7 +48,7 @@ public class Grocery {
   /**
    * Gets the price of the grocery per unit.
    *
-   * @return The price per unit.
+   * @return a {@link Float} containing the price per unit.
    */
   public float getPrice() {
     return price;

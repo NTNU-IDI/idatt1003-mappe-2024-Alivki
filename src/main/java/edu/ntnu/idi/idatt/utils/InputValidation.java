@@ -1,13 +1,14 @@
 package edu.ntnu.idi.idatt.utils;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * .
+ * Util class for input validation and conversion between units.
+ *
+ * @author Alivki
  */
 public class InputValidation {
   public static final Map<String, Float> weightConversionFactors = new HashMap<>();
@@ -24,10 +25,19 @@ public class InputValidation {
   }
 
   /**
-   * .
+   * Private constructor to prevent instantiation.
    *
-   * @param input test
-   * @return test
+   * @throws UnsupportedOperationException if utility class cannot be instantiated.
+   */
+  private InputValidation() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException("This class cannot be instantiated");
+  }
+
+  /**
+   * Converts the input to the correct unit.
+   *
+   * @param input user string input form grocery quantity and unit
+   * @return a {@link Object} with the converted quantity and the new unit.
    */
   public static Object[] unitConversion(String input) {
     Object[] parsedInput = parseInput(input);
@@ -49,12 +59,13 @@ public class InputValidation {
   }
 
   /**
-   * .
+   * Split the user input into a quantity and a unit.
    *
-   * @param input test
-   * @return test
+   * @param input string input
+   * @return a {@link Object} with quantity as first element and unit as the second.
+   * @throws IllegalArgumentException if the input is in the wrong form
    */
-  public static Object[] parseInput(String input) {
+  public static Object[] parseInput(String input) throws IllegalArgumentException {
     if (input == null || input.trim().isEmpty()) {
       throw new IllegalArgumentException("Input for quantity and unit cannot be null or empty");
     }
@@ -78,11 +89,11 @@ public class InputValidation {
   }
 
   /**
-   * .
+   * Does the conversion of the quantity for weight.
    *
-   * @param value test
-   * @param unit  test
-   * @return test
+   * @param value quantity input
+   * @param unit  unit input
+   * @return a {@link Float} converted quantity.
    */
   private static float convertWeight(float value, String unit) {
     float factor = weightConversionFactors.get(unit.toLowerCase());
@@ -95,27 +106,27 @@ public class InputValidation {
   }
 
   /**
-   * .
+   * Does the quantity conversion for volume.
    *
-   * @param value test
-   * @param unit  test
-   * @return test
+   * @param value quantity input
+   * @param unit  unit input
+   * @return a {@link Float} converted quantity.
    */
   private static float convertVolume(float value, String unit) {
     float factor = volumeConversionFactors.get(unit.toLowerCase());
 
     if (factor == 0) {
-      throw new IllegalArgumentException("Unsupported volum unit!");
+      throw new IllegalArgumentException("Unsupported volume unit!");
     }
 
     return factor * value;
   }
 
   /**
-   * .
+   * Checks if the input is empty or null.
    *
-   * @param input string
-   * @throws IllegalArgumentException If string parameters is null.
+   * @param input string input
+   * @throws IllegalArgumentException If string parameters is null or empty.
    */
   public static void isNotEmpty(String input) throws IllegalArgumentException {
     if (input == null || input.isEmpty() || input.trim().isEmpty()) {
@@ -124,30 +135,33 @@ public class InputValidation {
   }
 
   /**
-   * .
+   * Checks if it is a valid string.
+   *
+   * @param input string input
+   * @throws IllegalArgumentException If string contains illegal characters.
    */
-  public static void isValidString(String input) {
+  public static void isValidString(String input) throws IllegalArgumentException {
     if (!input.matches("^[a-zA-Z0!@#$%^&*()_+={};':|,.<>/?øæå]+$")) {
       throw new IllegalArgumentException("The input string can only contain characters");
     }
   }
 
   /**
-   * .
+   * Checks if input is valid float between set numbers.
    *
-   * @param input float
+   * @param input float input
    * @throws IllegalArgumentException If input is negative or over 10000.
    */
-  public static void isValidFloat(Float input) {
+  public static void isValidFloat(Float input) throws IllegalArgumentException {
     if (input < 0 || input > 10000) {
       throw new IllegalArgumentException("Price or quantity has to be between 0 and 10000");
     }
   }
 
   /**
-   * .
+   * Checks if input is a valid integer between set numbers.
    *
-   * @param input int
+   * @param input integer input
    * @throws IllegalArgumentException If input is negative or over 10000.
    */
   public static void isValidInteger(int input) {
@@ -157,12 +171,12 @@ public class InputValidation {
   }
 
   /**
-   * .
+   * Checks if input string is more then 32 characters long.
    *
-   * @param input string
+   * @param input input string
    * @throws IllegalArgumentException If name is over 32 characters long.
    */
-  public static void nameUnder32Char(String input) {
+  public static void nameOver32Char(String input) throws IllegalArgumentException {
     if (input.length() > 32) {
       throw new IllegalArgumentException("The name has to be under 32 character!");
     }

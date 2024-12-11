@@ -7,14 +7,22 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * .
+ * Represents a cookbook containing a collection of recipes and access to a fridge.
+ *
+ * <p>The {@code Cookbook} class is designed to
+ * manage a list of recipes and to interact with a {@link Fridge}.
+ * {@link Fridge} object that provides access to stored groceries</p>
+ *
+ * @author Alivki
  */
 public class Cookbook {
   private final List<Recipe> recipes;
   private final Fridge fridge;
 
   /**
-   * Using array list because it is dynamic array with many useful methods.
+   * Constructs a new {@code Cookbook} with an empty recipe list and the specified fridge.
+   *
+   * @param fridge the {@link Fridge} instance representing the user's fridge
    */
   public Cookbook(Fridge fridge) {
     recipes = new ArrayList<>();
@@ -22,7 +30,14 @@ public class Cookbook {
   }
 
   /**
-   * .
+   * Adds a recipe to the cookbook if it does not already exist.
+   *
+   * <p>Method checks if the provided recipe is in array list
+   * before adding it returning a success message or a message
+   * indicating the recipe is in the cookbook.</p>
+   *
+   * @param recipe the {@link Recipe} object to be added to the cookbook
+   * @return a {@link String} message indicating the result of the operation.
    */
   public String addRecipe(Recipe recipe) {
     if (recipeExist(recipe)) {
@@ -34,7 +49,13 @@ public class Cookbook {
   }
 
   /**
-   * .
+   * Removes the recipe from array list.
+   *
+   * <p>Method checks if the provided string is a object in array list
+   * and removes the object it is.</p>
+   *
+   * @param inputName the string input name from user
+   * @return a {@link String} message indicating the result of the operation.
    */
   public String removeRecipe(String inputName) {
     if (recipes.isEmpty()) {
@@ -46,9 +67,15 @@ public class Cookbook {
   }
 
   /**
-   * .
+   * Checks if the recipe can be made with current groceries in fridge.
+   *
+   * <p>Method gets {@link Fridge} groceries and check if any groceries are
+   * missing from the list of groceries in specified {@link Recipe}</p>
+   *
+   * @param recipeToCheck the {@link Recipe} to be checked
+   * @return a {@link Boolean} indication if recipe can be made or not
    */
-  public boolean canMakeRecipe(Recipe recipeToCheck) {
+  private boolean canMakeRecipe(Recipe recipeToCheck) {
     List<GroceryItem> groceries = fridge.getGroceries();
     Map<Grocery, Float> neededGroceries = recipeToCheck.getGroceries();
 
@@ -59,26 +86,59 @@ public class Cookbook {
   }
 
   /**
-   * .
+   * Makes a table for recipe suggestions to be shown for user.
+   *
+   * @return a {@link String} containing error message or the table of suggestions
    */
-  public void printRecipeSuggestions() {
+  public String recipeSuggestions() {
     if (recipes.isEmpty()) {
-      System.out.printf("There is no groceries in your fridge!%n");
-      return;
+      return "There is no groceries in your fridge!\n";
     }
 
-    System.out.println(String.format(
-        "+--------------------------------------------------+%n")
-        + StringManipulation.centerString("Recipe suggestions", 52)
-        + String.format(
-        "+-----------------+--------------------------------+%n")
-        + String.format(
-        "| Recipe Name     | Missing groceries              |%n")
-        + String.format(
-        "+-----------------+--------------------------------+"));
-    System.out.println(makeRecipeSuggestionsBody());
+    return """
+        +--------------------------------------------------+
+        %s+--------------------------------------------------+
+        | Recipe Name     | Missing groceries              |
+        +-----------------+--------------------------------+
+        %s
+        """.formatted(StringManipulation.centerString("Recipe suggestions", 52),
+        makeRecipeSuggestionsBody());
   }
 
+  /**
+   * Makes the body of the recipe suggestion table.
+   *
+   * <p>Method checks if the recipe can be made or if it is missing
+   * groceries. If none are missing</p>
+   *
+   * @return a {@link String} containing rows of recipe suggestion table for all recipes
+   */
+  private String makeRecipeSuggestionsBody() {
+    StringBuilder string = new StringBuilder();
+
+    for (Recipe recipe : recipes) {
+      if (canMakeRecipe(recipe)) {
+        string.append("""
+            | %-15s | You have every thing you need  |
+            |                 | Go make it if you want!        |
+            +-----------------+--------------------------------+
+            """.formatted(recipe.getName()));
+      } else {
+        if (numberOfMissingGroceries(recipe)) {
+          string.append(missingGroceries(recipe));
+        }
+      }
+    }
+
+    return string.toString();
+  }
+
+  /**
+   * Checks if the {@link Fridge} is missing more than 2 groceries for specified recipe.
+   *
+   * @param recipe the {@link Recipe} object to check
+   * @return a {@link Boolean} indication if the fridge are missing 2 or more groceries
+   */
   private boolean numberOfMissingGroceries(Recipe recipe) {
     List<GroceryItem> groceries = fridge.getGroceries();
 
@@ -94,14 +154,16 @@ public class Cookbook {
   }
 
   /**
-   * .
+   * Making rows for recipe suggestion table for recipe missing groceries.
+   *
+   * @param recipe the {@link Recipe} object to make rows for
+   * @return a {@link String} containing rows for recipe suggestion table
    */
   private String missingGroceries(Recipe recipe) {
     List<GroceryItem> groceries = fridge.getGroceries();
     Map<Grocery, Float> neededGroceries = recipe.getGroceries();
     StringBuilder string = new StringBuilder();
     List<String> missing = new ArrayList<>();
-
 
     for (Map.Entry<Grocery, Float> entry : neededGroceries.entrySet()) {
       for (GroceryItem groceryItem : groceries) {
@@ -113,50 +175,30 @@ public class Cookbook {
     }
 
     if (missing.size() <= 1) {
-      string.append(String.format("| %-15s | You only need one more grocery |%n"
-              + "|                 | to make this recipe!           |%n"
-              + "|                 | 1. %-27s |%n"
-              + "+-----------------+--------------------------------+%n", recipe.getName(),
-          missing.getFirst()));
+      string.append("""
+          | %-15s | You only need one more grocery |
+          |                 | to make this recipe!           |
+          |                 | 1. %-27s |
+          +-----------------+--------------------------------+
+          """.formatted(recipe.getName(), missing.getFirst()));
     } else {
-      string.append(String.format("| %-15s | You need two more groceries to |%n"
-              + "|                 | make this recipe!              |%n"
-              + "|                 | 1. %-27s |%n"
-              + "|                 | 2. %-27s |%n"
-              + "+-----------------+--------------------------------+%n", recipe.getName(),
-          missing.get(0), missing.get(1)));
+      string.append("""
+          | %-15s | You need two more groceries to |
+          |                 | make this recipe!              |
+          |                 | 1. %-27s |
+          |                 | 2. %-27s |
+          +-----------------+--------------------------------+
+          """.formatted(recipe.getName(), missing.get(0), missing.get(1)));
     }
 
     return string.toString();
   }
 
   /**
-   * .
-   */
-  private String makeRecipeSuggestionsBody() {
-    StringBuilder string = new StringBuilder();
-
-    for (Recipe recipe : recipes) {
-      if (canMakeRecipe(recipe)) {
-        string.append(String.format(
-            "| %-15s | You have every thing you need  |%n"
-                + "|                 | Go make it if you want!        |%n"
-                + "+-----------------+--------------------------------+%n",
-            recipe.getName()));
-      } else {
-        if (numberOfMissingGroceries(recipe)) {
-          string.append(missingGroceries(recipe));
-        }
-      }
-    }
-
-    return string.toString();
-  }
-
-  /**
-   * Finding a specific grocery by name.
+   * Prints recipe from storage to user.
    *
-   * @param inputName The name of the grocery to search for.
+   * @param inputName The name of the recipe to search for.
+   * @return a {@link String} containing the information about the recipe
    */
   public String printRecipe(String inputName) {
     Optional<Recipe> foundRecipe = findRecipe(inputName);
@@ -169,33 +211,42 @@ public class Cookbook {
   }
 
   /**
-   * .
+   * Returns a content table containing the recipes of the cookbook.
+   *
+   * <p>Checks if there are recipes in the cookbook and returns
+   * correct information</p>
+   *
+   * @return a {@link String} containing the cookbook content or error message
    */
   public String printCookbookContent() {
     if (recipes.isEmpty()) {
       return String.format("There is no recipes in your cookbook!%n");
     }
 
-    return String.format("%s%s", printCookbookHeader("Cookbook"), printCookbookBody());
+    return String.format("%s%s", printCookbookHeader(), printCookbookBody());
   }
 
   /**
-   * Printing header for cookbook content table.
+   * Makes header for cookbook content table.
+   *
+   * @return a {@link String} containing the content table for the cookbook
    */
-  private String printCookbookHeader(String title) {
-    return String.format(
-        "+----------------------------------------------------------------------------+%n")
-        + StringManipulation.centerString(title, 78)
-        + String.format(
-        "+------------------+---------------------------------------------+-----------+%n")
-        + String.format(
-        "| Recipe name      | Short description                           | Can make? |%n")
-        + String.format(
-        "+------------------+---------------------------------------------+-----------+%n");
+  private String printCookbookHeader() {
+    return """
+        +----------------------------------------------------------------------------+
+        %s+------------------+---------------------------------------------+-----------+
+        | Recipe name      | Short description                           | Can make? |
+        +------------------+---------------------------------------------+-----------+%n
+        """.formatted(StringManipulation.centerString("Cookbook", 78));
   }
 
   /**
-   * .
+   * Makes cookbook content table body.
+   *
+   * <p>Method creates the rows of the content table body. It checks if the
+   * recipe can be made and return the correct string if it can or not</p>
+   *
+   * @return a {@link String} containing the rows of the content table body
    */
   private String printCookbookBody() {
     StringBuilder string = new StringBuilder();
@@ -222,14 +273,19 @@ public class Cookbook {
   }
 
   /**
-   * .
+   * Checks if recipe exist in the cookbook.
+   *
+   * @return a {@link Boolean} indicating if the recipe exist or not
    */
   private boolean recipeExist(Recipe inputRecipe) {
     return recipes.stream().anyMatch(recipe -> recipe.equals(inputRecipe));
   }
 
   /**
-   * .
+   * Find a recipe in the cookbook array list from name.
+   *
+   * @param inputName input name in string from
+   * @return a {@link Optional} containing {@link Recipe} if recipe exist
    */
   private Optional<Recipe> findRecipe(String inputName) {
     return recipes.stream()

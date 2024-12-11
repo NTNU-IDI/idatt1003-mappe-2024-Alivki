@@ -9,34 +9,40 @@ import java.util.Optional;
 
 /**
  * Represents a fridge filled with grocery items.
- * Operations as adding and removing items, finding grocery items based on name or expiration date.
- * Using list interface because it adds flexibility(can change list type),
- * encapsulation(hides implementation from the user) and collects objects in indexed sequence.
+ *
+ * <p>The {@code Fridge} class is design to manage a list of
+ * {@link GroceryItem} objects.</p>
+ *
+ * @author Alivki
  */
 public class Fridge {
   private final List<GroceryItem> groceries;
 
   /**
-   * Using array list because it is dynamic array with many useful methods.
+   * Constructs a new {@code Fridge} with an empty array list.
    */
   public Fridge() {
     groceries = new ArrayList<>();
   }
 
   /**
-   * .
+   * Gets the list of {@link GroceryItem} object stored in the fridge.
+   *
+   * @return a {@link List} of {@link GroceryItem} objects
    */
   public List<GroceryItem> getGroceries() {
     return groceries;
   }
 
   /**
-   * Adds a grocery item to the list.
-   * If it is an existing grocery it will call the grocery.increaseQuantity
-   * method to increase its quantity. If it is a new item it will be added to
-   * the list while maintaining sorted order of the array.
+   * Adds a grocery item to the list if it does not exist.
    *
-   * @param newGrocery the new grocery.
+   * <p>Method checks if the grocery item exist. If it does
+   * it calls the increase quantity method. Else it adds it to the list
+   * while maintaining a sorted array based on alphabetical order</p>
+   *
+   * @param newGrocery the {@link GroceryItem} object to be added
+   * @return a {@link String} message indication if the item got added or not
    */
   public String addGrocery(GroceryItem newGrocery) {
     if (groceries.isEmpty()) {
@@ -55,9 +61,10 @@ public class Fridge {
   }
 
   /**
-   * Finding a specific grocery by name.
+   * Finding a specific grocery by name and returns information.
    *
-   * @param inputName The name of the grocery to search for.
+   * @param inputName The name of the grocery to search for
+   * @return a {@link String} containing the information about the grocery item
    */
   public String printGrocery(String inputName) {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
@@ -70,9 +77,10 @@ public class Fridge {
   }
 
   /**
-   * Removing a grocery by name.
+   * Removing a grocery from the array list.
    *
    * @param inputName The name of the grocery to search for.
+   * @return a {@link String} indication how the operation went.
    */
   public String removeGrocery(String inputName) {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
@@ -90,6 +98,7 @@ public class Fridge {
    *
    * @param inputName The name of the grocery to search for.
    * @param quantity  The quantity to increase grocery quantity with.
+   * @return a {@link String} indication how the operation went.
    */
   public String increaseQuantity(String inputName, float quantity) {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
@@ -104,11 +113,14 @@ public class Fridge {
 
   /**
    * Decreases the quantity of grocery by name.
-   * If the quantity after the decreasing operation is 0
-   * it calls the removeGrocery with grocery name to remove.
+   *
+   * <p>If the quantity after decreasing is 0 or below
+   * it calls the removeGrocery method for the specified
+   * {@link GroceryItem}</p>
    *
    * @param inputName The name of the grocery to search for.
    * @param quantity  The quantity to decrease grocery quantity with.
+   * @return a {@link String} indication how the operation went.
    */
   public String decreaseQuantity(String inputName, float quantity) {
     Optional<GroceryItem> foundGrocery = findGrocery(inputName);
@@ -129,11 +141,13 @@ public class Fridge {
 
 
   /**
-   * Prints a list of grocery items that have an expiration date before the specified date.
-   * If no groceries with expiration date before inputDate prints no groceries exist.
-   * Printed in ascending order by date.
+   * Returns a content table of expired grocery items.
    *
-   * @param inputDate The date to check against the expiration date of the grocery item.
+   * <p>Makes a content table of all grocery items that have
+   * expired before the specified date. It is made in ascending order by date</p>
+   *
+   * @param inputDate The {@link LocalDate} to check against the expiration date.
+   * @return a {@link String} contain error message or content table.
    */
   public String bestBeforeDate(LocalDate inputDate) {
     if (groceries.stream()
@@ -150,17 +164,18 @@ public class Fridge {
         .map(groceryItem -> String.format("%s", groceryItem.printGrocery()))
         .forEach(outputStringOfGroceryItems::append);
 
-    return String.format(
-        "%s"
-            + "%s+--------------+-------------+-----------------+------------------+%n"
-            + "| Total price: %-51s| %n"
-            + "+--------------+-------------+-----------------+------------------+%n",
-        printFridgeHeader("Expired groceries"), outputStringOfGroceryItems.toString(), totalPrice);
+    return """
+        %s%s+--------------+-------------+-----------------+------------------+
+        | Total price: %-51s|
+        +--------------+-------------+-----------------+------------------+%n
+        """.formatted(printFridgeHeader("Expired groceries"), outputStringOfGroceryItems.toString(),
+        totalPrice);
   }
 
   /**
-   * Printing all groceries in fridge in table.
-   * If there is no groceries it prints error message to user.
+   * Returns a content table contain all {@link GroceryItem} in fridge.
+   *
+   * @return a {@link String} containing error message or the content table for the fridge.
    */
   public String printFridgeContent() {
     if (groceries.isEmpty()) {
@@ -173,16 +188,18 @@ public class Fridge {
     groceries.stream().map(groceryItem -> String.format("%s", groceryItem.printGrocery()))
         .forEach(outputGroceries::append);
 
-    return String.format("%s"
-            + "%s"
-            + "+--------------+-------------+-----------------+------------------+%n"
-            + "| Total price: %-51s| %n"
-            + "+--------------+-------------+-----------------+------------------+%n",
-        printFridgeHeader("Fridge content"), outputGroceries, totalPrice);
+    return """
+        %s%s+--------------+-------------+-----------------+------------------+
+        | Total price: %-51s|
+        +--------------+-------------+-----------------+------------------+
+        """.formatted(printFridgeHeader("Fridge content"), outputGroceries, totalPrice);
   }
 
   /**
-   * .
+   * Calculates the total price of all expired {@link GroceryItem} objects.
+   *
+   * @param inputDate the {@link  LocalDate} to check against the expiery date.
+   * @return a {@link Float} with the total price.
    */
   private float totalExpiredPrice(LocalDate inputDate) {
     return groceries.stream()
@@ -192,7 +209,9 @@ public class Fridge {
   }
 
   /**
-   * .
+   * Calculates the total price of all {@link GroceryItem} objects.
+   *
+   * @return a {@link Float} with the total price.
    */
   private float totalPrice() {
     return groceries.stream()
@@ -201,14 +220,20 @@ public class Fridge {
   }
 
   /**
-   * .
+   * Checks if the specified grocery exist in the array list.
+   *
+   * @param inputGrocery the {@link GroceryItem} to check.
+   * @return a {@link Boolean} indicating if the grocery item exist.
    */
   private boolean groceryExist(GroceryItem inputGrocery) {
     return groceries.stream().anyMatch(groceryItem -> groceryItem.equals(inputGrocery));
   }
 
   /**
-   * .
+   * Finds a grocery items based on input name.
+   *
+   * @param inputName the name input from user.
+   * @return a {@link Optional} contain the found {@link GroceryItem} or null.
    */
   private Optional<GroceryItem> findGrocery(String inputName) {
     return groceries.stream()
@@ -217,10 +242,14 @@ public class Fridge {
   }
 
   /**
-   * Made my own binary search because it was fun. And so I did not have to make a list
-   * for the built-in Collections.binarySearch that needs a list of names and the search term.
+   * Finds the correct index to add new grocery item to keep list sorted.
    *
-   * @return return index
+   * <p>Binary search to find index to add new grocery item
+   * to keep the list sorted alphabetically. Used this instead of
+   * the built-in Collections.binarySearch because that need a list
+   * of names and search term.</p>
+   *
+   * @return a {@link Integer} indication index for new grocery item to be added.
    */
   private int findIndex(GroceryItem inputGrocery) {
     int left = 0;
@@ -241,7 +270,10 @@ public class Fridge {
   }
 
   /**
-   * Printing header for grocery content table.
+   * Makes content table header for fridge content.
+   *
+   * @param title title for the content table.
+   * @return {@link String} containing the content table.
    */
   private String printFridgeHeader(String title) {
     return String.format("+-----------------------------------------------------------------+%n")

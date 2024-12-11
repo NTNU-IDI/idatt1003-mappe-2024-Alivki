@@ -7,22 +7,30 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * .
+ * Util class to hande user input.
+ *
+ * @author Alivki
  */
 public class UserInput {
   static Scanner scanner = new Scanner(System.in);
 
   /**
    * Private constructor to prevent instantiation.
+   *
+   * @throws UnsupportedOperationException if utility class cannot be instantiated.
    */
   private UserInput() {
     throw new UnsupportedOperationException("Utility class - cannot be instantiated");
   }
 
   /**
-   * .
+   * Uses java scanner to take an integer input.
    *
-   * @return test
+   * <p>Only returns when the input does not throw
+   * exceptions and passes input validation</p>
+   *
+   * @return a {@link Integer}
+   * @throws IllegalArgumentException if input is invalid
    */
   public static int intInput() {
     while (true) {
@@ -41,9 +49,14 @@ public class UserInput {
   }
 
   /**
-   * .
+   * Uses java scanner to take a string input for name.
    *
-   * @return test
+   * <p>Only returns when the input does not throw
+   * exceptions and passes input validation. Has to only be
+   * letters and not be to long</p>
+   *
+   * @return a {@link String}
+   * @throws IllegalArgumentException if input is invalid
    */
   public static String nameInput() {
     while (true) {
@@ -51,7 +64,7 @@ public class UserInput {
         String input = scanner.nextLine();
         InputValidation.isNotEmpty(input);
         InputValidation.isValidString(input);
-        InputValidation.nameUnder32Char(input);
+        InputValidation.nameOver32Char(input);
         input = input.trim();
         return input;
       } catch (IllegalArgumentException e) {
@@ -62,7 +75,14 @@ public class UserInput {
   }
 
   /**
-   * .
+   * Uses java scanner to take a string input for quantity and unit.
+   *
+   * <p>Only returns when the input does not throw
+   * exceptions and passes input validation. Has to be both
+   * a float value and a string.</p>
+   *
+   * @return a {@link Object} with a float value and a string value as elements
+   * @throws IllegalArgumentException if input is invalid
    */
   public static Object[] unitAndQuantityInput() {
     while (true) {
@@ -76,9 +96,13 @@ public class UserInput {
   }
 
   /**
-   * .
+   * Uses java scanner to take a string input.
    *
-   * @return string
+   * <p>Only returns when the input does not throw
+   * exceptions and passes input validation</p>
+   *
+   * @return a {@link String}
+   * @throws IllegalArgumentException if input is invalid
    */
   public static String stringInput() {
     while (true) {
@@ -93,9 +117,13 @@ public class UserInput {
   }
 
   /**
-   * .
+   * Uses java scanner to take a float input.
    *
-   * @return string
+   * <p>Only returns when the input does not throw
+   * exceptions and passes input validation</p>
+   *
+   * @return a {@link Float}
+   * @throws IllegalArgumentException if input is invalid
    */
   public static float floatInput() {
     while (true) {
@@ -114,9 +142,13 @@ public class UserInput {
   }
 
   /**
-   * .
+   * Uses java scanner to take a string input and parses it to {@link LocalDate}.
    *
-   * @return string
+   * <p>Only returns when the input does not throw
+   * exceptions and passes input validation</p>
+   *
+   * @return a {@link LocalDate} specified from user input
+   * @throws IllegalArgumentException if input is invalid
    */
   public static LocalDate dateInput() {
     while (true) {
@@ -130,7 +162,7 @@ public class UserInput {
   }
 
   /**
-   * .
+   * Checks if user presses the enter key.
    */
   public static void enterKeyPress() {
     scanner.nextLine();
