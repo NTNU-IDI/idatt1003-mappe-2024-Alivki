@@ -22,8 +22,8 @@ class GroceryItemTest {
   }
 
   @Test
-  @DisplayName("Test: GroceryItem grocery getter")
-  void testGroceryGetternull() {
+  @DisplayName("Test: GroceryItem grocery getter for null value")
+  void testGroceryGetterNull() {
     assertThrows(NullPointerException.class, () -> {
       GroceryItem cheeseItem =
           new GroceryItem(null, LocalDate.of(2025, 12, 31), 1f);
@@ -54,8 +54,8 @@ class GroceryItemTest {
   }
 
   @Test
-  @DisplayName("Test: GroceryItem expiration date getter")
-  void testExpirationDateGetterHandlesnull() {
+  @DisplayName("Test: GroceryItem expiration date getter handles null value")
+  void testExpirationDateGetterNull() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
         new GroceryItem(cheese, null, 1f);
@@ -66,6 +66,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: Increasing quantity of groceryItem")
   void testIncreaseQuantity() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
@@ -80,6 +81,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: Increasing quantity of groceryItem with negative value")
   void testIncreaseNegativeQuantity() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
@@ -94,6 +96,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: Decrease quantity of groceryItem")
   void testDecreaseQuantity() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
@@ -108,6 +111,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: Increasing quantity of groceryItem with negative value")
   void testDecreaseNegativeQuantity() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
@@ -122,7 +126,8 @@ class GroceryItemTest {
   }
 
   @Test
-  void testDecreaseQuantityToBelowZero() {
+  @DisplayName("Test: Decrease quantity of groceryItem to below zero")
+  void testDecreaseQuantityBelowZero() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
         new GroceryItem(cheese, LocalDate.of(2025, 12, 31), 1f);
@@ -136,6 +141,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: toString method of groceryItem")
   void testToString() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
@@ -151,6 +157,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: Equals same object")
   void testEqualsSameObj() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
@@ -160,6 +167,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: Equals two different objects")
   void testEquals() {
     Grocery cheese1 = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem1 =
@@ -172,7 +180,8 @@ class GroceryItemTest {
   }
 
   @Test
-  void testEqualsK() {
+  @DisplayName("Test: Equals two different objects")
+  void testEqualsDifferentObj() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =
         new GroceryItem(cheese, LocalDate.of(2025, 12, 31), 1f);
@@ -184,6 +193,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: override hash code method")
   void testHashCode() {
     Grocery cheese1 = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem1 =
@@ -196,6 +206,7 @@ class GroceryItemTest {
   }
 
   @Test
+  @DisplayName("Test: override hash code method two different objects")
   void testHashCodeNot() {
     Grocery cheese = new Grocery("Cheese", "kg", 100f);
     GroceryItem cheeseItem =

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for the Grocery class.
  */
-public class GroceryTest {
+class GroceryTest {
   @Test
   @DisplayName("Test: Grocery name getter")
   void testNameGetter() {
