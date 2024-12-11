@@ -475,7 +475,7 @@ public class TextUserInterface {
   }
 
   private void printRecipeSuggestions() {
-    cookbook.missingGroceries("taco");
+    cookbook.printRecipeSuggestions();
     System.out.printf("%nPress enter to continue....");
     UserInput.enterKeyPress();
 

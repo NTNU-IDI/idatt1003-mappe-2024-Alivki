@@ -2,7 +2,6 @@ package edu.ntnu.idi.idatt.models;
 
 import edu.ntnu.idi.idatt.utils.StringManipulation;
 import java.util.ArrayList;
-import java.util.IllegalFormatPrecisionException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,53 +61,77 @@ public class Cookbook {
   /**
    * .
    */
-  public List<String> missingGroceries(String recipeName) {
-    Optional<Recipe> recipeToCheck = findRecipe(recipeName);
-    ArrayList<String> missingGroceries = new ArrayList<>();
-    List<GroceryItem> groceries = fridge.getGroceries();
-    Map<Grocery, Float> neededGroceries = recipeToCheck.get().getGroceries();
-
-    for (Map.Entry<Grocery, Float> entry : neededGroceries.entrySet()) {
-      boolean found = false;
-      for (GroceryItem groceryItem : groceries) {
-        if (entry.getKey().getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
-          found = true;
-          if (groceryItem.getQuantity() < entry.getValue()) {
-            float missingQuantity = entry.getValue() - groceryItem.getQuantity();
-            missingGroceries.add(groceryItem.getGrocery().getName() + " " + missingQuantity + groceryItem.getGrocery().getUnit());
-          }
-          break;
-        }
-      }
-
-      if (!found) {
-        missingGroceries.add(entry.getKey().getName() + " " + entry.getValue() + entry.getKey().getUnit());
-      }
-    }
-
-    for (String test : missingGroceries) {
-      System.out.println(test);
-    }
-
-    return missingGroceries;
-  }
-
-  /**
-   * .
-   */
   public void printRecipeSuggestions() {
     if (recipes.isEmpty()) {
       System.out.printf("There is no groceries in your fridge!%n");
       return;
     }
 
-    System.out.print(printCookbookHeader("Recipe suggestions"));
-    System.out.printf(
-        "+----------------------------------------------------------------------------+%n");
-    System.out.print(StringManipulation.centerString("Recipe suggestions", 78));
-    System.out.printf(
-        "+----------------------------------------------------------------------------+%n");
-    // System.out.print(recipeSuggestions());
+    System.out.println(String.format(
+        "+--------------------------------------------------+%n")
+        + StringManipulation.centerString("Recipe suggestions", 52)
+        + String.format(
+        "+-----------------+--------------------------------+%n")
+        + String.format(
+        "| Recipe Name     | Missing groceries              |%n")
+        + String.format(
+        "+-----------------+--------------------------------+"));
+    System.out.println(makeRecipeSuggestionsBody());
+  }
+
+  private boolean numberOfMissingGroceries(Recipe recipe) {
+    List<GroceryItem> groceries = fridge.getGroceries();
+
+    return recipe.getGroceries().entrySet().stream()
+        .filter(entry -> groceries.stream()
+            .filter(groceryItem -> groceryItem.getGrocery().getName()
+                .equalsIgnoreCase(entry.getKey().getName()))
+            .map(GroceryItem::getQuantity)
+            .findFirst()
+            .orElse(0f) < entry.getValue())
+        .limit(3)
+        .count() <= 2;
+  }
+
+  /**
+   * .
+   */
+  private String missingGroceries(Recipe recipe) {
+    List<GroceryItem> groceries = fridge.getGroceries();
+    Map<Grocery, Float> neededGroceries = recipe.getGroceries();
+    StringBuilder string = new StringBuilder();
+
+
+    for (Map.Entry<Grocery, Float> entry : neededGroceries.entrySet()) {
+      for (GroceryItem groceryItem : groceries) {
+        if (!entry.getKey().getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
+
+        }
+      }
+    }
+
+    return recipe.getName() + "\n";
+  }
+
+  /**
+   * .
+   */
+  private String makeRecipeSuggestionsBody() {
+    StringBuilder string = new StringBuilder();
+
+    for (Recipe recipe : recipes) {
+      if (canMakeRecipe(recipe)) {
+        string.append(String.format(
+            "| %-15s | You have every thing you need  |%n|                 | Go make it if you want!        |%n+-----------------+--------------------------------+",
+            recipe.getName()));
+      } else {
+        if (numberOfMissingGroceries(recipe)) {
+          string.append(missingGroceries(recipe));
+        }
+      }
+    }
+
+    return string.toString();
   }
 
   /**
