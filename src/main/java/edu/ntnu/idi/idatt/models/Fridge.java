@@ -137,7 +137,7 @@ public class Fridge {
    */
   public String bestBeforeDate(LocalDate inputDate) {
     if (groceries.stream()
-        .noneMatch(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))) {
+        .noneMatch(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(0)))) {
       return String.format("You have no groceries with a expiration date before %s.%n", inputDate);
     }
 
@@ -145,7 +145,7 @@ public class Fridge {
 
     StringBuilder outputStringOfGroceryItems = new StringBuilder();
     groceries.stream()
-        .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))
+        .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(0)))
         .sorted(Comparator.comparing(GroceryItem::getExpirationDate))
         .map(groceryItem -> String.format("%s", groceryItem.printGrocery()))
         .forEach(outputStringOfGroceryItems::append);
@@ -186,7 +186,7 @@ public class Fridge {
    */
   private float totalExpiredPrice(LocalDate inputDate) {
     return groceries.stream()
-        .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(1)))
+        .filter(grocery -> grocery.getExpirationDate().isBefore(inputDate.plusDays(0)))
         .map(groceryItem -> groceryItem.getGrocery().getPrice() * groceryItem.getQuantity())
         .reduce(0.0f, Float::sum);
   }
