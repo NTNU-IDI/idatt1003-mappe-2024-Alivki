@@ -100,17 +100,34 @@ public class Cookbook {
     List<GroceryItem> groceries = fridge.getGroceries();
     Map<Grocery, Float> neededGroceries = recipe.getGroceries();
     StringBuilder string = new StringBuilder();
+    List<String> missing = new ArrayList<>();
 
 
     for (Map.Entry<Grocery, Float> entry : neededGroceries.entrySet()) {
       for (GroceryItem groceryItem : groceries) {
         if (!entry.getKey().getName().equalsIgnoreCase(groceryItem.getGrocery().getName())) {
-
+          missing.add(entry.getKey().getName());
+          break;
         }
       }
     }
 
-    return recipe.getName() + "\n";
+    if (missing.size() <= 1) {
+      string.append(String.format("| %-15s | You only need one more grocery |%n"
+              + "|                 | to make this recipe!           |%n"
+              + "|                 | 1. %-27s |%n"
+              + "+-----------------+--------------------------------+%n", recipe.getName(),
+          missing.getFirst()));
+    } else {
+      string.append(String.format("| %-15s | You need two more groceries to |%n"
+              + "|                 | make this recipe!              |%n"
+              + "|                 | 1. %-27s |%n"
+              + "|                 | 2. %-27s |%n"
+              + "+-----------------+--------------------------------+%n", recipe.getName(),
+          missing.get(0), missing.get(1)));
+    }
+
+    return string.toString();
   }
 
   /**
@@ -122,7 +139,9 @@ public class Cookbook {
     for (Recipe recipe : recipes) {
       if (canMakeRecipe(recipe)) {
         string.append(String.format(
-            "| %-15s | You have every thing you need  |%n|                 | Go make it if you want!        |%n+-----------------+--------------------------------+",
+            "| %-15s | You have every thing you need  |%n"
+                + "|                 | Go make it if you want!        |%n"
+                + "+-----------------+--------------------------------+%n",
             recipe.getName()));
       } else {
         if (numberOfMissingGroceries(recipe)) {
