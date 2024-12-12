@@ -51,7 +51,8 @@ public class Fridge {
     }
 
     if (groceryExist(newGrocery)) {
-      newGrocery.increaseQuantity(newGrocery.getQuantity());
+      findGrocery(newGrocery.getGrocery().getName()).get()
+          .increaseQuantity(newGrocery.getQuantity());
       return String.format(
           "%nGrocery is all ready in fridge. Increased the quantity of the grocery!%n");
     }
@@ -258,7 +259,7 @@ public class Fridge {
     while (left < right) {
       int mid = (left + right) / 2;
       if (groceries.get(mid).getGrocery().getName().toLowerCase()
-          .compareTo(inputGrocery.getGrocery().getName().toLowerCase())
+              .compareTo(inputGrocery.getGrocery().getName().toLowerCase())
           < 0) {
         left = mid + 1;
       } else {
@@ -277,9 +278,9 @@ public class Fridge {
    */
   private String printFridgeHeader(String title) {
     return String.format("+-----------------------------------------------------------------+%n")
-        + StringManipulation.centerString(title, 67)
-        + String.format("+--------------+-------------+-----------------+------------------+%n")
-        + String.format("| Name         | Quantity    | Price per unit  | Expiration date  |%n")
-        + String.format("+--------------+-------------+-----------------+------------------+%n");
+           + StringManipulation.centerString(title, 67)
+           + String.format("+--------------+-------------+-----------------+------------------+%n")
+           + String.format("| Name         | Quantity    | Price per unit  | Expiration date  |%n")
+           + String.format("+--------------+-------------+-----------------+------------------+%n");
   }
 }

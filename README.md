@@ -7,27 +7,41 @@ STUDENT ID = "129252"
 
 ## Project description
 
-[//]: # (TODO: Write a short description of your project/product here.)
-
+This project serves as the end assignment for the course IDATT1003. 
+The project revolves around creating an application where a 
+user can store groceries and recipes. 
+They should be able to se what recipes can be made, 
+price of the stored groceries and expired groceries.
 ## Project structure
 
-[//]: # (TODO: Describe the structure of your project here. How have you used packages in your structure. Where are all sourcefiles stored. Where are all JUnit-test classes stored. etc.)
+Source files are stored in src/main/java/edu/ntnu/idi/idatt 
+here there are 3 folders each containing classes for 
+the program. Models contain the classes for the fridge, cookbook, recipes and grocery items. 
+Utils contains the util class. 
+Views contains the User interface class. 
+The main program is the Main.java file.
 
 ## Link to repository
 
-[//]: # (TODO: Include a link to your GitHub repository here.)
+https://github.com/NTNU-IDI/idatt1003-mappe-2024-Alivki.git
 
 ## How to run the project
 
-[//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method?
-What is the input and output of the program? What is the expected behaviour of the program?)
+To run the project clone the repository and navigate to the correct folder.
+Then navigate to idatt1003-mappe-2024-Alivki/src/main/java/edu/ntnu/idi/idatt
+where you find the Main.java file. Run this with "Java main.java".
+The program should then start in the terminal
+with instructions for the different menu options.
 
 ## How to run the tests
 
-[//]: # (TODO: Describe how to run the tests here.)
+To run the test navigate to the idatt1003-mappe-2024-Alivki folder
+where you cloned the project then "run mvm clean test" to run the test
 
 ## References
+Cay S. Horstmann, core java fundamentals volume 1, 2007
 
-[//]: # (TODO: Include references here, if any. For example, if you have used code from the course book, include a reference to the chapter.
-Or if you have used code from a website or other source, include a link to the source.)
+https://stackoverflow.com/questions/40268446/junit-5-how-to-assert-an-exception-is-thrown
+
+https://junit.org/junit5/docs/5.5.1/api/org/junit/jupiter/api/BeforeEach.html
 """

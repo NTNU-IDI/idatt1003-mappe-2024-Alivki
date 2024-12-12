@@ -2,7 +2,6 @@ package edu.ntnu.idi.idatt.models;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -165,8 +164,10 @@ class RecipeTest {
   @DisplayName("Test: To string method of recipe")
   void testToString() {
     Recipe taco = new Recipe("Taco", "Description", "Procedure", 1);
-    assertEquals("Name: Taco, Description: Description, Procedure: Procedure, Servings: 1", taco.toString(), "To string not returning what it should");
-    assertNotEquals("Name: Test, Description: Description, Procedure: Procedure, Servings: 1", taco.toString(), "To string returned wrong value");
+    assertEquals("Name: Taco, Description: Description, Procedure: Procedure, Servings: 1",
+        taco.toString(), "To string not returning what it should");
+    assertNotEquals("Name: Test, Description: Description, Procedure: Procedure, Servings: 1",
+        taco.toString(), "To string returned wrong value");
   }
 
   @Test

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 /**
  * Represents a recipe with its details.
@@ -60,7 +61,7 @@ public class Recipe {
   /**
    * Gets the procedure of the recipe.
    *
-   *@return a {@link String} with the procedure
+   * @return a {@link String} with the procedure
    */
   public String getProcedure() {
     return procedure;
@@ -112,13 +113,9 @@ public class Recipe {
    * @param removeGroceries {@link List} of string names for groceries.
    */
   public void removeGroceries(List<String> removeGroceries) {
-    for (String groceryName : removeGroceries) {
-      groceries.forEach((grocery, quantity) -> {
-        if (grocery.getName().equalsIgnoreCase(groceryName)) {
-          groceries.remove(grocery);
-        }
-      });
-    }
+    groceries.entrySet().removeIf(entry ->
+        removeGroceries.contains(entry.getKey().getName())
+    );
   }
 
   /**
@@ -156,8 +153,8 @@ public class Recipe {
     }
 
     return String.format("+---------------------------------------------------------------+%n")
-        + String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputName, "")
-        + String.format("+--------------------+------------------------------------------+%n");
+           + String.format("|%" + leftPadding + "s%s%" + rightPadding + "s|%n", "", inputName, "")
+           + String.format("+--------------------+------------------------------------------+%n");
   }
 
   /**
@@ -186,9 +183,9 @@ public class Recipe {
     ArrayList<String> infoColum =
         makeDescriptionColum(descriptionSplit, procedureSplit, numberOfRows);
 
-    for (int j = 0; j < numberOfRows; j++) {
-      string.append(String.format("| %-18s | %-40s |%n", groceryColum.get(j), infoColum.get(j)));
-    }
+    IntStream.range(0, numberOfRows)
+        .forEach(j -> string.append(
+            String.format("| %-18s | %-40s |%n", groceryColum.get(j), infoColum.get(j))));
 
     return string.toString();
   }
@@ -207,21 +204,18 @@ public class Recipe {
 
     groceryColum.add("Ingredients:");
 
-    int i = 0;
-    for (Map.Entry<Grocery, Float> entry : groceries.entrySet()) {
-      String outputName =
-          entry.getKey().getName().length() > 10
+    groceries.entrySet().stream()
+        .limit(numberOfRows)
+        .forEach(entry -> {
+          String outputName = entry.getKey().getName().length() > 10
               ? StringManipulation.shortenString(entry.getKey().getName(), 8)
               : entry.getKey().getName();
 
-      if (i < numberOfRows) {
-        groceryColum.add(String.format("%-10s%5.2f%s",
-            outputName,
-            entry.getValue(),
-            entry.getKey().getUnit()));
-      }
-      i++;
-    }
+          groceryColum.add(String.format("%-10s%5.2f%s",
+              outputName,
+              entry.getValue(),
+              entry.getKey().getUnit()));
+        });
 
     while (groceryColum.size() < numberOfRows - 1) {
       groceryColum.add(" ");
@@ -252,20 +246,21 @@ public class Recipe {
                                                  String[] procedureSplit, int numberOfRows) {
     ArrayList<String> infoColum = new ArrayList<>();
 
-    for (int i = 0; i < numberOfRows; i++) {
-      if (i < descriptionSplit.length) {
-        infoColum.add(descriptionSplit[i]);
-      } else if (i == descriptionSplit.length) {
-        infoColum.add(String.format("Number of servings: %d", servings));
-      } else if (i == descriptionSplit.length + 1) {
-        infoColum.add("-".repeat(40));
-      } else if (i >= descriptionSplit.length + 2
-          && i < descriptionSplit.length + procedureSplit.length + 2) {
-        infoColum.add(procedureSplit[i - (descriptionSplit.length + 2)]);
-      } else {
-        infoColum.add(" ");
-      }
-    }
+    IntStream.range(0, numberOfRows)
+        .forEach(i -> {
+          if (i < descriptionSplit.length) {
+            infoColum.add(descriptionSplit[i]);
+          } else if (i == descriptionSplit.length) {
+            infoColum.add(String.format("Number of servings: %d", servings));
+          } else if (i == descriptionSplit.length + 1) {
+            infoColum.add("-".repeat(40));
+          } else if (i >= descriptionSplit.length + 2
+                     && i < descriptionSplit.length + procedureSplit.length + 2) {
+            infoColum.add(procedureSplit[i - (descriptionSplit.length + 2)]);
+          } else {
+            infoColum.add(" ");
+          }
+        });
 
     return infoColum;
   }
