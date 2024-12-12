@@ -30,6 +30,15 @@ public class Cookbook {
   }
 
   /**
+   * Gets the list of {@link Recipe} object stored in the cookbook.
+   *
+   * @return a {@link List} of {@link Recipe} objects
+   */
+  public List<Recipe> getRecipes() {
+    return recipes;
+  }
+
+  /**
    * Adds a recipe to the cookbook if it does not already exist.
    *
    * <p>Method checks if the provided recipe is in array list
