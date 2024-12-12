@@ -35,7 +35,7 @@ with instructions for the different menu options.
 
 ## How to run the tests
 
-To run the test navigate to the idatt1003-mappe-2024-Alivki folder
+Make sure you have Maven installed. To run the test navigate to the idatt1003-mappe-2024-Alivki folder
 where you cloned the project then "run mvm clean test" to run the test
 
 ## References
@@ -44,4 +44,10 @@ Cay S. Horstmann, core java fundamentals volume 1, 2007
 https://stackoverflow.com/questions/40268446/junit-5-how-to-assert-an-exception-is-thrown
 
 https://junit.org/junit5/docs/5.5.1/api/org/junit/jupiter/api/BeforeEach.html
+
+https://www.geeksforgeeks.org
+
+https://stackoverflow.com
+
+https://www.w3schools.com
 """
