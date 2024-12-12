@@ -3,7 +3,9 @@ package edu.ntnu.idi.idatt.utils;
 /**
  * Util class to flush the console.
  *
- * @author Alivki
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.2
  */
 public class FlushConsole {
 

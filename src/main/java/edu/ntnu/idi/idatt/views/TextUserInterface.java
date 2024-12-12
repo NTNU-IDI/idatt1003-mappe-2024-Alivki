@@ -15,6 +15,10 @@ import java.util.Map;
 /**
  * The {@code TextUserInterface} class is the text based user interface for the program.
  * It initializes and starts the program by setting up the {@link Fridge} and {@link Cookbook}
+ *
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.0
  */
 public class TextUserInterface {
   private Fridge fridge;

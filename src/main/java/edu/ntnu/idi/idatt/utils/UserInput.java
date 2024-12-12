@@ -9,7 +9,9 @@ import java.util.Scanner;
 /**
  * Util class to hande user input.
  *
- * @author Alivki
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.2
  */
 public class UserInput {
   static Scanner scanner = new Scanner(System.in);

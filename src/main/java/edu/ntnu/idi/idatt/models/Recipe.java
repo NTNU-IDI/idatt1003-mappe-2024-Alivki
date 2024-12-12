@@ -14,7 +14,9 @@ import java.util.stream.IntStream;
  * <p>the {@code Recipe} class is designed to store
  * information about a recipe.</p>
  *
- * @author Alivki
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.2
  */
 public class Recipe {
   private final String name;

@@ -13,7 +13,9 @@ import java.util.Optional;
  * <p>The {@code Fridge} class is design to manage a list of
  * {@link GroceryItem} objects.</p>
  *
- * @author Alivki
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.0
  */
 public class Fridge {
   private final List<GroceryItem> groceries;

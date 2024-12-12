@@ -2,6 +2,10 @@ package edu.ntnu.idi.idatt.utils;
 
 /**
  * Util class to print menus in text user interface.
+ *
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v2.0
  */
 public class PrintMenus {
   /**

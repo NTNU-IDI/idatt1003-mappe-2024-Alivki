@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 /**
  * Util class for input validation and conversion between units.
  *
- * @author Alivki
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.1
  */
 public class InputValidation {
   public static final Map<String, Float> weightConversionFactors = new HashMap<>();

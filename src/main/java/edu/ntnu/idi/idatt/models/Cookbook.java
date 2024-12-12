@@ -13,7 +13,9 @@ import java.util.Optional;
  * manage a list of recipes and to interact with a {@link Fridge}.
  * {@link Fridge} object that provides access to stored groceries</p>
  *
- * @author Alivki
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.1
  */
 public class Cookbook {
   private final List<Recipe> recipes;

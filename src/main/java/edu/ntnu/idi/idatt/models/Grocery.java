@@ -6,7 +6,9 @@ package edu.ntnu.idi.idatt.models;
  * <p>the {@code Grocery} class is designed to store
  * information about the grocery item.</p>
  *
- * @author Alivki
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.0
  */
 public class Grocery {
   private final String name;

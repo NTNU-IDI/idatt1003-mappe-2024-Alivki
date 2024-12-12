@@ -12,7 +12,9 @@ import java.util.Objects;
  * <p>the {@code GroceryItem} class is designed to store
  * information about the grocery item.</p>
  *
- * @author Alivki
+ * @author Iver Lindholm
+ * @version v2.0
+ * @since v1.0
  */
 public class GroceryItem {
   private final Grocery grocery;
